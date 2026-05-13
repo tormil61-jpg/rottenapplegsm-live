@@ -1,0 +1,45 @@
+functionsDirectory = "/Users/miltontorres/Downloads/rtagsm_v3/netlify/functions"
+functionsDirectoryOrigin = "config-v1"
+headersOrigin = "config"
+plugins = []
+redirects = []
+
+[build]
+publish = "/Users/miltontorres/Downloads/rtagsm_v3"
+publishOrigin = "config"
+functions = "/Users/miltontorres/Downloads/rtagsm_v3/netlify/functions"
+
+[build.environment]
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[functions]
+
+[functions."*"]
+
+[[headers]]
+for = "/*"
+
+[headers.values]
+X-Frame-Options = "SAMEORIGIN"
+X-Content-Type-Options = "nosniff"
+Referrer-Policy = "strict-origin-when-cross-origin"
+X-XSS-Protection = "1; mode=block"
+
+[[headers]]
+for = "/.netlify/functions/*"
+
+[headers.values]
+Access-Control-Allow-Origin = "https://www.rottenapplegsm.com"
+Access-Control-Allow-Methods = "POST, OPTIONS"
+Access-Control-Allow-Headers = "Content-Type"
