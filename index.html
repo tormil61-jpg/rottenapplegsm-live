@@ -3715,6 +3715,7 @@ function confirmCryptoPayment(id){
   if(!confirm(`Confirm crypto payment received for order ${o.id}?\nThis will move the order to Processing.`))return;
   o.status="Processing";
   notifyStatus(payConfig,o,"Processing");
+  notifyNew(payConfig,o);
   showToast("✅ Payment confirmed — order is now Processing.");
   renderAdmin();
 }
