@@ -1400,7 +1400,9 @@ function toggleFaq(btn){
 function showToast(msg){const t=document.getElementById("toast");t.textContent=sanitize(msg);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),3600)}
 function scrollToSection(id){document.getElementById(id)?.scrollIntoView({behavior:"smooth"})}
 function getUserBalance(){if(!currentUser)return 0;const a=accounts.find(a=>a.id===currentUser.id);return a?a.balance:0}
-function updateBalance(uid,delta){const i=accounts.findIndex(a=>a.id===uid);if(i<0)return;accounts[i].balance=Math.max(0,parseFloat((accounts[i].balance+delta).toFixed(2)))}
+function updateBalance(uid,delta){const i=accounts.findIndex(a=>a.id===uid);if(i<0)return;accounts[i].balance=Math.max(0,parseFloat((accounts[i].balance+delta).toFixed(2)))
+  saveAccounts();
+}
 function savePct(s){return s.orig&&s.orig>s.price?Math.round((1-s.price/s.orig)*100):null}
 function activeServices(){return services.filter(s=>s.active)}
 function statusBadge(st){const cls=STATUS_CLASS[st]||"status-processing";return`<span class="badge ${cls}">${st}</span>`}
@@ -1504,6 +1506,7 @@ async function handleRegister(){
   const passwordHash=await hashPassword(pw);
   const newAcc={id:"ACC"+secureId(8),name:sanitize(name),email,passwordHash,balance:0,createdAt:new Date().toISOString().split("T")[0]};
   accounts.push(newAcc);
+  saveAccounts();
   const {passwordHash:_,...safe}=newAcc;
   setCurrentUser(safe);
   btn.textContent="Create Account";btn.disabled=false;
@@ -3696,6 +3699,10 @@ async function refreshOrderFromSupplier(orderId){
   else{showToast("Could not reach supplier API.");}
 }
 function adminAdjustBalance(uid,delta,name){updateBalance(uid,delta);showToast("Balance "+(delta>0?"+":"")+"$"+delta+" for "+name);renderAdminPage()}
+function saveAccounts(){try{localStorage.setItem("ra_accounts",JSON.stringify(accounts));}catch(e){}}
+function loadAccounts(){try{var s=localStorage.getItem("ra_accounts");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p)&&p.length){accounts=p;}}catch(e){}}
+function savePayConfig(){try{localStorage.setItem("ra_payconfig",JSON.stringify(payConfig));}catch(e){}}
+function loadPayConfig(){try{var s=localStorage.getItem("ra_payconfig");if(!s)return;var p=JSON.parse(s);if(p&&typeof p==="object")Object.assign(payConfig,p);}catch(e){}}
 function saveOrders(){try{localStorage.setItem("ra_orders",JSON.stringify(orders||[]));}catch(e){}}
 function loadOrders(){try{var s=localStorage.getItem("ra_orders");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p)&&p.length)orders=p;}catch(e){}}
 function updateOrderStatus(id,status){
