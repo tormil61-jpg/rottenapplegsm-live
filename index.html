@@ -3464,7 +3464,12 @@ function renderAdminPage(){
                 <label class="lbl" style="margin-bottom:4px">Price ($)</label>
                 <input class="inp" type="number" style="font-size:12px;padding:7px 10px" placeholder="4.99"
                   value="${t.price}"
-                  onchange="imeiCheckTypes[${i}].price=parseFloat(this.value)||${t.price};renderImeiCheckTypes()"/>
+                  onchange="imeiCheckTypes[${i}].price=parseFloat(this.value)||${t.price}" onblur="saveImeiCheckTypes();showToast('IMEI price saved.')"/>
+              </div>
+              <div style="padding-top:20px">
+                <button onclick="saveImeiCheckTypes();showToast('IMEI prices saved ✓');" style="padding:6px 14px;border-radius:8px;border:none;background:var(--purpleL);color:#fff;font-size:12px;font-weight:700;cursor:pointer">💾 Save</button>
+              </div>
+              <div style="display:none">/>
               </div>
             </div>
             <div style="font-size:11px;color:${t.sickwServiceId?"var(--green)":"var(--muted)"}">
@@ -3506,7 +3511,11 @@ function renderAdminServices(search=""){
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Was $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" value="${s.orig||""}" onblur="updateSvcField(${s.id},'orig',this.value)"/></div>
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Cost $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" placeholder="0" value="${s.cost||""}" onblur="updateSvcField(${s.id},'cost',this.value)"/></div>
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Time</div><input class="inp" style="width:88px;padding:5px 8px;font-size:12px" value="${s.time}" onblur="updateSvcField(${s.id},'time',this.value)"/></div>
-          <div style="display:flex;gap:8px;align-items:center;padding-top:16px">
+          <div style="margin-bottom:10px">
+          <div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">Description</div>
+          <textarea class="inp" style="width:100%;font-size:12px;padding:8px;min-height:60px;resize:vertical;font-family:inherit" placeholder="Shown to customers on order page" onblur="updateSvcField(${s.id},'description',this.value)">${sanitize(s.description||"")}</textarea>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;padding-top:16px">
             <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:4px">🔥</div><div class="toggle${s.hot?" on":""}" onclick="toggleSvc(${s.id},'hot')"><div class="dot"></div></div></div>
             <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:4px">🆕</div><div class="toggle${s.recent?" on":""}" onclick="toggleSvc(${s.id},'recent')"><div class="dot"></div></div></div>
             <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:4px">On</div><div class="toggle${s.active?" on":""}" onclick="toggleSvc(${s.id},'active')"><div class="dot"></div></div></div>
@@ -3707,6 +3716,8 @@ function confirmCryptoPayment(id){
   renderAdmin();
 }
 function updateOrderField(id,field,val){const o=allOrders.find(x=>x.id===id);if(o)o[field]=sanitize(val)}
+function saveImeiCheckTypes(){try{localStorage.setItem("ra_imei_checks",JSON.stringify(imeiCheckTypes));}catch(e){}}
+function loadImeiCheckTypes(){try{var s=localStorage.getItem("ra_imei_checks");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p))p.forEach(function(sv){var x=imeiCheckTypes.find(function(t){return t.id===sv.id});if(x&&sv.price!==undefined)x.price=sv.price;});}catch(e){}}
 function saveServicesToStorage(){try{localStorage.setItem("ra_services",JSON.stringify(services));}catch(e){}}
 function loadServicesFromStorage(){try{var s=localStorage.getItem("ra_services");if(!s)return;var p=JSON.parse(s);if(!Array.isArray(p))return;p.forEach(function(sv){var x=services.find(function(sc){return sc.id===sv.id});if(x){["price","orig","cost","time","active","hot","recent"].forEach(function(f){if(sv[f]!==undefined)x[f]=sv[f]})}});}catch(e){}}
 function updateSvcField(id,field,val){
