@@ -3696,6 +3696,8 @@ async function refreshOrderFromSupplier(orderId){
   else{showToast("Could not reach supplier API.");}
 }
 function adminAdjustBalance(uid,delta,name){updateBalance(uid,delta);showToast("Balance "+(delta>0?"+":"")+"$"+delta+" for "+name);renderAdminPage()}
+function saveOrders(){try{localStorage.setItem("ra_orders",JSON.stringify(orders||[]));}catch(e){}}
+function loadOrders(){try{var s=localStorage.getItem("ra_orders");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p)&&p.length)orders=p;}catch(e){}}
 function updateOrderStatus(id,status){
   if(!ORDER_STATUSES.includes(status))return;
   const o=allOrders.find(x=>x.id===id);
