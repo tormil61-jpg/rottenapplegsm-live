@@ -3717,43 +3717,9 @@ function confirmCryptoPayment(id){
 }
 function updateOrderField(id,field,val){const o=allOrders.find(x=>x.id===id);if(o)o[field]=sanitize(val)}
 function saveImeiCheckTypes(){try{localStorage.setItem("ra_imei_checks",JSON.stringify(imeiCheckTypes));}catch(e){}}
-function loadImeiCheckTypes(){
-  try{
-    var s=localStorage.getItem("ra_imei_checks");
-    if(!s)return;
-    var p=JSON.parse(s);
-    if(!Array.isArray(p)||p.length===0)return;
-    p.forEach(function(sv){
-      var x=imeiCheckTypes.find(function(t){return t.id===sv.id});
-      if(!x)return;
-      if(sv.price!==undefined)x.price=parseFloat(sv.price)||x.price;
-    });
-    console.log("Loaded saved IMEI prices from storage");
-  }catch(e){console.error("loadImeiCheckTypes error:",e);}
-});if(x&&sv.price!==undefined)x.price=sv.price;});}catch(e){}}
+function loadImeiCheckTypes(){try{var s=localStorage.getItem("ra_imei_checks");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p))p.forEach(function(sv){var x=imeiCheckTypes.find(function(t){return t.id===sv.id});if(x&&sv.price!==undefined)x.price=sv.price;});}catch(e){}}
 function saveServicesToStorage(){try{localStorage.setItem("ra_services",JSON.stringify(services));}catch(e){}}
-function loadServicesFromStorage(){
-  try{
-    var s=localStorage.getItem("ra_services");
-    if(!s)return;
-    var p=JSON.parse(s);
-    if(!Array.isArray(p)||p.length===0)return;
-    p.forEach(function(sv){
-      var x=services.find(function(sc){return sc.id===sv.id});
-      if(!x)return;
-      if(sv.price!==undefined)x.price=parseFloat(sv.price)||x.price;
-      if(sv.orig!==undefined)x.orig=parseFloat(sv.orig)||x.orig;
-      if(sv.cost!==undefined)x.cost=parseFloat(sv.cost)||x.cost;
-      if(sv.time!==undefined)x.time=sv.time;
-      if(sv.active!==undefined)x.active=!!sv.active;
-      if(sv.hot!==undefined)x.hot=!!sv.hot;
-      if(sv.recent!==undefined)x.recent=!!sv.recent;
-      if(sv.description!==undefined)x.description=sv.description;
-      if(sv.notes!==undefined)x.notes=sv.notes;
-    });
-    console.log("Loaded saved prices from storage");
-  }catch(e){console.error("loadServicesFromStorage error:",e);}
-});if(x){["price","orig","cost","time","active","hot","recent"].forEach(function(f){if(sv[f]!==undefined)x[f]=sv[f]})}});}catch(e){}}
+function loadServicesFromStorage(){try{var s=localStorage.getItem("ra_services");if(!s)return;var p=JSON.parse(s);if(!Array.isArray(p))return;p.forEach(function(sv){var x=services.find(function(sc){return sc.id===sv.id});if(x){["price","orig","cost","time","active","hot","recent"].forEach(function(f){if(sv[f]!==undefined)x[f]=sv[f]})}});}catch(e){}}
 function updateSvcField(id,field,val){
   const s=services.find(x=>x.id===id);if(!s)return;
   s[field]=["price","orig","cost"].includes(field)?parseFloat(val)||0:sanitize(String(val));
