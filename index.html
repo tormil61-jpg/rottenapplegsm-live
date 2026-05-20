@@ -3430,14 +3430,14 @@ function renderAdminPage(){
               <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px">
                 <input class="inp" style="width:42px;padding:6px;font-size:18px;text-align:center;background:var(--surface2)"
                   placeholder="📱" value="${sanitize(t.icon||"")}"
-                  onchange="imeiCheckTypes[${i}].icon=this.value;renderImeiCheckTypes()"/>
+                  onchange="imeiCheckTypes[${i}].icon=this.value;saveImeiCheckTypes();renderImeiCheckTypes()"/>
                 <input class="inp" style="flex:1;font-size:13px;font-weight:600;padding:7px 10px"
                   placeholder="Check type name" value="${sanitize(t.label||"")}"
-                  onchange="imeiCheckTypes[${i}].label=this.value;renderImeiCheckTypes()"/>
+                  onchange="imeiCheckTypes[${i}].label=this.value;saveImeiCheckTypes();renderImeiCheckTypes()"/>
               </div>
               <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
                 <span style="font-size:11px;color:var(--muted)">Active</span>
-                <div class="toggle${t.active?" on":""}" onclick="imeiCheckTypes[${i}].active=!imeiCheckTypes[${i}].active;renderImeiCheckTypes();renderAdminPage()"><div class="dot"></div></div>
+                <div class="toggle${t.active?" on":""}" onclick="imeiCheckTypes[${i}].active=!imeiCheckTypes[${i}].active;saveImeiCheckTypes();renderImeiCheckTypes();renderAdminPage()"><div class="dot"></div></div>
                 <button onclick="removeImeiCheckType(${i})" style="padding:4px 10px;border-radius:6px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.07);color:var(--red);font-size:12px;cursor:pointer">✕</button>
               </div>
             </div>
@@ -3452,7 +3452,7 @@ function renderAdminPage(){
                 <label class="lbl" style="margin-bottom:4px">sickw Service ID</label>
                 <input class="inp" style="font-family:monospace;font-size:12px;padding:7px 10px" placeholder="e.g. 1 or 42"
                   value="${sanitize(t.sickwServiceId||"")}"
-                  onchange="imeiCheckTypes[${i}].sickwServiceId=this.value;renderImeiCheckTypes()"/>
+                  onchange="imeiCheckTypes[${i}].sickwServiceId=this.value;saveImeiCheckTypes();renderImeiCheckTypes()"/>
               </div>
               <div>
                 <label class="lbl" style="margin-bottom:4px">sickw API URL (optional)</label>
@@ -3728,8 +3728,8 @@ function updateSvcField(id,field,val){
   showToast("Saved.");
   renderAllServices(document.getElementById("svc-search")?.value||"");
 }
-function toggleSvc(id,field){const s=services.find(x=>x.id===id);if(s){s[field]=!s[field];renderAdminServices(document.getElementById("svc-search")?.value||"")}}
-function deleteSvc(id){services=services.filter(s=>s.id!==id);renderAdminServices(document.getElementById("svc-search")?.value||"");showToast("Removed.")}
+function toggleSvc(id,field){const s=services.find(x=>x.id===id);if(s){s[field]=!s[field];saveServicesToStorage();renderAdminServices(document.getElementById("svc-search")?.value||"")}}
+function deleteSvc(id){services=services.filter(s=>s.id!==id);saveServicesToStorage();renderAdminServices(document.getElementById("svc-search")?.value||"");showToast("Removed.")}
 function addService(){
   const series=document.getElementById("ns-series").value.trim();
   const price=parseFloat(document.getElementById("ns-price").value);
