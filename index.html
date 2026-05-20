@@ -3336,7 +3336,7 @@ function renderAdminPage(){
     const stypes=["Carrier Unlock","Blacklist / Unbarring","FRP Bypass","MDM Remove","Mi Account Remove"];
     const brands=["Apple iPhone","Samsung","Any Device","Xiaomi","Tecno/Infinix"];
     content=`<div style="display:flex;gap:12px;margin-bottom:14px;align-items:center;flex-wrap:wrap">
-      <span style="color:var(--muted);font-size:13px">${services.length} services</span>
+      <span style="color:var(--muted);font-size:13px">${services.length} services</span> <button onclick="saveServicesToStorage();showToast('Prices saved ✓');" style="padding:6px 14px;border-radius:8px;border:none;background:var(--purpleL);color:#fff;font-size:12px;font-weight:700;cursor:pointer">💾 Save All Prices</button>
       <input class="inp" style="width:240px;padding:8px 12px" placeholder="Search…" id="svc-search" oninput="renderAdminServices(this.value)"/>
     </div>
     <div id="admin-svc-list"></div>
@@ -3352,16 +3352,6 @@ function renderAdminPage(){
         <div><label class="lbl">Cost $</label><input class="inp" type="number" id="ns-cost" placeholder="0"/></div>
         <div><label class="lbl">Turnaround</label><input class="inp" id="ns-time" placeholder="24 hrs"/></div>
         <div><label class="lbl">Success %</label><input class="inp" id="ns-rate" placeholder="100%"/></div>
-        <div style="grid-column:1/-1">
-          <label class="lbl">Stripe Payment Link <span style="font-weight:400;color:var(--muted)">(optional — overrides global link)</span></label>
-          <input class="inp" id="ns-stripelink" placeholder="https://buy.stripe.com/xxxxxxxxxxxxxxxx"/>
-        </div>
-        <div style="grid-column:1/-1">
-          <label class="lbl">Service Description <span style="font-weight:400;color:var(--muted)">(shown to customers when selecting this service)</span></label>
-          <textarea class="inp" id="ns-description" placeholder="e.g. Permanently unlocks your iPhone from T-Mobile so you can use any carrier worldwide. Phone must be fully paid off." style="resize:vertical;min-height:68px;line-height:1.5"></textarea>
-        </div>
-        <div style="grid-column:1/-1;margin-top:4px"><button class="btn" onclick="addService()" style="padding:11px 28px">+ Add Service</button></div>
-      </div>
     </div>`;
   } else if(adminTab==="payments"){
     content=`<div style="display:flex;flex-direction:column;gap:20px;max-width:660px">
@@ -3521,27 +3511,11 @@ function renderAdminServices(search=""){
             <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:4px">🆕</div><div class="toggle${s.recent?" on":""}" onclick="toggleSvc(${s.id},'recent')"><div class="dot"></div></div></div>
             <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:4px">On</div><div class="toggle${s.active?" on":""}" onclick="toggleSvc(${s.id},'active')"><div class="dot"></div></div></div>
             <button onclick="deleteSvc(${s.id})" style="padding:5px 11px;border-radius:7px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.07);color:var(--red);font-size:12px;cursor:pointer;margin-top:14px">✕</button>
+            <button onclick="saveServicesToStorage();showToast('Saved ✓');" style="padding:5px 14px;border-radius:7px;border:none;background:var(--purpleL);color:#fff;font-size:12px;cursor:pointer;margin-top:14px;font-weight:600">💾 Save</button>
           </div>
         </div>
       </div>
       <div style="border-top:1px solid var(--border);padding-top:14px">
-        <div style="margin-bottom:12px">
-          <label class="lbl" style="margin-bottom:6px;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase">
-            Stripe Payment Link <span style="font-weight:400;text-transform:none;color:var(--muted)">(overrides global link for this service)</span>
-            ${s.stripeLink?`<span style="background:rgba(34,197,94,.12);color:var(--green);padding:2px 8px;border-radius:100px;font-size:10px;margin-left:6px">✓ Set</span>`:`<span style="background:rgba(249,115,22,.1);color:var(--orange);padding:2px 8px;border-radius:100px;font-size:10px;margin-left:6px">Not set</span>`}
-          </label>
-          <input class="inp" style="font-size:12px;padding:8px 12px" placeholder="https://buy.stripe.com/xxxxxxxxxxxxxxxx" value="${sanitize(s.stripeLink||"")}" onblur="updateSvcField(${s.id},'stripeLink',this.value)"/>
-        </div>
-        <div style="margin-bottom:12px">
-          <label class="lbl" style="margin-bottom:6px;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase">Service Description <span style="font-weight:400;text-transform:none;color:var(--muted)">(shown to customers when selecting this service)</span></label>
-          <textarea style="width:100%;background:var(--surface3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:#f0eeff;font-size:13px;font-family:inherit;line-height:1.5;resize:vertical;min-height:68px;outline:none;transition:border-color .2s" placeholder="e.g. Permanently unlocks your iPhone from T-Mobile so you can use any carrier worldwide. Phone must be fully paid off. No jailbreak needed." onblur="updateSvcField(${s.id},'description',this.value)" onfocus="this.style.borderColor='var(--purpleL)'" onblur2="this.style.borderColor='var(--border)'">${sanitize(s.description||"")}</textarea>
-        </div>
-        <div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">Supplier API</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end">
-          <div><label class="lbl" style="margin-bottom:4px">API Panel URL</label><input class="inp" style="font-family:monospace;font-size:12px;padding:8px 10px" placeholder="https://supplier.com/api/" value="${sanitize(s.apiUrl||"")}" onblur="updateSvcField(${s.id},'apiUrl',this.value)"/></div>
-          <div><label class="lbl" style="margin-bottom:4px">API Key</label><input class="inp" type="password" style="font-family:monospace;font-size:12px;padding:8px 10px" placeholder="Supplier API key" value="${sanitize(s.apiKey||"")}" onblur="updateSvcField(${s.id},'apiKey',this.value)"/></div>
-          <div><label class="lbl" style="margin-bottom:4px">Service ID</label><input class="inp" style="width:90px;font-family:monospace;font-size:12px;padding:8px 10px" placeholder="e.g. 42" value="${sanitize(s.apiServiceId||"")}" onblur="updateSvcField(${s.id},'apiServiceId',this.value)"/></div>
-        </div>
         <div style="font-size:11px;margin-top:7px;color:${apiOk?"var(--green)":"var(--muted)"}">${apiOk?"✓ Orders auto-submit to "+s.apiUrl:"No API configured — manual processing required."}</div>
       </div>
     </div>`}).join("")
