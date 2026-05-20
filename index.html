@@ -1322,7 +1322,7 @@ let suppliers=[
 
 // Support tickets
 let tickets=[]; // starts at #1001 for first order
-let payConfig={backendUrl:"",stripePublicKey:"pk_live_51RAdiy1im1pzQEDTBG0uDRJunjMRS084946lVYkl0i5irM9Fb787d6rH0vMOQ6JKGA6lsI6XizEzU9SO7Y9LJmp000SIAZMg1A",stripePaymentLink:"",paypalClientId:"",btcAddress:"3H1wo2u43uh7kwfZk3L5JD7pJpTz3JT768",usdtAddress:"0x5CDA5992AB8CFD42C135F12756809AFea7d746F8",sickwKey:"8S6-CWT-SGV-XW7-8NK-ALG-320-HXQ",emailjsPublicKey:"",emailjsServiceId:"",emailjsTemplateNew:"",emailjsTemplateStatus:""};
+let payConfig={backendUrl:"",stripePublicKey:"pk_live_51RAdiy1im1pzQEDTBG0uDRJunjMRS084946lVYkl0i5irM9Fb787d6rH0vMOQ6JKGA6lsI6XizEzU9SO7Y9LJmp000SIAZMg1A",stripePaymentLink_disabled:"",paypalClientId:"",btcAddress:"3H1wo2u43uh7kwfZk3L5JD7pJpTz3JT768",usdtAddress:"0x5CDA5992AB8CFD42C135F12756809AFea7d746F8",sickwKey:"8S6-CWT-SGV-XW7-8NK-ALG-320-HXQ",emailjsPublicKey:"",emailjsServiceId:"",emailjsTemplateNew:"",emailjsTemplateStatus:""};
 
 // Supplier API configs — DhruFusion standard format
 const SUPPLIER_APIS={
@@ -1989,7 +1989,7 @@ async function submitImeiCheck(){
     svc:{price:selectedImeiCheckType.price,carrier:"IMEI Check",stype:selectedImeiCheckType.label,series:"",brand:"",carrier:selectedImeiCheckType.label},
     isImeiCheck:true
   };
-  matchedSvc={price:selectedImeiCheckType.price,carrier:selectedImeiCheckType.label,stype:"IMEI Check",series:"",brand:selectedImeiCheckType.label,stripeLink:selectedImeiCheckType.stripeLink||payConfig.stripePaymentLink||""};
+  matchedSvc={price:selectedImeiCheckType.price,carrier:selectedImeiCheckType.label,stype:"IMEI Check",series:"",brand:selectedImeiCheckType.label,stripeLink:selectedImeiCheckType.stripeLink||payConfig.stripePaymentLink_disabled||""};
   document.getElementById("checkout-total").textContent="$"+selectedImeiCheckType.price.toFixed(2);
   document.getElementById("stripe-total").textContent="$"+selectedImeiCheckType.price.toFixed(2);
   document.getElementById("paypal-total").textContent="$"+selectedImeiCheckType.price.toFixed(2);
@@ -2191,11 +2191,11 @@ function setCheckoutStep(step){
     document.getElementById("stripe-order-detail").textContent=
       matchedSvc?`${matchedSvc.brand} · ${matchedSvc.series} · ${matchedSvc.carrier}`:"";
     const warnEl=document.getElementById("stripe-key-warn");
-    warnEl.style.display=payConfig.stripePublicKey&&payConfig.stripePaymentLink?"none":"block";
+    warnEl.style.display=payConfig.stripePublicKey&&payConfig.stripePaymentLink_disabled?"none":"block";
     if(!payConfig.stripePublicKey){
       warnEl.textContent="⚠ Stripe publishable key not configured. Go to Admin → Payment Config.";
-    } else if(!payConfig.stripePaymentLink){
-      warnEl.textContent="⚠ Stripe Payment Link URL not set. Go to Admin → Payment Config → Stripe Payment Link URL.";
+    } else if(!payConfig.stripePaymentLink_disabled){
+      warnEl.textContent="⚠  not set. Go to Admin → Payment Config → .";
     }
   }
 }
