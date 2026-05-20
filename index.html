@@ -3464,7 +3464,7 @@ function renderAdminPage(){
                 <label class="lbl" style="margin-bottom:4px">Price ($)</label>
                 <input class="inp" type="number" style="font-size:12px;padding:7px 10px" placeholder="4.99"
                   value="${t.price}"
-                  onchange="imeiCheckTypes[${i}].price=parseFloat(this.value)||${t.price}" onblur="saveImeiCheckTypes();showToast('IMEI price saved.')"/>
+                  onchange="imeiCheckTypes[${i}].price=parseFloat(this.value)||${t.price};saveImeiCheckTypes();" onblur="saveImeiCheckTypes();showToast('IMEI price saved ✓')"/>
               </div>
               <div style="padding-top:20px">
                 <button onclick="saveImeiCheckTypes();showToast('IMEI prices saved ✓');" style="padding:6px 14px;border-radius:8px;border:none;background:var(--purpleL);color:#fff;font-size:12px;font-weight:700;cursor:pointer">💾 Save</button>
