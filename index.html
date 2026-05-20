@@ -3724,6 +3724,7 @@ function updateSvcField(id,field,val){
   const s=services.find(x=>x.id===id);if(!s)return;
   s[field]=["price","orig","cost"].includes(field)?parseFloat(val)||0:sanitize(String(val));
   saveServicesToStorage();
+  saveServicesToStorage();
   showToast("Saved.");
   renderAllServices(document.getElementById("svc-search")?.value||"");
 }
