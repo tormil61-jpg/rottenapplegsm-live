@@ -3788,6 +3788,8 @@ function addService(){
     rate:document.getElementById("ns-rate").value||"100%",
     notes:"",
     description:sanitize(document.getElementById("ns-description")?.value||""),
+    sickwServiceId:(document.getElementById("ns-sickwid")?.value||"").trim(),
+    sickwAutoSubmit:document.getElementById("ns-sickauto")?.checked||false,
     stripeLink:sanitize(document.getElementById("ns-stripelink")?.value||""),
     hot:false,recent:false,active:true,
     apiUrl:"",apiKey:"",apiServiceId:""
