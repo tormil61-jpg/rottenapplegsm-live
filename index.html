@@ -3539,6 +3539,10 @@ function renderAdminServices(search=""){
         </div>
                 <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
           <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">⚡ Sickw Auto-Unlock</div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:5px">Supplier / Source</div>
+          <input class="inp" style="width:100%;padding:6px 10px;font-size:13px" placeholder="e.g. iFoneUnlock, SNFusions, sickw" value="${sanitize(s.supplier||'')}" onblur="updateSvcField(${s.id},'supplier',this.value)"/>
+        </div>
           <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
             <div style="display:flex;gap:6px;align-items:center">
               <span style="font-size:12px;color:var(--muted)">Auto-submit</span>
