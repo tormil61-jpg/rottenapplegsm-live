@@ -3787,7 +3787,7 @@ function addService(){
   const orig=parseFloat(document.getElementById("ns-orig").value)||null;
   if(!series||!price||isNaN(price)||price<=0){showToast("Fill in Series and Price.");return}
   services.push({
-    id:Date.now(),
+    id:Date.now();saveServicesToStorage(),
     carrier:document.getElementById("ns-carrier").value,
     stype:document.getElementById("ns-stype").value,
     brand:document.getElementById("ns-brand").value,
@@ -3822,6 +3822,7 @@ loadServicesFromStorage();
 loadImeiCheckTypes();
 loadOrders();
 loadAccounts();
+loadPayConfig();
 checkStripeReturn();
 renderHome();
 </script>
