@@ -2245,6 +2245,7 @@ function recordOrder(method, initialStatus){
     placeSupplierOrder(o, matchedSvc).catch(()=>{});
   }
   if(method==="wallet"&&currentUser)updateBalance(currentUser.id,-matchedSvc.price);
+  saveOrders();
   notifyNew(payConfig,o);
   document.getElementById("order-imei").value="";
   if(document.getElementById("order-email"))document.getElementById("order-email").value="";
@@ -3716,7 +3717,9 @@ async function refreshOrderFromSupplier(orderId){
   if(result){showToast("Status updated: "+o.status);renderAdminPage();}
   else{showToast("Could not reach supplier API.");}
 }
-function adminAdjustBalance(uid,delta,name){updateBalance(uid,delta);showToast("Balance "+(delta>0?"+":"")+"$"+delta+" for "+name);renderAdminPage()}
+function adminAdjustBalance(uid,delta,name){updateBalance(uid,delta);showToast("Balance "+(delta>0?"+":"")+"$"+delta+" for "+name);renderAdminPage()
+  saveAccounts();
+}
 function saveAccounts(){try{localStorage.setItem("ra_accounts",JSON.stringify(accounts));}catch(e){}}
 function loadAccounts(){try{var s=localStorage.getItem("ra_accounts");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p)&&p.length){accounts=p;}}catch(e){}}
 function savePayConfig(){try{localStorage.setItem("ra_payconfig",JSON.stringify(payConfig));}catch(e){}}
