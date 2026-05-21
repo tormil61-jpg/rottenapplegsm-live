@@ -3355,6 +3355,11 @@ function renderAdminPage(){
         <div><label class="lbl">Cost $</label><input class="inp" type="number" id="ns-cost" placeholder="0"/></div>
         <div><label class="lbl">Turnaround</label><input class="inp" id="ns-time" placeholder="24 hrs"/></div>
         <div><label class="lbl">Success %</label><input class="inp" id="ns-rate" placeholder="100%"/></div>
+      <div style="grid-column:1/-1;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:10px 0;border-top:1px solid var(--border)">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase">⚡ Sickw Auto-Unlock</span>
+        <label style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--text);cursor:pointer"><input type="checkbox" id="ns-sickauto" style="accent-color:var(--purpleL)"/> Auto-submit via sickw</label>
+        <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Sickw Service ID</div><input class="inp" id="ns-sickwid" placeholder="e.g. 14" style="width:110px;padding:6px 10px;font-size:13px;font-family:monospace"/></div>
+      </div>
     </div>`;
   } else if(adminTab==="payments"){
     content=`<div style="display:flex;flex-direction:column;gap:20px;max-width:660px">
