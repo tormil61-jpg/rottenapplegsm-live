@@ -1351,7 +1351,7 @@ let imeiCheckTypes=[
   {id:"icloud_status",     label:"iCloud Lock Status",             icon:"☁️", desc:"Check if iPhone/iPad is iCloud locked or activation locked. Instant.",                              price:3.99, sickwServiceId:"3",   apiUrl:"https://sickw.com/api.php", active:true},
   {id:"icloud_clean_lost", label:"iCloud Clean / Lost Status",    icon:"☁️", desc:"Check if device is reported lost or stolen in iCloud. Instant.",                                    price:4.99, sickwServiceId:"4",   apiUrl:"https://sickw.com/api.php", active:true},
   {id:"apple_mdm",         label:"Apple MDM Status",              icon:"🔒", desc:"Check if iPhone/iPad is enrolled in MDM (Mobile Device Management). Instant.",                      price:5.99, sickwServiceId:"81",  apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"apple_activation",  label:"Apple Activation Status Pro",   icon:"🍎", desc:"Full Apple activation lock and status check. Instant.",                                             price:3.99, sickwServiceId:"88",  apiUrl:"https://sickw.com/api.php", active:true},
+  {id:"apple_activation",  label:"Apple Activation Status Pro",   icon:"<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 1.5C7.5 1.5 5.5 3 5 5c-.8.1-1.5.4-2 1C2 7 1.5 8 1.5 9c0 1 .3 1.8.8 2.5-.5.7-.8 1.5-.8 2.5 0 2.8 2.2 5 5 5 .7 0 1.4-.1 2-.4.2-.1.3-.1.5 0 .6.3 1.3.4 2 .4 2.8 0 5-2.2 5-5 0-1-.3-1.8-.8-2.5.5-.7.8-1.5.8-2.5 0-1-.5-2-1.5-2.7-.5-.6-1.2-.9-2-1C14.5 3 12.5 1.5 10 1.5z" fill="url(#rl)"/><defs><linearGradient id="rl" x1="1.5" y1="1.5" x2="18.5" y2="18.5" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#ff0000"/><stop offset="20%" stop-color="#ff8c00"/><stop offset="40%" stop-color="#ffd700"/><stop offset="60%" stop-color="#00c800"/><stop offset="80%" stop-color="#0000ff"/><stop offset="100%" stop-color="#8000ff"/></linearGradient></defs></svg>", desc:"Full Apple activation lock and status check. Instant.",                                             price:3.99, sickwServiceId:"88",  apiUrl:"https://sickw.com/api.php", active:true},
   // Carrier / Blacklist checks
   {id:"blacklist_att",     label:"AT&T USA Status Check",         icon:"🔍", desc:"Check carrier status and blacklist on AT&T network. Instant.",                                      price:4.99, sickwServiceId:"",    apiUrl:"https://sickw.com/api.php", active:true},
   {id:"blacklist_tmobile", label:"T-Mobile USA Status Check",     icon:"🔍", desc:"Check if device is blacklisted on T-Mobile / MetroPCS / Sprint. Instant.",                         price:2.99, sickwServiceId:"16",  apiUrl:"https://sickw.com/api.php", active:true},
@@ -3357,6 +3357,8 @@ function renderAdminPage(){
         <div><label class="lbl">Cost $</label><input class="inp" type="number" id="ns-cost" placeholder="0"/></div>
         <div><label class="lbl">Turnaround</label><input class="inp" id="ns-time" placeholder="24 hrs"/></div>
         <div><label class="lbl">Success %</label><input class="inp" id="ns-rate" placeholder="100%"/></div>
+      <div style="grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--border)"><input type="checkbox" id="ns-active" checked style="accent-color:var(--purpleL);width:16px;height:16px;cursor:pointer"/><span style="font-size:13px;font-weight:600;color:var(--text)">Publish immediately (visible to customers)</span></div>
+      <div style="grid-column:1/-1"><div style="font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600">Supplier / Source</div><input class="inp" id="ns-supplier" placeholder="e.g. iFoneUnlock, SNFusions, sickw" style="width:100%"/></div>
       <div style="grid-column:1/-1;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:10px 0;border-top:1px solid var(--border)">
         <span style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase">⚡ Sickw Auto-Unlock</span>
         <label style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--text);cursor:pointer"><input type="checkbox" id="ns-sickauto" style="accent-color:var(--purpleL)"/> Auto-submit via sickw</label>
@@ -3517,7 +3519,17 @@ function renderAdminServices(search=""){
           <div style="font-size:12px;color:var(--muted)">${s.brand} · ${s.series}</div>
         </div>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Price $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" value="${s.price}" onblur="updateSvcField(${s.id},'price',this.value)"/></div>
+          <div style="margin-bottom:10px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em;font-weight:600">Service Name</div>
+          <input class="inp" style="width:100%;padding:5px 8px;font-size:13px;font-weight:600" placeholder="Service name" value="${sanitize(s.name||s.brand+' '+s.series)}" onblur="updateSvcField(${s.id},'name',this.value)"/>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Carrier</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.carrier)}" onblur="updateSvcField(${s.id},'carrier',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Type</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.stype)}" onblur="updateSvcField(${s.id},'stype',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Brand</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.brand)}" onblur="updateSvcField(${s.id},'brand',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Series</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.series)}" onblur="updateSvcField(${s.id},'series',this.value)"/></div>
+        </div>
+        <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Price $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" value="${s.price}" onblur="updateSvcField(${s.id},'price',this.value)"/></div>
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Was $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" value="${s.orig||""}" onblur="updateSvcField(${s.id},'orig',this.value)"/></div>
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Cost $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" placeholder="0" value="${s.cost||""}" onblur="updateSvcField(${s.id},'cost',this.value)"/></div>
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Time</div><input class="inp" style="width:88px;padding:5px 8px;font-size:12px" value="${s.time}" onblur="updateSvcField(${s.id},'time',this.value)"/></div>
@@ -3800,7 +3812,7 @@ function addService(){
     sickwServiceId:(document.getElementById("ns-sickwid")?.value||"").trim(),
     sickwAutoSubmit:document.getElementById("ns-sickauto")?.checked||false,
     stripeLink:sanitize(document.getElementById("ns-stripelink")?.value||""),
-    hot:false,recent:false,active:true,
+    hot:false,recent:false,active:document.getElementById("ns-active")?.checked!==false,
     apiUrl:"",apiKey:"",apiServiceId:""
   })
   saveServicesToStorage();;
