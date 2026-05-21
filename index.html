@@ -3786,7 +3786,7 @@ function addService(){
   const orig=parseFloat(document.getElementById("ns-orig").value)||null;
   if(!series||!price||isNaN(price)||price<=0){showToast("Fill in Series and Price.");return}
   services.push({
-    id:Date.now();saveServicesToStorage(),
+    id:Date.now(),
     carrier:document.getElementById("ns-carrier").value,
     stype:document.getElementById("ns-stype").value,
     brand:document.getElementById("ns-brand").value,
@@ -3801,7 +3801,8 @@ function addService(){
     stripeLink:sanitize(document.getElementById("ns-stripelink")?.value||""),
     hot:false,recent:false,active:true,
     apiUrl:"",apiKey:"",apiServiceId:""
-  });
+  })
+  saveServicesToStorage();;
   document.getElementById("ns-series").value="";
   document.getElementById("ns-price").value="";
   document.getElementById("ns-orig").value="";
