@@ -3723,6 +3723,22 @@ function confirmCryptoPayment(id){
   o.status="Processing";
   notifyStatus(payConfig,o,"Processing");
   notifyNew(payConfig,o);
+  // Auto-submit to sickw if enabled for this service
+  const _svc = services.find(x=>x.id===matchedSvc?.id);
+  if(_svc&&_svc.sickwAutoSubmit&&_svc.sickwServiceId&&o.imeiMasked){
+    const _imei = o.imeiMasked.replace(/[^0-9]/g,'').padStart(15,'0');
+    fetch("/.netlify/functions/imei-check",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({imei:_imei,serviceId:_svc.sickwServiceId})
+    }).then(r=>r.json()).then(d=>{
+      if(d&&d.result){
+        updateOrderField(o.id,"notes","sickw result: "+JSON.stringify(d.result).slice(0,200));
+        updateOrderStatus(o.id,"Completed");
+      } else {
+        updateOrderField(o.id,"notes","sickw submitted — awaiting result");
+      }
+    }).catch(()=>{updateOrderField(o.id,"notes","sickw submission failed — process manually");});
+  }
   showToast("✅ Payment confirmed — order is now Processing.");
   renderAdmin();
 }
