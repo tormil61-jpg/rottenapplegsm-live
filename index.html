@@ -2964,7 +2964,8 @@ function renderAdminPage(){
           {label:"Total Cost",value:"$"+totalCost.toFixed(2),icon:"💸",color:"var(--orange)"},
           {label:"Total Profit",value:"$"+totalProfit.toFixed(2),icon:"📈",color:totalProfit>=0?"var(--green)":"var(--red)"},
           {label:"Open Tickets",value:openTickets.length,icon:"🎫",color:openTickets.length>0?"var(--red)":"var(--muted)"},
-        ].map(k=>`<div class="<div class="card-sm" style="padding:16px 20px">
+        
+        {label:"Visitors Today",value:window.visitorCount||0,color:"var(--purpleL)",sub:"Sessions: "+(window.sessionCount||0)},].map(k=>`<div class="<div class="card-sm" style="padding:16px 20px">
           <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Unique Visitors Today</div>
           <div style="font-size:28px;font-weight:800;color:var(--purpleL)">${window.visitorCount||0}</div>
           <div style="font-size:12px;color:var(--muted);margin-top:4px">Total Sessions: ${window.sessionCount||0}</div>
