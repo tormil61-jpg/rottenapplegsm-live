@@ -990,7 +990,7 @@ nav{
       <!-- Brand -->
       <div>
         <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px">
-          <div class="logo-box" style="width:30px;height:30px;font-size:14px;border-radius:8px"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 2C9.5 2 8.2 2.8 7.5 4c-.5-.1-1-.1-1.5 0C4.3 4.4 3 6 3 8c0 1 .3 1.9.8 2.6C3.3 11.4 3 12.4 3 13.5 3 16.5 5.5 19 8.5 19c.8 0 1.6-.2 2.2-.5.2-.1.5-.1.6 0 .6.3 1.4.5 2.2.5 3 0 5.5-2.5 5.5-5.5 0-1.1-.3-2.1-.8-2.9.5-.7.8-1.6.8-2.6 0-2-1.3-3.6-3-4-.5-.1-1-.1-1.5 0C12.8 2.8 11.5 2 11 2z" fill="url(#rg)"/><defs><linearGradient id="rg" x1="3" y1="2" x2="19" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FF0000"/><stop offset="20%" stop-color="#FF7F00"/><stop offset="40%" stop-color="#FFFF00"/><stop offset="60%" stop-color="#00CC00"/><stop offset="80%" stop-color="#0000FF"/><stop offset="100%" stop-color="#8B00FF"/></linearGradient></defs></svg></div>
+          <div class="logo-box" style="width:30px;height:30px;font-size:14px;border-radius:8px">🍎</div>
           <span style="font-weight:800;font-size:16px;color:#f0eeff">Rotten Apple GSM</span>
         </div>
         <div style="color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:14px">Permanent carrier unlocks, blacklist removal, and FRP bypass for any device, any carrier, anywhere.</div>
@@ -1207,7 +1207,7 @@ nav{
   <div style="max-width:1100px;margin:0 auto;padding:24px;position:relative;z-index:1">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
       <div style="display:flex;align-items:center;gap:10px">
-        <div class="logo-box" style="width:32px;height:32px"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 2C9.5 2 8.2 2.8 7.5 4c-.5-.1-1-.1-1.5 0C4.3 4.4 3 6 3 8c0 1 .3 1.9.8 2.6C3.3 11.4 3 12.4 3 13.5 3 16.5 5.5 19 8.5 19c.8 0 1.6-.2 2.2-.5.2-.1.5-.1.6 0 .6.3 1.4.5 2.2.5 3 0 5.5-2.5 5.5-5.5 0-1.1-.3-2.1-.8-2.9.5-.7.8-1.6.8-2.6 0-2-1.3-3.6-3-4-.5-.1-1-.1-1.5 0C12.8 2.8 11.5 2 11 2z" fill="url(#rg)"/><defs><linearGradient id="rg" x1="3" y1="2" x2="19" y2="19" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FF0000"/><stop offset="20%" stop-color="#FF7F00"/><stop offset="40%" stop-color="#FFFF00"/><stop offset="60%" stop-color="#00CC00"/><stop offset="80%" stop-color="#0000FF"/><stop offset="100%" stop-color="#8B00FF"/></linearGradient></defs></svg></div>
+        <div class="logo-box" style="width:32px;height:32px">🍎</div>
         <span style="font-weight:800;font-size:18px">Admin Panel</span>
       </div>
       <button class="btn-ghost" onclick="adminAuth=false;renderAdminPage();showPage('home')">← Exit Admin</button>
@@ -1631,7 +1631,7 @@ function renderHome(){
       <span class="badge ${STYPE_CLASS[s.stype]||'stype-unlock'}" style="margin-bottom:8px;display:inline-block">${s.stype}</span>
       <div style="font-weight:700;font-size:14px;margin-bottom:4px">${s.brand} · ${s.series}</div>
       <!-- View description link -->
-      <button onclick="event.stopPropagation();openSvcPopup('${popId}')"
+      <button onclick="event.stopPropagation();openSvcPopup()"
         style="display:inline-flex;align-items:center;gap:4px;margin-bottom:8px;background:none;border:none;color:#60a5fa;font-size:12px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px">🔍 View description</button>
       <div id="desc-pop-${s.id}" style="display:none;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.25);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:13px;color:var(--text);line-height:1.6">${s.description||'No description yet. Add one in Admin → Services.'}</div>
       <div id="\${popId}" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px;font-size:13px;color:var(--text);line-height:1.6">\${s.description||'No description available.'}</div>
@@ -1643,7 +1643,7 @@ function renderHome(){
         <div style="background:var(--surface3);color:var(--muted);font-size:11px;padding:3px 10px;border-radius:100px">${s.time}</div>
       </div>
       <!-- Popup -->
-      <div id="${popId}" style="display:none;position:absolute;bottom:calc(100% + 8px);left:0;right:0;z-index:300;background:var(--surface2);border:1px solid var(--purple);border-radius:12px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,.5)">
+      <div id="desc-pop-${s.id}" style="display:none;position:absolute;bottom:calc(100% + 8px);left:0;right:0;z-index:300;background:var(--surface2);border:1px solid var(--purple);border-radius:12px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,.5)">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px">
           <div style="font-weight:700;font-size:13px;color:#f0eeff">${s.brand} · ${s.series}</div>
           <button onclick="event.stopPropagation();closeSvcPopup('${popId}')"
