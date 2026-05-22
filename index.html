@@ -3532,7 +3532,7 @@ function renderAdminServices(search=""){
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Time</div><input class="inp" style="width:88px;padding:5px 8px;font-size:12px" value="${s.time}" onblur="updateSvcField(${s.id},'time',this.value)"/></div>
           <div style="margin-bottom:10px">
           <div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">Description</div>
-          <textarea class="inp" style="width:100%;font-size:12px;padding:8px;min-height:60px;resize:vertical;font-family:inherit" placeholder="Shown to customers on order page" onblur="updateSvcField(${s.id},'description',this.value)">${sanitize(s.description||"")}</textarea>
+          <textarea class="inp" style="width:100%;font-size:12px;padding:8px;min-height:60px;resize:vertical;font-family:inherit" placeholder="Shown to customers on order page" oninput="updateSvcField(${s.id},'description',this.value)">${sanitize(s.description||"")}</textarea>
         </div>
                 <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
           <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">⚡ Sickw Auto-Unlock</div>
