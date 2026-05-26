@@ -2936,7 +2936,6 @@ function renderAdminPage(){
     ["suppliers","Suppliers"],
     ["services","Services"],
     ["tickets",`Tickets (${tickets.filter(t=>t.status==="Open").length})`],
-    ["reports","Reports"],
     ["payments","Payment Config"],
   ];
   let content="";
@@ -2964,8 +2963,7 @@ function renderAdminPage(){
           {label:"Total Cost",value:"$"+totalCost.toFixed(2),icon:"💸",color:"var(--orange)"},
           {label:"Total Profit",value:"$"+totalProfit.toFixed(2),icon:"📈",color:totalProfit>=0?"var(--green)":"var(--red)"},
           {label:"Open Tickets",value:openTickets.length,icon:"🎫",color:openTickets.length>0?"var(--red)":"var(--muted)"},
-        
-        {label:"Visitors Today",value:window.visitorCount||0,color:"var(--purpleL)",sub:"Sessions: "+(window.sessionCount||0)},].map(k=>`<div class="<div class="card-sm" style="padding:16px 20px">
+        ].map(k=>`<div class="<div class="card-sm" style="padding:16px 20px">
           <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Unique Visitors Today</div>
           <div style="font-size:28px;font-weight:800;color:var(--purpleL)">${window.visitorCount||0}</div>
           <div style="font-size:12px;color:var(--muted);margin-top:4px">Total Sessions: ${window.sessionCount||0}</div>
@@ -3361,6 +3359,7 @@ function renderAdminPage(){
         <span style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase">⚡ Sickw Auto-Unlock</span>
         <label style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--text);cursor:pointer"><input type="checkbox" id="ns-sickauto" style="accent-color:var(--purpleL)"/> Auto-submit via sickw</label>
         <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Sickw Service ID</div><input class="inp" id="ns-sickwid" placeholder="e.g. 14" style="width:110px;padding:6px 10px;font-size:13px;font-family:monospace"/></div>
+      <button class="btn" onclick="addService()" style="margin-top:12px;width:100%;padding:12px;font-size:15px;font-weight:700">+ Add Service to List</button>
       </div>
     </div>`;
   } else if(adminTab==="payments"){
