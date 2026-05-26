@@ -195,29 +195,29 @@ html{scroll-behavior:smooth}
 
 /* ── Design tokens ── */
 :root{
-  --purple:#7c3aed;
-  --purpleL:#9d5ffe;
-  --pink:#d946ef;
-  --accent:#a78bfa;
-  --cyan:#22d3ee;
+  --purple:#1d4ed8;
+  --purpleL:#2563eb;
+  --pink:#3b82f6;
+  --accent:#60a5fa;
+  --cyan:#38bdf8;
   --green:#22c55e;
   --orange:#f97316;
   --red:#ef4444;
-  --surface:rgba(255,255,255,.07);
-  --surface2:rgba(255,255,255,.10);
-  --surface3:rgba(255,255,255,.14);
-  --muted:rgba(240,238,255,.5);
-  --border:rgba(255,255,255,.14);
-  --grad:linear-gradient(135deg,#7c3aed,#9d5ffe,#d946ef);
+  --surface:rgba(255,255,255,.05);
+  --surface2:rgba(255,255,255,.08);
+  --surface3:rgba(255,255,255,.12);
+  --muted:rgba(219,234,254,.5);
+  --border:rgba(255,255,255,.12);
+  --grad:linear-gradient(135deg,#1e3a8a,#1d4ed8,#2563eb);
 }
 
 /* ── Body with visible gradient background ── */
 body{
-  background:#07050f;
+  background:#020817;
   background-image:
-    radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(124,58,237,.55) 0%, transparent 60%),
-    radial-gradient(ellipse 65% 55% at 90% 100%,  rgba(217,70,239,.45) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 50% 45%,  rgba(59,130,246,.25) 0%, transparent 60%);
+    radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(29,78,216,.45) 0%, transparent 60%),
+    radial-gradient(ellipse 65% 55% at 90% 100%,  rgba(30,58,138,.40) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 45%,  rgba(37,99,235,.20) 0%, transparent 60%);
   color:#f0eeff;
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
   min-height:100vh;
@@ -2963,13 +2963,7 @@ function renderAdminPage(){
           {label:"Total Cost",value:"$"+totalCost.toFixed(2),icon:"💸",color:"var(--orange)"},
           {label:"Total Profit",value:"$"+totalProfit.toFixed(2),icon:"📈",color:totalProfit>=0?"var(--green)":"var(--red)"},
           {label:"Open Tickets",value:openTickets.length,icon:"🎫",color:openTickets.length>0?"var(--red)":"var(--muted)"},
-        ].map(k=>`<div class="<div class="card-sm" style="padding:16px 20px">
-          <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Unique Visitors Today</div>
-          <div style="font-size:28px;font-weight:800;color:var(--purpleL)">${window.visitorCount||0}</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:4px">Total Sessions: ${window.sessionCount||0}</div>
-        </div>
-        card-sm" style="text-align:center;padding:16px 12px">
-          <div style="font-size:24px;margin-bottom:6px">${k.icon}</div>
+        ].map(k=>`<div class="<div style="font-size:24px;margin-bottom:6px">${k.icon}</div>
           <div style="font-weight:800;font-size:20px;color:${k.color};margin-bottom:4px">${k.value}</div>
           <div style="font-size:12px;color:var(--muted)">${k.label}</div>
         </div>`).join("")}
@@ -3832,19 +3826,7 @@ function addService(){
 // ═══════════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════════
-// Simple visitor tracking
-(function(){
-  try{
-    let v=parseInt(localStorage.getItem("ra_visitors")||"0");
-    const last=localStorage.getItem("ra_last_visit");
-    const today=new Date().toDateString();
-    if(last!==today){v++;localStorage.setItem("ra_visitors",v);localStorage.setItem("ra_last_visit",today);}
-    window.visitorCount=v;
-    let sv=parseInt(localStorage.getItem("ra_sessions")||"0");
-    sv++;localStorage.setItem("ra_sessions",sv);
-    window.sessionCount=sv;
-  }catch(e){}
-})();
+
 loadServicesFromStorage();
 loadImeiCheckTypes();
 loadOrders();
