@@ -2963,7 +2963,13 @@ function renderAdminPage(){
           {label:"Total Cost",value:"$"+totalCost.toFixed(2),icon:"💸",color:"var(--orange)"},
           {label:"Total Profit",value:"$"+totalProfit.toFixed(2),icon:"📈",color:totalProfit>=0?"var(--green)":"var(--red)"},
           {label:"Open Tickets",value:openTickets.length,icon:"🎫",color:openTickets.length>0?"var(--red)":"var(--muted)"},
-        ].map(k=>`<div class="<div style="font-size:24px;margin-bottom:6px">${k.icon}</div>
+        ].map(k=>`<div class="<div class="card-sm" style="padding:16px 20px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Unique Visitors Today</div>
+          <div style="font-size:28px;font-weight:800;color:var(--purpleL)">${window.visitorCount||0}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">Total Sessions: ${window.sessionCount||0}</div>
+        </div>
+        card-sm" style="text-align:center;padding:16px 12px">
+          <div style="font-size:24px;margin-bottom:6px">${k.icon}</div>
           <div style="font-weight:800;font-size:20px;color:${k.color};margin-bottom:4px">${k.value}</div>
           <div style="font-size:12px;color:var(--muted)">${k.label}</div>
         </div>`).join("")}
@@ -3211,14 +3217,7 @@ function renderAdminPage(){
             </tbody>
           </table>
         </div>
-      
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px">
-      <div class="card-sm" style="padding:16px 20px;min-width:160px">
-        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Visitors Today</div>
-        <div style="font-size:28px;font-weight:800;color:var(--purpleL)">${window.visitorCount||0}</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:4px">Sessions: ${window.sessionCount||0}</div>
       </div>
-    </div></div>
     </div>`;
   } else if(adminTab==="orders"){
     content=allOrders.length===0
