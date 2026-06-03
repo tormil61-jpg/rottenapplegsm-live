@@ -425,6 +425,9 @@ nav{
   .grid-2{grid-template-columns:1fr}
 }
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 14px rgba(34,197,94,0)}}
+
+select{background:var(--surface2)!important;color:#f0eeff!important;border:1px solid var(--border)!important}
+select option{background:#0f172a!important;color:#f0eeff!important}
 </style>
 <body>
 
@@ -1322,7 +1325,7 @@ let suppliers=[
 
 // Support tickets
 let tickets=[]; // starts at #1001 for first order
-let payConfig={backendUrl:"",stripePublicKey:"pk_live_51RAdiy1im1pzQEDTBG0uDRJunjMRS084946lVYkl0i5irM9Fb787d6rH0vMOQ6JKGA6lsI6XizEzU9SO7Y9LJmp000SIAZMg1A",stripePaymentLink_disabled:"",paypalClientId:"AVNQLqpnuHw6iz1WhMle_P_GsQRaAvpE0zHHy82EOlf3tzPiUWbnPuP_CkvXJ_W6Ue4D6OlZSTINacqs",btcAddress:"3H1wo2u43uh7kwfZk3L5JD7pJpTz3JT768",usdtAddress:"0x5CDA5992AB8CFD42C135F12756809AFea7d746F8",sickwKey:"8S6-CWT-SGV-XW7-8NK-ALG-320-HXQ",emailjsPublicKey:"HVDMR09St7qz-fUxV",emailjsServiceId:"service_zfgxbhe",emailjsTemplateNew:"template_8hpp3n8",emailjsTemplateStatus:"template_ts2m4ye"};
+let payConfig={backendUrl:"",stripePublicKey:"pk_live_51RAdiy1im1pzQEDTBG0uDRJunjMRS084946lVYkl0i5irM9Fb787d6rH0vMOQ6JKGA6lsI6XizEzU9SO7Y9LJmp000SIAZMg1A",stripePaymentLink_disabled:"",paypalClientId:"AVNQLqpnuHw6iz1WhMle_P_GsQRaAvpE0zHHy82EOlf3tzPiUWbnPuP_CkvXJ_W6Ue4D6OlZSTINacqs",btcAddress:"3H1wo2u43uh7kwfZk3L5JD7pJpTz3JT768",usdtAddress:"0x5CDA5992AB8CFD42C135F12756809AFea7d746F8",sickwKey:"8S6-CWT-SGV-XW7-8NK-ALG-320-HXQ",githubToken:"",emailjsPublicKey:"HVDMR09St7qz-fUxV",emailjsServiceId:"service_zfgxbhe",emailjsTemplateNew:"template_8hpp3n8",emailjsTemplateStatus:"template_ts2m4ye"};
 
 // Supplier API configs — DhruFusion standard format
 const SUPPLIER_APIS={
@@ -3332,7 +3335,8 @@ function renderAdminPage(){
     const stypes=["Carrier Unlock","Blacklist / Unbarring","FRP Bypass","MDM Remove","Mi Account Remove"];
     const brands=["Apple iPhone","Samsung","Any Device","Xiaomi","Tecno/Infinix"];
     content=`<div style="display:flex;gap:12px;margin-bottom:14px;align-items:center;flex-wrap:wrap">
-      <span style="color:var(--muted);font-size:13px">${services.length} services</span> <button onclick="saveServicesToStorage();showToast('Prices saved ✓');" style="padding:6px 14px;border-radius:8px;border:none;background:var(--purpleL);color:#fff;font-size:12px;font-weight:700;cursor:pointer">💾 Save All Prices</button>
+      <span style="color:var(--muted);font-size:13px">${services.length} services</span>
+        <button onclick="deployToGitHub()" style="padding:6px 14px;border-radius:8px;border:none;background:#1d4ed8;color:#fff;font-size:12px;font-weight:700;cursor:pointer;margin-left:8px">🚀 Deploy Changes</button> <button onclick="saveServicesToStorage();showToast('Prices saved ✓');" style="padding:6px 14px;border-radius:8px;border:none;background:var(--purpleL);color:#fff;font-size:12px;font-weight:700;cursor:pointer">💾 Save All Prices</button>
       <input class="inp" style="width:240px;padding:8px 12px" placeholder="Search…" id="svc-search" oninput="renderAdminServices(this.value)"/>
     </div>
     <div id="admin-svc-list"></div>
@@ -3366,7 +3370,12 @@ function renderAdminPage(){
         <div style="color:var(--muted);font-size:12px;margin-bottom:12px">From developer.paypal.com → My Apps & Credentials → your app. Safe to use in browser — no backend needed.</div>
         <label class="lbl">PayPal Client ID</label>
         <div style="display:flex;gap:8px">
-          <input class="inp" style="flex:1;font-family:monospace;font-size:12px" placeholder="AxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxT"
+          <div class="card-sm" style="margin-bottom:16px">
+          <div style="font-weight:700;font-size:15px;margin-bottom:8px">🚀 GitHub Deploy Token</div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Required to deploy price changes to all devices. Get from github.com/settings/tokens</p>
+          <input class="inp" placeholder="ghp_..." value="${sanitize(payConfig.githubToken||"")}" onblur="payConfig.githubToken=this.value;savePayConfig()" style="font-family:monospace;font-size:12px"/>
+        </div>
+        <input class="inp" style="flex:1;font-family:monospace;font-size:12px" placeholder="AxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxT"
             value="${sanitize(payConfig.paypalClientId||"")}" onchange="payConfig.paypalClientId=this.value"/>
           <button class="btn" style="padding:10px 16px;font-size:13px" onclick="showToast('PayPal Client ID saved.')">Save</button>
         </div>
@@ -3731,6 +3740,24 @@ function adminAdjustBalance(uid,delta,name){updateBalance(uid,delta);showToast("
 }
 function saveAccounts(){try{localStorage.setItem("ra_accounts",JSON.stringify(accounts));}catch(e){}}
 function loadAccounts(){try{var s=localStorage.getItem("ra_accounts");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p)&&p.length){accounts=p;}}catch(e){}}
+function deployToGitHub(){
+  const token = payConfig.githubToken;
+  if(!token){showToast("Add GitHub token in Payment Config first.");return;}
+  showToast("Deploying changes... ~18 seconds");
+  const content = btoa(unescape(encodeURIComponent(document.documentElement.outerHTML)));
+  fetch("https://api.github.com/repos/tormil61-jpg/rottenapplegsm-live/contents/index.html",{
+    headers:{"Authorization":"token "+token,"Accept":"application/vnd.github.v3+json"}
+  }).then(r=>r.json()).then(d=>{
+    return fetch("https://api.github.com/repos/tormil61-jpg/rottenapplegsm-live/contents/index.html",{
+      method:"PUT",
+      headers:{"Authorization":"token "+token,"Content-Type":"application/json","Accept":"application/vnd.github.v3+json"},
+      body:JSON.stringify({message:"admin update",content:content,sha:d.sha})
+    });
+  }).then(r=>r.json()).then(d=>{
+    if(d.content)showToast("Deployed! Live in ~18 seconds.");
+    else showToast("Deploy failed: "+(d.message||"unknown error"));
+  }).catch(e=>showToast("Deploy error: "+e.message));
+}
 function savePayConfig(){try{localStorage.setItem("ra_payconfig",JSON.stringify(payConfig));}catch(e){}}
 function loadPayConfig(){try{var s=localStorage.getItem("ra_payconfig");if(!s)return;var p=JSON.parse(s);if(p&&typeof p==="object")Object.assign(payConfig,p);}catch(e){}}
 function saveOrders(){try{localStorage.setItem("ra_orders",JSON.stringify(orders||[]));}catch(e){}}
