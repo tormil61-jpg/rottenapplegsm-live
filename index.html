@@ -2506,7 +2506,7 @@ function setCheckoutStep_crypto(type){
   document.getElementById("crypto-amount").textContent=amountStr;
   document.getElementById("crypto-label").textContent="equivalent in "+(isUsdt?"USDT":"BTC");
   document.getElementById("crypto-address").textContent=addr||"Address not configured";
-  setTimeout(function(){var qrc=document.getElementById("crypto-qr-container");if(qrc&&addr){var qurl="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data="+encodeURIComponent(addr)+"&bgcolor=ffffff&color=000000&format=png";qrc.innerHTML="<img src='"+qurl+"' width=160 height=160 style='display:block' alt='QR Code' onerror='this.style.display=\"none\"'>";}},200);
+  var _qrAddr=addr;var _qrTry=function(){var qrc=document.getElementById("crypto-qr-container");if(qrc&&_qrAddr){var qurl="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data="+encodeURIComponent(_qrAddr)+"&bgcolor=ffffff&color=000000&format=png";qrc.innerHTML="<img src='"+qurl+"' width=160 height=160 style='display:block;border-radius:8px' alt='QR Code'>";}else if(!qrc){setTimeout(_qrTry,200);}};setTimeout(_qrTry,300);
   // Generate QR code
   const qrContainer = document.getElementById("crypto-qr-container");
   if(qrContainer && addr){
