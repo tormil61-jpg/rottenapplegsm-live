@@ -2509,10 +2509,7 @@ function setCheckoutStep_crypto(type){
   // Generate QR code
   const qrContainer = document.getElementById("crypto-qr-container");
   if(qrContainer && addr){
-    qrContainer.innerHTML = "";
-    if(typeof QRCode !== "undefined"){
-      new QRCode(qrContainer,{text:addr,width:160,height:160,colorDark:"#000",colorLight:"#fff"});
-    }
+    qrContainer.innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data='+encodeURIComponent(addr)+'&bgcolor=ffffff&color=000000&format=png" style="width:160px;height:160px;display:block" alt="QR Code" onerror="this.parentElement.innerHTML='<div style=\"padding:10px;font-size:11px;color:#333;text-align:center\">Scan address above</div>'">';
   }
   const warn=document.getElementById("crypto-network-warn");
   if(warn) warn.textContent=networkShort;
