@@ -259,16 +259,16 @@ nav{
 .btn{
   padding:11px 24px;
   background:linear-gradient(135deg,#1d4ed8,#2563eb,#3b82f6);
-  border:1px solid rgba(157,95,254,.35);
+  border:1px solid rgba(37,99,235,.35);
   border-radius:12px;color:#fff;font-weight:700;font-size:14px;cursor:pointer;
   transition:all .2s;position:relative;overflow:hidden;
-  box-shadow:0 4px 20px rgba(124,58,237,.4), inset 0 1px 0 rgba(255,255,255,.2);
+  box-shadow:0 4px 20px rgba(29,78,216,.4), inset 0 1px 0 rgba(255,255,255,.2);
 }
 .btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 60%);pointer-events:none}
-.btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(124,58,237,.55), inset 0 1px 0 rgba(255,255,255,.25)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(29,78,216,.45), inset 0 1px 0 rgba(255,255,255,.25)}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .btn-ghost{padding:9px 20px;background:rgba(255,255,255,.06);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);border-radius:10px;color:rgba(240,238,255,.7);font-size:13px;cursor:pointer;transition:all .2s}
-.btn-ghost:hover{color:#f0eeff;border-color:rgba(157,95,254,.5);background:rgba(124,58,237,.12)}
+.btn-ghost:hover{color:#f0eeff;border-color:rgba(37,99,235,.5);background:rgba(29,78,216,.12)}
 .btn-sm{padding:7px 14px;font-size:13px}
 
 /* ── Inputs ── */
@@ -283,9 +283,9 @@ nav{
   box-shadow:inset 0 2px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(0,0,0,.2);
 }
 .inp:focus,.sel:focus{
-  border-color:rgba(157,95,254,.7);
-  background:rgba(124,58,237,.12);
-  box-shadow:0 0 0 3px rgba(124,58,237,.25), inset 0 2px 0 rgba(255,255,255,.1);
+  border-color:rgba(37,99,235,.7);
+  background:rgba(29,78,216,.12);
+  box-shadow:0 0 0 3px rgba(29,78,216,.20), inset 0 2px 0 rgba(255,255,255,.1);
 }
 .sel{appearance:none;cursor:pointer}
 .lbl{font-size:12px;color:rgba(240,238,255,.55);font-weight:600;margin-bottom:5px;display:block;letter-spacing:.02em}
@@ -297,7 +297,7 @@ nav{
   -webkit-backdrop-filter:blur(40px) saturate(200%);
   border:1px solid rgba(255,255,255,.22);
   border-radius:24px;padding:32px;
-  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), 0 20px 60px rgba(0,0,0,.55), 0 4px 20px rgba(124,58,237,.18);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), 0 20px 60px rgba(0,0,0,.55), 0 4px 20px rgba(29,78,216,.18);
   position:relative;overflow:hidden;
 }
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);pointer-events:none}
@@ -314,7 +314,7 @@ nav{
 
 /* ── Glow blobs ── */
 .blob{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
-.blob-purple{width:900px;height:900px;background:radial-gradient(circle,rgba(124,58,237,.9),transparent 70%);opacity:.30;top:-300px;left:-300px;animation:blobFloat1 14s ease-in-out infinite}
+.blob-purple{width:900px;height:900px;background:radial-gradient(circle,rgba(29,78,216,.9),transparent 70%);opacity:.30;top:-300px;left:-300px;animation:blobFloat1 14s ease-in-out infinite}
 .blob-pink{width:700px;height:700px;background:radial-gradient(circle,rgba(217,70,239,.9),transparent 70%);opacity:.25;bottom:-200px;right:-200px;animation:blobFloat2 17s ease-in-out infinite}
 .blob-rainbow{width:400px;height:400px;background:conic-gradient(from 0deg,#22c55e,#facc15,#f97316,#ef4444,#a855f7,#3b82f6,#22c55e);opacity:.07;top:40%;left:50%;transform:translate(-50%,-50%);animation:blobSpin 25s linear infinite}
 @keyframes blobFloat1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(50px,40px) scale(1.05)}}
@@ -324,7 +324,7 @@ nav{
 /* ── Badges ── */
 .badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;display:inline-block}
 .badge-hot{background:rgba(249,115,22,.2);color:#fb923c;border:1px solid rgba(249,115,22,.2)}
-.stype-unlock{background:rgba(124,58,237,.2);color:#60a5fa;border:1px solid rgba(124,58,237,.2)}
+.stype-unlock{background:rgba(29,78,216,.2);color:#60a5fa;border:1px solid rgba(29,78,216,.2)}
 .stype-blacklist{background:rgba(239,68,68,.18);color:#f87171;border:1px solid rgba(239,68,68,.18)}
 .stype-frp{background:rgba(34,211,238,.15);color:#67e8f9;border:1px solid rgba(34,211,238,.15)}
 .stype-mi{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.15)}
@@ -332,7 +332,7 @@ nav{
 .status-pending-crypto{background:rgba(59,130,246,.15);color:#60a5fa;animation:pulse 2s ease infinite}
 .status-processing{background:rgba(249,115,22,.15);color:#fb923c}
 .status-submitted{background:rgba(34,211,238,.13);color:#67e8f9}
-.status-progress{background:rgba(124,58,237,.18);color:#60a5fa}
+.status-progress{background:rgba(29,78,216,.18);color:#60a5fa}
 .status-completed{background:rgba(34,197,94,.15);color:#4ade80}
 .status-refunded{background:rgba(251,191,36,.13);color:#fde047}
 .status-cancelled{background:rgba(239,68,68,.13);color:#f87171}
@@ -353,7 +353,7 @@ nav{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 6px 28px rgba(0,0,0,.35);
 }
 .svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent)}
-.svc-card:hover{border-color:rgba(157,95,254,.55);transform:translateY(-7px) scale(1.01);background:rgba(124,58,237,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 24px 64px rgba(124,58,237,.32)}
+.svc-card:hover{border-color:rgba(37,99,235,.55);transform:translateY(-7px) scale(1.01);background:rgba(29,78,216,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 24px 64px rgba(29,78,216,.32)}
 
 /* ── Overlay / Modal ── */
 .overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.65);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 16px 48px}
@@ -365,7 +365,7 @@ nav{
   border:1px solid rgba(255,255,255,.18);
   border-radius:26px;width:100%;max-width:500px;
   margin-top:20px;overflow:hidden;
-  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), 0 40px 100px rgba(0,0,0,.6), 0 0 60px rgba(124,58,237,.2);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), 0 40px 100px rgba(0,0,0,.6), 0 0 60px rgba(29,78,216,.2);
 }
 .modal-header{
   background:rgba(255,255,255,.07);
@@ -377,7 +377,7 @@ nav{
 .close-btn:hover{background:rgba(255,255,255,.16);color:#f0eeff}
 
 /* ── Toast ── */
-#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(124,58,237,.85);backdrop-filter:blur(20px);border:1px solid rgba(157,95,254,.4);color:#fff;padding:11px 26px;border-radius:100px;font-size:14px;font-weight:600;z-index:9999;white-space:nowrap;box-shadow:0 8px 32px rgba(124,58,237,.4);opacity:0;transition:opacity .3s;pointer-events:none}
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(29,78,216,.85);backdrop-filter:blur(20px);border:1px solid rgba(37,99,235,.4);color:#fff;padding:11px 26px;border-radius:100px;font-size:14px;font-weight:600;z-index:9999;white-space:nowrap;box-shadow:0 8px 32px rgba(29,78,216,.4);opacity:0;transition:opacity .3s;pointer-events:none}
 #toast.show{opacity:1}
 
 /* ── WhatsApp FAB ── */
@@ -386,7 +386,7 @@ nav{
 
 /* ── Toggle ── */
 .toggle{width:36px;height:20px;border-radius:100px;border:1px solid rgba(255,255,255,.14);position:relative;cursor:pointer;flex-shrink:0;background:rgba(255,255,255,.08);backdrop-filter:blur(8px);transition:all .2s}
-.toggle.on{background:rgba(124,58,237,.4);border-color:rgba(157,95,254,.5)}
+.toggle.on{background:rgba(29,78,216,.4);border-color:rgba(37,99,235,.5)}
 .toggle .dot{position:absolute;width:14px;height:14px;border-radius:50%;background:rgba(240,238,255,.6);top:2px;left:2px;transition:left .2s,background .2s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
 .toggle.on .dot{left:18px;background:#60a5fa}
 
@@ -394,12 +394,12 @@ nav{
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:14px}
 .tab{padding:8px 16px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);backdrop-filter:blur(10px);color:rgba(240,238,255,.5);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500}
 .tab:hover{background:rgba(255,255,255,.09);color:rgba(240,238,255,.8)}
-.tab.active{background:rgba(124,58,237,.3);border-color:rgba(157,95,254,.4);color:#f0eeff;font-weight:700;box-shadow:0 2px 12px rgba(124,58,237,.3)}
+.tab.active{background:rgba(29,78,216,.3);border-color:rgba(37,99,235,.4);color:#f0eeff;font-weight:700;box-shadow:0 2px 12px rgba(29,78,216,.3)}
 
 /* ── Stat card ── */
 .stat-card{background:rgba(255,255,255,.07);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:20px;transition:all .2s;box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 4px 20px rgba(0,0,0,.3)}
 .stat-card.clickable{cursor:pointer}
-.stat-card.clickable:hover{border-color:rgba(157,95,254,.4);transform:translateY(-3px);box-shadow:0 12px 40px rgba(124,58,237,.2)}
+.stat-card.clickable:hover{border-color:rgba(37,99,235,.4);transform:translateY(-3px);box-shadow:0 12px 40px rgba(29,78,216,.2)}
 
 /* ── Section headers ── */
 .section-label{font-size:11px;color:#60a5fa;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
@@ -407,15 +407,15 @@ nav{
 
 /* ── HIW cards ── */
 .hiw-card{background:rgba(255,255,255,.07);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:28px;transition:all .25s cubic-bezier(.34,1.56,.64,1);text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 4px 24px rgba(0,0,0,.3)}
-.hiw-card:hover{border-color:rgba(157,95,254,.45);transform:translateY(-6px);background:rgba(124,58,237,.1)}
-.hiw-icon{width:52px;height:52px;background:rgba(124,58,237,.2);backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.3);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 16px;box-shadow:0 4px 16px rgba(124,58,237,.3)}
+.hiw-card:hover{border-color:rgba(37,99,235,.45);transform:translateY(-6px);background:rgba(29,78,216,.1)}
+.hiw-icon{width:52px;height:52px;background:rgba(29,78,216,.2);backdrop-filter:blur(10px);border:1px solid rgba(29,78,216,.3);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 16px;box-shadow:0 4px 16px rgba(29,78,216,.3)}
 
 /* ── Error box ── */
 .err-box{background:rgba(239,68,68,.1);backdrop-filter:blur(10px);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:10px 14px;color:#f87171;font-size:13px;margin-bottom:16px}
 
 /* ── Method buttons ── */
 .method-btn{padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);backdrop-filter:blur(12px);cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;width:100%;color:#f0eeff;transition:all .2s;margin-bottom:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
-.method-btn:hover{border-color:rgba(157,95,254,.45);background:rgba(124,58,237,.12);transform:translateX(4px)}
+.method-btn:hover{border-color:rgba(37,99,235,.45);background:rgba(29,78,216,.12);transform:translateX(4px)}
 
 /* ── Responsive ── */
 @media(max-width:600px){
@@ -510,7 +510,7 @@ select option{background:#0f172a!important;color:#f0eeff!important}
         </div>
         <!-- Logged-in user: wallet only -->
         <div id="checkout-user-methods" style="display:none">
-          <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--purpleL)">
+          <div style="background:rgba(29,78,216,.08);border:1px solid rgba(29,78,216,.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--purpleL)">
             💼 Registered accounts pay using account balance only.
           </div>
           <button class="method-btn" onclick="payWallet()">
@@ -569,7 +569,7 @@ select option{background:#0f172a!important;color:#f0eeff!important}
       <!-- Step: crypto -->
       <div id="step-crypto" style="display:none">
         <div id="crypto-title" style="font-weight:700;font-size:16px;margin-bottom:4px"></div>
-        <div id="crypto-network-badge" style="display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(124,58,237,.15);color:var(--purpleL);margin-bottom:16px"></div>
+        <div id="crypto-network-badge" style="display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(29,78,216,.15);color:var(--purpleL);margin-bottom:16px"></div>
 
         <!-- Amount box -->
         <div style="background:var(--surface2);border-radius:12px;padding:18px;margin-bottom:12px;text-align:center">
@@ -579,7 +579,7 @@ select option{background:#0f172a!important;color:#f0eeff!important}
 
           <!-- Address copy box -->
           <div style="font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px">To This Address</div>
-          <div id="crypto-address" onclick="copyCryptoAddr()" style="background:var(--surface3);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:12px;word-break:break-all;border:1.5px dashed var(--border);cursor:pointer;transition:all .2s;margin-bottom:6px" onmouseover="this.style.borderColor='var(--purpleL)';this.style.background='rgba(124,58,237,.08)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface3)'"></div>
+          <div id="crypto-address" onclick="copyCryptoAddr()" style="background:var(--surface3);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:12px;word-break:break-all;border:1.5px dashed var(--border);cursor:pointer;transition:all .2s;margin-bottom:6px" onmouseover="this.style.borderColor='var(--purpleL)';this.style.background='rgba(29,78,216,.08)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface3)'"></div>
           <div style="display:flex;flex-direction:column;align-items:center;margin-top:14px">
             <div id="crypto-qr-container" style="background:#fff;padding:10px;border-radius:12px;display:inline-block"></div>
             <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:8px">Scan with your crypto wallet</div>
@@ -634,11 +634,11 @@ select option{background:#0f172a!important;color:#f0eeff!important}
           <div style="font-weight:700;font-size:13px;color:#f0eeff;margin-bottom:12px">What happens next</div>
           <div style="display:flex;flex-direction:column;gap:10px">
             <div style="display:flex;align-items:flex-start;gap:10px">
-              <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,58,237,.2);color:var(--purpleL);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+              <div style="width:24px;height:24px;border-radius:50%;background:rgba(29,78,216,.2);color:var(--purpleL);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
               <div style="font-size:13px;color:var(--muted)">We receive your order and submit it to our supplier within minutes.</div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:10px">
-              <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,58,237,.2);color:var(--purpleL);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+              <div style="width:24px;height:24px;border-radius:50%;background:rgba(29,78,216,.2);color:var(--purpleL);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
               <div style="font-size:13px;color:var(--muted)">You will receive an email update when your unlock is complete — usually within 24–72 hours.</div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:10px">
@@ -653,7 +653,7 @@ select option{background:#0f172a!important;color:#f0eeff!important}
           <button id="view-orders-btn" onclick="closeCheckout();showPage('account');setAccountTab('orders')" class="btn" style="width:100%;padding:13px;display:none">📦 View My Orders</button>
 
           <!-- Guest: create account prompt -->
-          <div id="done-create-account" style="display:none;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.25);border-radius:12px;padding:16px;text-align:left">
+          <div id="done-create-account" style="display:none;background:rgba(29,78,216,.08);border:1px solid rgba(29,78,216,.20);border-radius:12px;padding:16px;text-align:left">
             <div style="font-weight:700;font-size:14px;margin-bottom:6px;color:#f0eeff">📋 Track your order anytime</div>
             <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Create a free account to view your order status, save your history, and use balance for faster checkout next time.</div>
             <button class="btn" onclick="closeCheckout();showPage('auth')" style="width:100%;padding:11px">Create Free Account →</button>
@@ -744,7 +744,7 @@ select option{background:#0f172a!important;color:#f0eeff!important}
         <button class="btn btn-sm" onclick="scrollToSection('selector')">Get Unlock</button>
       </div>
       <div id="nav-user" style="display:none;align-items:center;gap:8px">
-        <button onclick="openDeposit()" style="background:rgba(124,58,237,.15);border:1px solid var(--border);color:var(--purpleL);padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600">💼 <span id="nav-balance">$0.00</span></button>
+        <button onclick="openDeposit()" style="background:rgba(29,78,216,.15);border:1px solid var(--border);color:var(--purpleL);padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600">💼 <span id="nav-balance">$0.00</span></button>
         <button class="btn btn-sm" onclick="showPage('account')">My Account</button>
       </div>
     </div>
@@ -752,7 +752,7 @@ select option{background:#0f172a!important;color:#f0eeff!important}
 
   <!-- Hero -->
   <div style="position:relative;z-index:1;text-align:center;padding:76px 24px 52px;display:flex;flex-direction:column;align-items:center">
-    <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(124,58,237,.13);border:1px solid var(--border);border-radius:100px;padding:5px 16px;font-size:12px;color:var(--accent);margin-bottom:22px">
+    <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(29,78,216,.13);border:1px solid var(--border);border-radius:100px;padding:5px 16px;font-size:12px;color:var(--accent);margin-bottom:22px">
       <span style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block"></span> Live &amp; Processing Orders 24/7
     </div>
     <h1 style="font-size:clamp(2rem,5vw,3.6rem);font-weight:800;line-height:1.1;max-width:720px;margin-bottom:16px">
@@ -771,7 +771,7 @@ select option{background:#0f172a!important;color:#f0eeff!important}
         <button class="btn" style="padding:12px 28px;font-size:15px" onclick="scrollToSection('selector')">Place New Order</button>
         <button style="padding:12px 28px;background:transparent;border:1px solid var(--border);border-radius:10px;color:#f0eeff;cursor:pointer;font-weight:600;font-size:15px" onclick="showPage('account')">My Orders</button>
       </div>
-      <div style="display:inline-flex;align-items:center;gap:12px;background:rgba(124,58,237,.1);border:1px solid var(--border);border-radius:12px;padding:12px 24px">
+      <div style="display:inline-flex;align-items:center;gap:12px;background:rgba(29,78,216,.1);border:1px solid var(--border);border-radius:12px;padding:12px 24px">
         <span style="font-size:20px">💼</span>
         <span style="color:var(--muted);font-size:14px">Balance:</span>
         <span id="hero-balance" style="font-weight:800;font-size:20px;color:var(--purpleL)">$0.00</span>
@@ -877,7 +877,7 @@ select option{background:#0f172a!important;color:#f0eeff!important}
             <label class="lbl">Your Name (optional)</label>
             <input class="inp" id="order-name" placeholder="Full name" maxlength="80"/>
           </div>
-          <div style="background:rgba(124,58,237,.08);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px">
+          <div style="background:rgba(29,78,216,.08);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px">
             <span style="font-size:16px">💼</span>
             <div style="flex:1">
               <span style="font-size:13px;color:var(--muted)">Sign in to pay with balance and track orders. </span>
@@ -1189,7 +1189,7 @@ select option{background:#0f172a!important;color:#f0eeff!important}
       <span class="brand-name">Rotten Apple GSM</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div style="background:rgba(124,58,237,.15);border:1px solid var(--border);border-radius:10px;padding:7px 14px;font-size:13px">
+      <div style="background:rgba(29,78,216,.15);border:1px solid var(--border);border-radius:10px;padding:7px 14px;font-size:13px">
         <span style="color:var(--muted)">Balance: </span><span id="acc-nav-balance" style="color:var(--purpleL);font-weight:700">$0.00</span>
       </div>
       <button class="btn-ghost btn-sm" onclick="showPage('home')">Home</button>
@@ -2473,7 +2473,7 @@ function toggleCryptoCheck(){
   const btn=document.getElementById("crypto-submit-btn");
   if(cryptoChecked){
     box.textContent="✓";box.style.background="var(--purpleL)";box.style.borderColor="var(--purpleL)";box.style.color="#fff";
-    label.style.borderColor="var(--purpleL)";label.style.background="rgba(124,58,237,.08)";
+    label.style.borderColor="var(--purpleL)";label.style.background="rgba(29,78,216,.08)";
     btn.disabled=false;btn.style.background="var(--purpleL)";btn.style.color="#fff";btn.style.cursor="pointer";
     btn.textContent="✅ Submit Order — Pending Verification";
   } else {
@@ -2506,6 +2506,8 @@ function setCheckoutStep_crypto(type){
   document.getElementById("crypto-amount").textContent=amountStr;
   document.getElementById("crypto-label").textContent="equivalent in "+(isUsdt?"USDT":"BTC");
   document.getElementById("crypto-address").textContent=addr||"Address not configured";
+  var qrc=document.getElementById("crypto-qr-container");
+  if(qrc&&addr){var qurl="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data="+encodeURIComponent(addr)+"&bgcolor=ffffff&color=000000&format=png";qrc.innerHTML="<img src='"+qurl+"' width=160 height=160 style='display:block' alt='QR'>";}
   // Generate QR code
   const qrContainer = document.getElementById("crypto-qr-container");
   if(qrContainer && addr){
@@ -2561,7 +2563,7 @@ function openDeposit(){
 function closeDeposit(){document.getElementById("deposit-overlay").classList.remove("open")}
 function renderDepositQuickBtns(){
   document.getElementById("deposit-quick-btns").innerHTML=DEP_AMOUNTS.map(a=>`
-    <button onclick="setDepositAmt(${a})" id="dep-btn-${a}" style="flex:1 1 60px;padding:10px 4px;border-radius:10px;border:1.5px solid ${depositAmt===a&&!depositCustom?"var(--purple)":"var(--border)"};background:${depositAmt===a&&!depositCustom?"rgba(124,58,237,.2)":"var(--surface2)"};color:${depositAmt===a&&!depositCustom?"var(--purpleL)":"var(--muted)"};font-weight:700;font-size:14px;cursor:pointer">$${a}</button>`).join("")
+    <button onclick="setDepositAmt(${a})" id="dep-btn-${a}" style="flex:1 1 60px;padding:10px 4px;border-radius:10px;border:1.5px solid ${depositAmt===a&&!depositCustom?"var(--purple)":"var(--border)"};background:${depositAmt===a&&!depositCustom?"rgba(29,78,216,.2)":"var(--surface2)"};color:${depositAmt===a&&!depositCustom?"var(--purpleL)":"var(--muted)"};font-weight:700;font-size:14px;cursor:pointer">$${a}</button>`).join("")
 }
 function setDepositAmt(a){depositAmt=a;depositCustom="";document.getElementById("deposit-custom").value="";document.getElementById("deposit-over-limit").style.display="none";renderDepositQuickBtns();updateDepositDisplay()}
 function depositCustomChange(v){depositCustom=v;depositAmt=0;renderDepositQuickBtns();const over=parseFloat(v)>MAX_DEP;document.getElementById("deposit-over-limit").style.display=over?"block":"none";updateDepositDisplay()}
@@ -2780,7 +2782,7 @@ function renderAccountPage(){
               <div style="font-size:12px;color:var(--muted);margin-bottom:10px">${t.date}</div>
               <div style="background:var(--surface2);border-radius:8px;padding:12px;font-size:13px;color:#f0eeff;line-height:1.6">${sanitize(t.message)}</div>
               ${t.reply?`
-              <div style="margin-top:10px;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:8px;padding:12px">
+              <div style="margin-top:10px;background:rgba(29,78,216,.08);border:1px solid rgba(29,78,216,.2);border-radius:8px;padding:12px">
                 <div style="font-size:11px;font-weight:700;color:var(--purpleL);margin-bottom:4px">Rotten Apple GSM replied:</div>
                 <div style="font-size:13px;color:#f0eeff;line-height:1.6">${sanitize(t.reply)}</div>
               </div>`:""}
@@ -3115,7 +3117,7 @@ function renderAdminPage(){
           </div>
         </div>
         <div style="background:var(--surface2);border-radius:8px;padding:12px;font-size:13px;color:#f0eeff;line-height:1.6;margin-bottom:12px">${sanitize(t.message)}</div>
-        ${t.reply?`<div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:8px;padding:12px;font-size:13px;color:var(--purpleL);line-height:1.6;margin-bottom:10px"><span style="font-weight:700">Your Reply:</span> ${sanitize(t.reply)}</div>`:""}
+        ${t.reply?`<div style="background:rgba(29,78,216,.08);border:1px solid rgba(29,78,216,.2);border-radius:8px;padding:12px;font-size:13px;color:var(--purpleL);line-height:1.6;margin-bottom:10px"><span style="font-weight:700">Your Reply:</span> ${sanitize(t.reply)}</div>`:""}
         <div style="display:flex;gap:8px">
           <input class="inp" style="flex:1;font-size:13px;padding:8px 12px" placeholder="Type a reply…" id="ticket-reply-${i}"/>
           <button class="btn" style="padding:8px 16px;font-size:13px" onclick="replyTicket(${i})">Reply</button>
@@ -3444,7 +3446,7 @@ function renderAdminPage(){
           <button class="btn" style="padding:7px 14px;font-size:12px" onclick="addImeiCheckType()">+ Add Check Type</button>
         </div>
         <div style="color:var(--muted);font-size:12px;margin-bottom:16px">Each check type is a paid service. Set the name, price, sickw API details, and toggle active. Find service IDs at sickw.com → Services.</div>
-        <div style="color:var(--muted);font-size:12px;margin-bottom:14px;padding:10px 12px;background:rgba(124,58,237,.07);border-radius:8px;border-left:3px solid var(--purple)">
+        <div style="color:var(--muted);font-size:12px;margin-bottom:14px;padding:10px 12px;background:rgba(29,78,216,.07);border-radius:8px;border-left:3px solid var(--purple)">
           sickw.com API Key: <input class="inp" style="display:inline;width:260px;font-family:monospace;font-size:12px;padding:5px 10px;margin-left:8px"
             placeholder="31-character key" value="${sanitize(payConfig.sickwKey||"")}" onchange="payConfig.sickwKey=this.value"/>
           <button class="btn" style="padding:6px 12px;font-size:12px;margin-left:6px" onclick="showToast('sickw API key saved.')">Save</button>
