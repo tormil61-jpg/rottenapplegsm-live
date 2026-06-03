@@ -580,12 +580,10 @@ select option{background:#0f172a!important;color:#f0eeff!important}
           <!-- Address copy box -->
           <div style="font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px">To This Address</div>
           <div id="crypto-address" onclick="copyCryptoAddr()" style="background:var(--surface3);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:12px;word-break:break-all;border:1.5px dashed var(--border);cursor:pointer;transition:all .2s;margin-bottom:6px" onmouseover="this.style.borderColor='var(--purpleL)';this.style.background='rgba(124,58,237,.08)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface3)'"></div>
-          <div style="display:flex;justify-content:center;margin-top:14px">
-            <div style="background:#fff;padding:10px;border-radius:12px;display:inline-block">
-              <img id="crypto-qr" src="" alt="QR Code" style="width:160px;height:160px;display:block"/>
-            </div>
+          <div style="display:flex;flex-direction:column;align-items:center;margin-top:14px">
+            <div id="crypto-qr-container" style="background:#fff;padding:10px;border-radius:12px;display:inline-block"></div>
+            <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:8px">Scan with your crypto wallet</div>
           </div>
-          <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:8px">Scan with your crypto wallet</div>
           <div style="font-size:11px;color:var(--muted)">👆 Tap address to copy</div>
         </div>
 
@@ -2509,8 +2507,13 @@ function setCheckoutStep_crypto(type){
   document.getElementById("crypto-label").textContent="equivalent in "+(isUsdt?"USDT":"BTC");
   document.getElementById("crypto-address").textContent=addr||"Address not configured";
   // Generate QR code
-  const qrEl = document.getElementById("crypto-qr");
-  if(qrEl && addr) qrEl.src = "https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=" + encodeURIComponent(addr) + "&choe=UTF-8";
+  const qrContainer = document.getElementById("crypto-qr-container");
+  if(qrContainer && addr){
+    qrContainer.innerHTML = "";
+    if(typeof QRCode !== "undefined"){
+      new QRCode(qrContainer,{text:addr,width:160,height:160,colorDark:"#000",colorLight:"#fff"});
+    }
+  }
   const warn=document.getElementById("crypto-network-warn");
   if(warn) warn.textContent=networkShort;
   const step=document.getElementById("crypto-step-amount");
