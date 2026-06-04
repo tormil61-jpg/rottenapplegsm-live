@@ -5690,21 +5690,36 @@ function adminAdjustBalance(uid,delta,name){updateBalance(uid,delta);showToast("
 function saveAccounts(){try{localStorage.setItem("ra_accounts",JSON.stringify(accounts));}catch(e){}}
 function loadAccounts(){try{var s=localStorage.getItem("ra_accounts");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p)&&p.length){accounts=p;}}catch(e){}}
 function deployToGitHub(){
-  const token = payConfig.githubToken;
+  const token=payConfig.githubToken;
   if(!token){showToast("Add GitHub token in Payment Config first.");return;}
-  showToast("Deploying changes... ~18 seconds");
-  const content = btoa(unescape(encodeURIComponent(document.documentElement.outerHTML)));
+  showToast("Saving to all devices... ~18 seconds");
+  // Get the stored services and build update payload
+  const svcData=JSON.stringify(services);
+  const imeiData=JSON.stringify(imeiCheckTypes);
+  // Fetch current file from GitHub
   fetch("https://api.github.com/repos/tormil61-jpg/rottenapplegsm-live/contents/index.html",{
     headers:{"Authorization":"token "+token,"Accept":"application/vnd.github.v3+json"}
   }).then(r=>r.json()).then(d=>{
+    if(!d.content){showToast("Deploy failed: "+( d.message||"check token"));return;}
+    // Decode current file
+    let src=decodeURIComponent(escape(atob(d.content.replace(/
+/g,""))));
+    // Update services array in source
+    const svcMatch=src.match(/^let services=\[[\s\S]*?\];/m);
+    if(svcMatch) src=src.replace(svcMatch[0],"let services="+svcData+";");
+    // Update imeiCheckTypes in source
+    const imeiMatch=src.match(/^let imeiCheckTypes=\[[\s\S]*?\];/m);
+    if(imeiMatch) src=src.replace(imeiMatch[0],"let imeiCheckTypes="+imeiData+";");
+    // Push updated file
+    const encoded=btoa(unescape(encodeURIComponent(src)));
     return fetch("https://api.github.com/repos/tormil61-jpg/rottenapplegsm-live/contents/index.html",{
       method:"PUT",
       headers:{"Authorization":"token "+token,"Content-Type":"application/json","Accept":"application/vnd.github.v3+json"},
-      body:JSON.stringify({message:"admin update",content:content,sha:d.sha})
+      body:JSON.stringify({message:"price update",content:encoded,sha:d.sha})
     });
-  }).then(r=>r.json()).then(d=>{
-    if(d.content)showToast("Deployed! Live in ~18 seconds.");
-    else showToast("Deploy failed: "+(d.message||"unknown error"));
+  }).then(r=>r&&r.json()).then(d=>{
+    if(d&&d.content)showToast("Saved! Live on all devices in ~18 seconds.");
+    else if(d)showToast("Deploy failed: "+(d.message||"unknown"));
   }).catch(e=>showToast("Deploy error: "+e.message));
 }
 function savePayConfig(){try{localStorage.setItem("ra_payconfig",JSON.stringify(payConfig));}catch(e){}}
