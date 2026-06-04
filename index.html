@@ -3818,9 +3818,7 @@ function updateOrderField(id,field,val){const o=allOrders.find(x=>x.id===id);if(
 }
 function saveImeiCheckTypes(){try{localStorage.setItem("ra_imei_checks",JSON.stringify(imeiCheckTypes));}catch(e){}}
 function loadImeiCheckTypes(){try{var s=localStorage.getItem("ra_imei_checks");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p))p.forEach(function(sv){var x=imeiCheckTypes.find(function(t){return t.id===sv.id});if(x&&sv.price!==undefined)x.price=sv.price;});}catch(e){}}
-function saveServicesToStorage(){try{localStorage.setItem("ra_services",JSON.stringify(services));}catch(e){
-  autoDeployToGitHub();
-}
+function saveServicesToStorage(){try{localStorage.setItem("ra_services",JSON.stringify(services));}catch(e){}}
 function loadServicesFromStorage(){try{var s=localStorage.getItem("ra_services");if(!s)return;var p=JSON.parse(s);if(!Array.isArray(p)||!p.length)return;p.forEach(function(sv){var x=services.find(function(sc){return sc.id===sv.id});if(!x){services.push(sv);return;}if(sv.price!==undefined)x.price=parseFloat(sv.price)||x.price;if(sv.orig!==undefined)x.orig=parseFloat(sv.orig)||0;if(sv.cost!==undefined)x.cost=parseFloat(sv.cost)||0;if(sv.time!==undefined)x.time=sv.time;if(sv.active!==undefined)x.active=!!sv.active;if(sv.hot!==undefined)x.hot=!!sv.hot;if(sv.recent!==undefined)x.recent=!!sv.recent;if(sv.description!==undefined)x.description=sv.description;if(sv.supplier!==undefined)x.supplier=sv.supplier;if(sv.name!==undefined)x.name=sv.name;if(sv.carrier!==undefined)x.carrier=sv.carrier;if(sv.stype!==undefined)x.stype=sv.stype;if(sv.brand!==undefined)x.brand=sv.brand;if(sv.series!==undefined)x.series=sv.series;if(sv.sickwServiceId!==undefined)x.sickwServiceId=sv.sickwServiceId;if(sv.sickwAutoSubmit!==undefined)x.sickwAutoSubmit=!!sv.sickwAutoSubmit;});}catch(e){}}
 function updateSvcField(id,field,val){
   const s=services.find(x=>x.id===id);if(!s)return;
