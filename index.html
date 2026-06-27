@@ -3836,6 +3836,8 @@ function addService(){
 // INIT
 // ═══════════════════════════════════════════════════════════════════
 
+localStorage.removeItem("ra_services");
+localStorage.removeItem("ra_imei_checks");
 loadServicesFromStorage();
 loadImeiCheckTypes();
 loadOrders();
