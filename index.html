@@ -3753,8 +3753,6 @@ function updateOrderStatus(id,status){
   if(status==="Refunded"&&o.paymentMethod==="wallet"&&o.accountId){
     updateBalance(o.accountId,o.amount);showToast("Refund issued and balance credited.");
   } else {showToast("Status updated.")}
-
-  updateOrderInSupabase(id,{status:status,updated_at:new Date().toISOString()});
 }
 function confirmCryptoPayment(id){
   const o=allOrders.find(x=>x.id===id);
@@ -3840,103 +3838,6 @@ function addService(){
 
 localStorage.removeItem("ra_services");
 localStorage.removeItem("ra_imei_checks");
-// ═══════════════════════════════════════════════════════════════════
-// SUPABASE INTEGRATION
-// ═══════════════════════════════════════════════════════════════════
-const SUPA_URL = 'https://fkiajefrdcgiobrzftjx.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk';
-
-async function supaFetch(table, method='GET', body=null, filter='') {
-  const url = SUPA_URL+'/rest/v1/'+table+(filter?'?'+filter:'');
-  const opts = {
-    method,
-    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'}
-  };
-  if(body) opts.body = JSON.stringify(body);
-  const r = await fetch(url, opts);
-  if(method==='GET') return r.json();
-  return r.ok;
-}
-
-// Save order to Supabase
-async function saveOrderToSupabase(o) {
-  try {
-    await supaFetch('orders','POST',{
-      id:o.id, order_number:o.orderNumber, customer_name:o.name,
-      email:o.email, description:o.desc, imei:o.imei,
-      amount:o.amount, cost:o.cost||0, payment_method:o.paymentMethod,
-      status:o.status||'Pending Verification', placed:o.placed,
-      account_id:o.accountId||null
-    });
-  } catch(e) { console.log('Supabase order save error:', e); }
-}
-
-// Update order status in Supabase
-async function updateOrderInSupabase(id, updates) {
-  try {
-    await supaFetch('orders','PATCH',updates,'id=eq.'+id);
-  } catch(e) { console.log('Supabase update error:', e); }
-}
-
-// Load orders from Supabase
-async function loadOrdersFromSupabase() {
-  try {
-    const data = await supaFetch('orders','GET',null,'order=created_at.desc');
-    if(data && data.length) {
-      allOrders = data.map(o=>({
-        id:o.id, orderNumber:o.order_number, name:o.customer_name,
-        email:o.email, desc:o.description, imei:o.imei,
-        amount:parseFloat(o.amount)||0, cost:parseFloat(o.cost)||0,
-        paymentMethod:o.payment_method, status:o.status,
-        placed:o.placed, completed:o.completed,
-        accountId:o.account_id, supplierOrderId:o.supplier_order_id,
-        notes:o.notes||''
-      })));
-      saveOrders();
-    }
-  } catch(e) { console.log('Supabase load orders error:', e); }
-}
-
-// Save account to Supabase
-async function saveAccountToSupabase(acc) {
-  try {
-    await supaFetch('accounts','POST',{
-      id:acc.id, name:acc.name, email:acc.email,
-      password_hash:acc.passwordHash, balance:acc.balance||0
-    });
-  } catch(e) { console.log('Supabase account save error:', e); }
-}
-
-// Update account in Supabase
-async function updateAccountInSupabase(id, updates) {
-  try {
-    await supaFetch('accounts','PATCH',updates,'id=eq.'+id);
-  } catch(e) { console.log('Supabase account update error:', e); }
-}
-
-// Load accounts from Supabase  
-async function loadAccountsFromSupabase() {
-  try {
-    const data = await supaFetch('accounts','GET',null,'');
-    if(data && data.length) {
-      accounts = data.map(a=>({
-        id:a.id, name:a.name, email:a.email,
-        passwordHash:a.password_hash, balance:parseFloat(a.balance)||0,
-        created:a.created_at
-      })));
-      saveAccounts();
-    }
-  } catch(e) { console.log('Supabase load accounts error:', e); }
-}
-
-// Init Supabase on load
-(async function initSupabase() {
-  try {
-    await Promise.all([loadOrdersFromSupabase(), loadAccountsFromSupabase()]);
-    console.log('Supabase data loaded');
-  } catch(e) { console.log('Supabase init error:', e); }
-})();
-
 loadServicesFromStorage();
 loadImeiCheckTypes();
 loadOrders();
