@@ -1224,6 +1224,15 @@ select option{background:#0f172a!important;color:#f0eeff!important}
 </div>
 
 <script>
+// Supabase Integration
+const SUPA_URL='https://fkiajefrdcgiobrzftjx.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk';
+async function supaGet(table,filter){const r=await fetch(SUPA_URL+'/rest/v1/'+table+(filter?'?'+filter:''),{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});return r.json();}
+async function supaPost(table,data){const r=await fetch(SUPA_URL+'/rest/v1/'+table,{method:'POST',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(data)});return r.ok;}
+async function supaPatch(table,data,filter){const r=await fetch(SUPA_URL+'/rest/v1/'+table+'?'+filter,{method:'PATCH',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(data)});return r.ok;}
+window.SUPABASE_READY=true;
+</script>
+<script>
 // ═══════════════════════════════════════════════════════════════════
 // SECURITY HELPERS
 // ═══════════════════════════════════════════════════════════════════
@@ -2227,6 +2236,9 @@ function recordOrder(method, initialStatus){
   setCheckoutStep("done");
 }
 // ── Stripe Checkout (redirect — no backend needed) ────────────────────────────
+  // Save to Supabase
+  if(window.SUPABASE_READY){supaPost('orders',{id:o.id,order_number:o.orderNumber,customer_name:o.name,email:o.email,description:o.desc,imei:o.imeiMasked||o.imei,amount:o.amount,cost:o.cost||0,payment_method:o.paymentMethod,status:o.status||'Pending Verification',placed:o.placed,account_id:o.accountId||null});}
+}
 function launchStripeCheckout(){
   const pk=payConfig.stripePublicKey;
   const errEl=document.getElementById("stripe-error");
@@ -3753,6 +3765,8 @@ function updateOrderStatus(id,status){
   if(status==="Refunded"&&o.paymentMethod==="wallet"&&o.accountId){
     updateBalance(o.accountId,o.amount);showToast("Refund issued and balance credited.");
   } else {showToast("Status updated.")}
+
+  if(window.SUPABASE_READY){supaPatch('orders',{status:status,updated_at:new Date().toISOString()},'id=eq.'+id);}
 }
 function confirmCryptoPayment(id){
   const o=allOrders.find(x=>x.id===id);
