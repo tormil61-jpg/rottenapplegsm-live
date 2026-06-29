@@ -3843,7 +3843,13 @@ window.saveServicesToStorage=function(){_ogSave();syncServicesToSupabase();};
 
 // Override recordOrder to save to Supabase
 const _ogRecord=window.recordOrder;
-window.recordOrder=function(o){_ogRecord(o);supaPost('orders',{id:o.id,order_number:o.orderNumber,customer_name:o.name,email:o.email,description:o.desc,imei:o.imeiMasked||o.imei||'',amount:o.amount,cost:o.cost||0,payment_method:o.paymentMethod,status:o.status||'Pending Verification',placed:o.placed,account_id:o.accountId||null});};
+window.recordOrder=function(o){
+  // Push to local allOrders array immediately
+  allOrders.unshift(o);
+  saveOrders();
+  // Save to Supabase
+  supaPost('orders',{id:o.id,order_number:o.orderNumber,customer_name:o.name,email:o.email,description:o.desc,imei:o.imeiMasked||o.imei||'',amount:o.amount,cost:o.cost||0,payment_method:o.paymentMethod,status:o.status||'Pending Verification',placed:o.placed,account_id:o.accountId||null});
+};
 
 // Override updateOrderStatus to sync to Supabase
 const _ogStatus=window.updateOrderStatus;
@@ -3897,7 +3903,7 @@ window.saveServicesToStorage=function(){_origSaveSvc();syncServicesToSupabase();
 
 // Hook recordOrder
 const _origRecordOrder=recordOrder;
-window.recordOrder=function(o){_origRecordOrder(o);supaPost('orders',{id:o.id,order_number:o.orderNumber,customer_name:o.name,email:o.email,description:o.desc,imei:o.imeiMasked||o.imei||'',amount:o.amount,cost:o.cost||0,payment_method:o.paymentMethod,status:o.status||'Pending Verification',placed:o.placed,account_id:o.accountId||null});};
+
 
 // Hook updateOrderStatus
 const _origUpdateStatus=updateOrderStatus;
