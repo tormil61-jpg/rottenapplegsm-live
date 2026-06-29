@@ -3849,36 +3849,51 @@ renderHome();
 <script>
 const SUPA_URL='https://fkiajefrdcgiobrzftjx.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk';
-async function supaGet(t,f){const r=await fetch(SUPA_URL+'/rest/v1/'+t+(f?'?'+f:''),{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});return r.json();}
-async function supaPost(t,d){return(await fetch(SUPA_URL+'/rest/v1/'+t,{method:'POST',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(d)})).ok;}
-async function supaPatch(t,d,f){return(await fetch(SUPA_URL+'/rest/v1/'+t+'?'+f,{method:'PATCH',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(d)})).ok;}
+const SH={'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
+async function supaGet(t,f){try{const r=await fetch(SUPA_URL+'/rest/v1/'+t+(f?'?'+f:''),{headers:SH});return await r.json();}catch(e){return[];}}
+async function supaPost(t,d){try{const r=await fetch(SUPA_URL+'/rest/v1/'+t,{method:'POST',headers:{...SH,'Prefer':'return=minimal'},body:JSON.stringify(d)});return r.ok;}catch(e){return false;}}
+async function supaPatch(t,d,f){try{const r=await fetch(SUPA_URL+'/rest/v1/'+t+'?'+f,{method:'PATCH',headers:{...SH,'Prefer':'return=minimal'},body:JSON.stringify(d)});return r.ok;}catch(e){return false;}}
+async function supaUpsert(t,d){try{const r=await fetch(SUPA_URL+'/rest/v1/'+t,{method:'POST',headers:{...SH,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(d)});return r.ok;}catch(e){return false;}}
 
-// Hook recordOrder to save to Supabase
-const _origRecordOrder=recordOrder;
-window.recordOrder=function(o){
-  _origRecordOrder(o);
-  supaPost('orders',{id:o.id,order_number:o.orderNumber,customer_name:o.name,email:o.email,description:o.desc,imei:o.imeiMasked||o.imei||'',amount:o.amount,cost:o.cost||0,payment_method:o.paymentMethod,status:o.status||'Pending Verification',placed:o.placed,account_id:o.accountId||null});
-};
+// Sync all services to Supabase
+async function syncServicesToSupabase(){
+  const rows=services.map(s=>({id:s.id,carrier:s.carrier||'',stype:s.stype||'',brand:s.brand||'',series:s.series||'',price:s.price||0,orig:s.orig||0,cost:s.cost||0,time:s.time||'24 hrs',rate:s.rate||'100%',notes:s.notes||'',description:s.description||'',supplier:s.supplier||'',hot:!!s.hot,recent:!!s.recent,active:s.active!==false,sickw_service_id:s.sickwServiceId||'',sickw_auto_submit:!!s.sickwAutoSubmit}));
+  const ok=await supaUpsert('services',rows);
+  if(ok)showToast('Saved to all devices!');
+}
 
-// Hook updateOrderStatus to sync to Supabase
-const _origUpdateStatus=updateOrderStatus;
-window.updateOrderStatus=function(id,status){
-  _origUpdateStatus(id,status);
-  supaPatch('orders',{status:status,updated_at:new Date().toISOString()},'id=eq.'+id);
-};
+// Load services from Supabase
+async function loadServicesFromSupabase(){
+  const data=await supaGet('services','order=id.asc');
+  if(!data||!data.length)return;
+  data.forEach(row=>{
+    const s=services.find(x=>x.id===row.id);
+    if(s){s.price=parseFloat(row.price)||s.price;s.orig=parseFloat(row.orig)||0;s.cost=parseFloat(row.cost)||0;s.time=row.time||s.time;s.active=row.active!==false;s.hot=!!row.hot;s.recent=!!row.recent;s.description=row.description||s.description||'';s.supplier=row.supplier||s.supplier||'';}
+    else if(row.active!==false){services.push({id:row.id,carrier:row.carrier,stype:row.stype,brand:row.brand,series:row.series,price:parseFloat(row.price)||0,orig:parseFloat(row.orig)||0,cost:parseFloat(row.cost)||0,time:row.time||'24 hrs',rate:row.rate||'100%',notes:row.notes||'',description:row.description||'',supplier:row.supplier||'',hot:!!row.hot,recent:!!row.recent,active:true,sickwServiceId:row.sickw_service_id||'',sickwAutoSubmit:!!row.sickw_auto_submit});}
+  });
+}
 
-// Load orders from Supabase on page load
+// Override saveServicesToStorage to also sync to Supabase
+const _ogSave=window.saveServicesToStorage;
+window.saveServicesToStorage=function(){_ogSave();syncServicesToSupabase();};
+
+// Override recordOrder to save to Supabase
+const _ogRecord=window.recordOrder;
+window.recordOrder=function(o){_ogRecord(o);supaPost('orders',{id:o.id,order_number:o.orderNumber,customer_name:o.name,email:o.email,description:o.desc,imei:o.imeiMasked||o.imei||'',amount:o.amount,cost:o.cost||0,payment_method:o.paymentMethod,status:o.status||'Pending Verification',placed:o.placed,account_id:o.accountId||null});};
+
+// Override updateOrderStatus to sync to Supabase
+const _ogStatus=window.updateOrderStatus;
+window.updateOrderStatus=function(id,status){_ogStatus(id,status);supaPatch('orders',{status:status,updated_at:new Date().toISOString()},'id=eq.'+encodeURIComponent(id));};
+
+// Init on load
 (async function(){
-  try{
-    const data=await supaGet('orders','order=created_at.desc');
-    if(data&&data.length){
-      allOrders=data.map(o=>({id:o.id,orderNumber:o.order_number,name:o.customer_name,email:o.email,desc:o.description,imei:o.imei,amount:parseFloat(o.amount)||0,cost:parseFloat(o.cost)||0,paymentMethod:o.payment_method,status:o.status,placed:o.placed,completed:o.completed,accountId:o.account_id,notes:o.notes||''}));
-      saveOrders();
-      console.log('Loaded',data.length,'orders from Supabase');
-    }
-  }catch(e){console.log('Supabase init error:',e);}
+  await loadServicesFromSupabase();
+  renderHome();
+  const orders=await supaGet('orders','order=created_at.desc');
+  if(orders&&orders.length){allOrders=orders.map(o=>({id:o.id,orderNumber:o.order_number,name:o.customer_name,email:o.email,desc:o.description,imei:o.imei||'',amount:parseFloat(o.amount)||0,cost:parseFloat(o.cost)||0,paymentMethod:o.payment_method,status:o.status,placed:o.placed,completed:o.completed||'',accountId:o.account_id||'',notes:o.notes||''}));saveOrders();}
 })();
 </script>
+</body>
 <script>
 const SUPA_URL='https://fkiajefrdcgiobrzftjx.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk';
