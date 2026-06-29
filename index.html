@@ -3809,6 +3809,9 @@ function addService(){
 
 localStorage.removeItem("ra_services");
 localStorage.removeItem("ra_imei_checks");
+// Clear localStorage so Supabase prices always win on reload
+localStorage.removeItem("ra_services");
+localStorage.removeItem("ra_imei_checks");
 loadServicesFromStorage();
 loadImeiCheckTypes();
 loadOrders();
@@ -3865,6 +3868,17 @@ window.updateOrderStatus=function(id,status){_ogStatus(id,status);supaPatch('ord
 // Init on load
 (async function(){
   await loadServicesFromSupabase();
+  // Also load IMEI prices from Supabase
+  try{
+    const imeiData = await supaGet('imei_checks','order=id.asc');
+    if(imeiData&&imeiData.length){
+      imeiData.forEach(row=>{
+        const t=imeiCheckTypes.find(x=>x.id===row.id);
+        if(t){t.price=parseFloat(row.price)||t.price;t.active=row.active!==false;t.label=row.label||t.label;t.description=row.description||t.desc||'';t.sickwServiceId=row.sickw_service_id||t.sickwServiceId||'';}
+      });
+      saveImeiCheckTypes();
+    }
+  }catch(e){console.log('IMEI Supabase load error:',e);}
   renderHome();
   const orders=await supaGet('orders','order=created_at.desc');
   if(orders&&orders.length){allOrders=orders.map(o=>({id:o.id,orderNumber:o.order_number,name:o.customer_name,email:o.email,desc:o.description,imei:o.imei||'',amount:parseFloat(o.amount)||0,cost:parseFloat(o.cost)||0,paymentMethod:o.payment_method,status:o.status,placed:o.placed,completed:o.completed||'',accountId:o.account_id||'',notes:o.notes||''}));saveOrders();}
