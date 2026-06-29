@@ -3324,6 +3324,7 @@ function renderAdminPage(){
       <input class="inp" value="${sanitize(t.desc||t.description||'')}" onblur="imeiCheckTypes[${i}].desc=this.value;imeiCheckTypes[${i}].description=this.value;saveImeiCheckTypes()" style="font-size:13px;margin-bottom:10px"/>
       <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Sickw Service ID</div>
       <input class="inp" value="${sanitize(t.sickwServiceId||t.apiServiceId||'')}" onblur="imeiCheckTypes[${i}].sickwServiceId=this.value;saveImeiCheckTypes()" style="font-size:13px"/>
+      <button onclick="saveImeiCheckTypes();showToast('Saved!')" style="margin-top:12px;width:100%;padding:10px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-weight:700;cursor:pointer;font-size:13px">💾 Save Changes</button>
       <div style="margin-top:10px;font-size:12px;color:var(--green)">✓ Live — $${(t.price||0).toFixed(2)} per check</div>
     </div>
     `).join('') + `
@@ -3747,7 +3748,13 @@ function confirmCryptoPayment(id){
 function updateOrderField(id,field,val){const o=allOrders.find(x=>x.id===id);if(o)o[field]=sanitize(val)
   saveOrders();
 }
-function saveImeiCheckTypes(){try{localStorage.setItem("ra_imei_checks",JSON.stringify(imeiCheckTypes));}catch(e){}}
+function saveImeiCheckTypes(){
+  try{localStorage.setItem("ra_imei_checks",JSON.stringify(imeiCheckTypes));}catch(e){}
+  if(typeof supaUpsert!=="undefined"){
+    const rows=imeiCheckTypes.map(t=>({id:t.id,label:t.label,icon:t.icon||"🔍",description:t.desc||t.description||"",price:parseFloat(t.price)||0,active:t.active!==false,sickw_service_id:t.sickwServiceId||""}));
+    supaUpsert("imei_checks",rows);
+  }
+}
 function loadImeiCheckTypes(){try{var s=localStorage.getItem("ra_imei_checks");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p))p.forEach(function(sv){var x=imeiCheckTypes.find(function(t){return t.id===sv.id});if(x&&sv.price!==undefined)x.price=sv.price;});}catch(e){}}
 function saveServicesToStorage(){try{localStorage.setItem("ra_services",JSON.stringify(services));}catch(e){}}
 function loadServicesFromStorage(){try{var s=localStorage.getItem("ra_services");if(!s)return;var p=JSON.parse(s);if(!Array.isArray(p)||!p.length)return;p.forEach(function(sv){var x=services.find(function(sc){return sc.id===sv.id});if(!x){services.push(sv);return;}if(sv.price!==undefined)x.price=parseFloat(sv.price)||x.price;if(sv.orig!==undefined)x.orig=parseFloat(sv.orig)||0;if(sv.cost!==undefined)x.cost=parseFloat(sv.cost)||0;if(sv.time!==undefined)x.time=sv.time;if(sv.active!==undefined)x.active=!!sv.active;if(sv.hot!==undefined)x.hot=!!sv.hot;if(sv.recent!==undefined)x.recent=!!sv.recent;if(sv.description!==undefined)x.description=sv.description;if(sv.supplier!==undefined)x.supplier=sv.supplier;if(sv.name!==undefined)x.name=sv.name;if(sv.carrier!==undefined)x.carrier=sv.carrier;if(sv.stype!==undefined)x.stype=sv.stype;if(sv.brand!==undefined)x.brand=sv.brand;if(sv.series!==undefined)x.series=sv.series;if(sv.sickwServiceId!==undefined)x.sickwServiceId=sv.sickwServiceId;if(sv.sickwAutoSubmit!==undefined)x.sickwAutoSubmit=!!sv.sickwAutoSubmit;});}catch(e){}}
