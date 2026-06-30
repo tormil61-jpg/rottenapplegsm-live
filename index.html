@@ -572,6 +572,44 @@ select option{background:#0f172a!important;color:#f0eeff!important}
       </div>
 
       <!-- Step: crypto -->
+      <div id="step-zelle" style="display:none">
+        <h3 style="margin-bottom:16px;font-size:18px">&#x1F49A; Zelle Payment</h3>
+        <div class="card-sm" style="margin-bottom:16px;text-align:center">
+          <div style="font-size:13px;color:var(--muted);margin-bottom:8px">Send payment to</div>
+          <div style="font-weight:800;font-size:18px;color:#4ade80;margin-bottom:4px" id="zelle-address">Tormil61@icloud.com</div>
+          <div style="font-size:13px;color:var(--muted)" id="zelle-name">Milton Torres</div>
+        </div>
+        <div class="card-sm" style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <span style="color:var(--muted);font-size:13px">Service price</span>
+            <span id="zelle-base" style="font-weight:600">$0.00</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <span style="color:var(--muted);font-size:13px">Zelle fee (5%)</span>
+            <span id="zelle-fee" style="color:#f97316;font-weight:600">$0.00</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;border-top:1px solid var(--border);padding-top:8px">
+            <span style="font-weight:700">Total to send</span>
+            <span id="zelle-amount" style="font-weight:800;font-size:18px;color:#4ade80">$0.00</span>
+          </div>
+        </div>
+        <div class="card-sm" style="margin-bottom:16px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.3)">
+          <div style="font-size:13px;line-height:1.6">
+            1. Open your bank app and go to Zelle<br>
+            2. Send the exact amount to <strong>Tormil61@icloud.com</strong><br>
+            3. Take a screenshot of the confirmation<br>
+            4. Tap the checkbox below and submit your order
+          </div>
+        </div>
+        <label style="display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;cursor:pointer">
+          <input type="checkbox" id="zelle-check" style="margin-top:3px;accent-color:#4ade80" onchange="var b=document.getElementById('zelle-submit-btn');b.disabled=!this.checked;b.style.opacity=this.checked?'1':'.5'"/>
+          <span style="font-size:13px">I have sent the exact Zelle amount and have a screenshot ready.</span>
+        </label>
+        <button id="zelle-submit-btn" disabled onclick="confirmZelle()" style="width:100%;padding:14px;font-size:15px;font-weight:700;border-radius:12px;border:none;background:linear-gradient(135deg,#16a34a,#4ade80);color:#000;cursor:pointer;opacity:.5">
+          &#x2713; I Sent the Payment - Confirm Order
+        </button>
+        <button onclick="setCheckoutStep('method')" style="width:100%;padding:10px;margin-top:8px;background:none;border:1px solid var(--border);border-radius:10px;color:var(--muted);font-size:13px;cursor:pointer">&#8592; Back</button>
+      </div>
       <div id="step-crypto" style="display:none">
         <div id="crypto-title" style="font-weight:700;font-size:16px;margin-bottom:4px"></div>
         <div id="crypto-network-badge" style="display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(29,78,216,.15);color:var(--purpleL);margin-bottom:16px"></div>
@@ -2156,7 +2194,7 @@ function openCheckout(){
 }
 function closeCheckout(){document.getElementById("checkout-overlay").classList.remove("open")}
 function setCheckoutStep(step){
-  ["method","stripe","paypal","crypto","zelle","done"].forEach(s=>document.getElementById("step-"+s).style.display="none");
+  ["method","stripe","paypal","crypto","zelle","done"].forEach(s=>{var el=document.getElementById("step-"+s);if(el)el.style.display="none";});
   document.getElementById("step-"+step).style.display="block";
   const backBtn=document.getElementById("checkout-back");
   backBtn.style.display=(step!=="method"&&step!=="done")?"block":"none";
