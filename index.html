@@ -3875,6 +3875,7 @@ window.updateOrderStatus=function(id,status){_ogStatus(id,status);supaPatch('ord
       imeiData.forEach(row=>{
         const t=imeiCheckTypes.find(x=>x.id===row.id);
         if(t){t.price=parseFloat(row.price)||t.price;t.active=row.active!==false;t.label=row.label||t.label;t.description=row.description||t.desc||'';t.sickwServiceId=row.sickw_service_id||t.sickwServiceId||'';}
+        else if(row.active!==false){imeiCheckTypes.push({id:row.id,label:row.label||'New Check',icon:row.icon||'🔍',desc:row.description||'',description:row.description||'',price:parseFloat(row.price)||0,active:true,sickwServiceId:row.sickw_service_id||''});}
       });
       saveImeiCheckTypes();
     }
