@@ -2215,7 +2215,7 @@ function recordOrder(method, initialStatus){
   saveOrders();
   notifyNew(payConfig,o);
   if(typeof supaPost!=="undefined"){
-    supaPost("orders",{id:o.id,order_number:o.orderNumber,customer_name:o.name||"Guest",email:o.email,description:o.desc,imei:o.imeiMasked||"",amount:o.amount,cost:o.cost||0,payment_method:o.paymentMethod,status:o.status||"Processing",placed:o.placed,account_id:o.accountId||null}).catch(function(e){console.log("Supabase order save error:",e);});
+    supaPost("orders",{id:o.id,order_number:o.orderNumber,customer_name:o.name||"Guest",email:o.email,description:o.desc,carrier:o.carrier||'',stype:o.stype||'',series:o.series||'',brand:o.brand||'',imei:o.imeiMasked||"",amount:o.amount,cost:o.cost||0,payment_method:o.paymentMethod,status:o.status||"Processing",placed:o.placed,account_id:o.accountId||null}).catch(function(e){console.log("Supabase order save error:",e);});
   }
   document.getElementById("order-imei").value="";
   if(document.getElementById("order-email"))document.getElementById("order-email").value="";
@@ -3885,7 +3885,7 @@ window.updateOrderStatus=function(id,status){_ogStatus(id,status);supaPatch('ord
   }catch(e){console.log('IMEI Supabase load error:',e);}
   renderHome();
   const orders=await supaGet('orders','order=created_at.desc');
-  if(orders&&orders.length){allOrders=orders.map(o=>({id:o.id,orderNumber:o.order_number,name:o.customer_name,email:o.email,desc:o.description,imei:o.imei||'',amount:parseFloat(o.amount)||0,cost:parseFloat(o.cost)||0,paymentMethod:o.payment_method,status:o.status,placed:o.placed,completed:o.completed||'',accountId:o.account_id||'',notes:o.notes||''}));saveOrders();}
+  if(orders&&orders.length){allOrders=orders.map(o=>({id:o.id,orderNumber:o.order_number,name:o.customer_name,email:o.email,desc:o.description,carrier:o.carrier||'',stype:o.stype||'',series:o.series||'',brand:o.brand||'',imei:o.imei||'',amount:parseFloat(o.amount)||0,cost:parseFloat(o.cost)||0,paymentMethod:o.payment_method,status:o.status,placed:o.placed,completed:o.completed||'',accountId:o.account_id||'',notes:o.notes||''}));saveOrders();}
 })();
 </script>
 </body>
