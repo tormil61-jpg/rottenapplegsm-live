@@ -2214,6 +2214,9 @@ function recordOrder(method, initialStatus){
   if(method==="wallet"&&currentUser)updateBalance(currentUser.id,-matchedSvc.price);
   saveOrders();
   notifyNew(payConfig,o);
+  if(typeof supaPost!=="undefined"){
+    supaPost("orders",{id:o.id,order_number:o.orderNumber,customer_name:o.name||"Guest",email:o.email,description:o.desc,imei:o.imeiMasked||"",amount:o.amount,cost:o.cost||0,payment_method:o.paymentMethod,status:o.status||"Processing",placed:o.placed,account_id:o.accountId||null}).catch(function(e){console.log("Supabase order save error:",e);});
+  }
   document.getElementById("order-imei").value="";
   if(document.getElementById("order-email"))document.getElementById("order-email").value="";
   if(document.getElementById("order-name"))document.getElementById("order-name").value="";
