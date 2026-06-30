@@ -3774,7 +3774,7 @@ function addService(){
   const orig=parseFloat(document.getElementById("ns-orig").value)||null;
   if(!series||!price||isNaN(price)||price<=0){showToast("Fill in Series and Price.");return}
   services.push({
-    id:Date.now(),
+    id:Date.now()*1000+Math.floor(Math.random()*1000),
     carrier:document.getElementById("ns-carrier").value,
     stype:document.getElementById("ns-stype").value,
     brand:document.getElementById("ns-brand").value,
