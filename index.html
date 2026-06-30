@@ -3926,10 +3926,6 @@ async function loadServicesFromSupabase(){
 const _origSaveSvc=saveServicesToStorage;
 window.saveServicesToStorage=function(){_origSaveSvc();syncServicesToSupabase();};
 
-// Hook recordOrder
-const _origRecordOrder=recordOrder;
-
-
 // Hook updateOrderStatus
 const _origUpdateStatus=updateOrderStatus;
 window.updateOrderStatus=function(id,status){_origUpdateStatus(id,status);supaPatch('orders',{status:status,updated_at:new Date().toISOString()},'id=eq.'+id);};
