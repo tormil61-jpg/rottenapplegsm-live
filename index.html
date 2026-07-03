@@ -3508,10 +3508,10 @@ function renderAdminServices(search=""){
           <input class="inp" style="width:100%;padding:5px 8px;font-size:13px;font-weight:600" placeholder="Service name" value="${sanitize(s.name||s.brand+' '+s.series)}" onblur="updateSvcField(${s.id},'name',this.value)"/>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
-          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Carrier</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.carrier)}" onblur="updateSvcField(${s.id},'carrier',this.value)" oninput="updateSvcField(${s.id},'carrier',this.value)"/></div>
-          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Type</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.stype)}" onblur="updateSvcField(${s.id},'stype',this.value)" oninput="updateSvcField(${s.id},'stype',this.value)"/></div>
-          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Brand</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.brand)}" onblur="updateSvcField(${s.id},'brand',this.value)" oninput="updateSvcField(${s.id},'brand',this.value)"/></div>
-          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Series</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.series)}" onblur="updateSvcField(${s.id},'series',this.value)" oninput="updateSvcField(${s.id},'series',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Carrier</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.carrier)}" onblur="updateSvcField(${s.id},'carrier',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Type</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.stype)}" onblur="updateSvcField(${s.id},'stype',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Brand</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.brand)}" onblur="updateSvcField(${s.id},'brand',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Series</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.series)}" onblur="updateSvcField(${s.id},'series',this.value)"/></div>
         </div>
         <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Price $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" value="${s.price}" onblur="updateSvcField(${s.id},'price',this.value)"/></div>
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Was $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" value="${s.orig||""}" onblur="updateSvcField(${s.id},'orig',this.value)"/></div>
@@ -3942,10 +3942,6 @@ window.saveServicesToStorage=function(){
   _origSaveSvc();
   syncServicesToSupabase().then(function(){
     renderHome();
-    if(typeof renderAdminServices==='function'){
-      var q=document.getElementById('svc-search')?.value||'';
-      renderAdminServices(q);
-    }
   });
 };
 
