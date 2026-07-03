@@ -3520,10 +3520,14 @@ function renderAdminServices(search=""){
           <div style="margin-bottom:10px">
           <div style="font-size:10px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em;font-weight:600">Service Name</div>
           <input class="inp" style="width:100%;padding:5px 8px;font-size:13px;font-weight:600" placeholder="Service name" value="${sanitize(s.name||s.brand+' '+s.series)}" onblur="updateSvcField(${s.id},'name',this.value)"/>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+            <input class="inp" style="padding:4px 7px;font-size:11px" placeholder="Brand" value="${sanitize(s.brand)}" onblur="updateSvcField(${s.id},'brand',this.value)"/>
+            <input class="inp" style="padding:4px 7px;font-size:11px" placeholder="Series" value="${sanitize(s.series)}" onblur="updateSvcField(${s.id},'series',this.value)"/>
+          </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
-          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Carrier</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.carrier)}" onblur="updateSvcField(${s.id},'carrier',this.value)"/></div>
-          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Type</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.stype)}" onblur="updateSvcField(${s.id},'stype',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Carrier</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.carrier)}" onblur="updateSvcField(${s.id},'carrier',this.value)" oninput="updateSvcField(${s.id},'carrier',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Type</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.stype)}" onblur="updateSvcField(${s.id},'stype',this.value)" oninput="updateSvcField(${s.id},'stype',this.value)"/></div>
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Brand</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.brand)}" onblur="updateSvcField(${s.id},'brand',this.value)"/></div>
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Series</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.series)}" onblur="updateSvcField(${s.id},'series',this.value)"/></div>
         </div>
