@@ -3920,7 +3920,7 @@ async function loadServicesFromSupabase(){
     if(data&&data.length){
       data.forEach(row=>{
         const s=services.find(x=>x.id===row.id);
-        if(s){s.price=parseFloat(row.price)||s.price;s.orig=parseFloat(row.orig)||0;s.cost=parseFloat(row.cost)||0;s.time=row.time||s.time;s.active=row.active!==false;s.hot=row.hot||false;s.recent=row.recent||false;s.description=row.description||s.description||'';s.supplier=row.supplier||'';}
+        if(s){s.price=parseFloat(row.price)||s.price;s.orig=parseFloat(row.orig)||0;s.cost=parseFloat(row.cost)||0;s.time=row.time||s.time;s.active=row.active!==false;s.hot=row.hot||false;s.recent=row.recent||false;s.description=row.description||s.description||'';s.supplier=row.supplier||'';s.carrier=row.carrier||s.carrier;s.stype=row.stype||s.stype;s.brand=row.brand||s.brand;s.series=row.series||s.series;}
         else if(row.active!==false){services.push({id:row.id,carrier:row.carrier,stype:row.stype,brand:row.brand,series:row.series,price:parseFloat(row.price)||0,orig:parseFloat(row.orig)||0,cost:parseFloat(row.cost)||0,time:row.time||'24 hrs',rate:row.rate||'100%',notes:row.notes||'',description:row.description||'',supplier:row.supplier||'',hot:row.hot||false,recent:row.recent||false,active:true,sickwServiceId:row.sickw_service_id||'',sickwAutoSubmit:row.sickw_auto_submit||false});}
       });
       renderHome();
