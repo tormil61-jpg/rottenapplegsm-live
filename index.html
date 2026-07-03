@@ -3847,6 +3847,30 @@ loadAccounts();
 loadPayConfig();
 checkStripeReturn();
 renderHome();
+
+function setCheckoutStep_zelle(){
+  var svc=checkoutPending&&checkoutPending.svc?checkoutPending.svc:matchedSvc;
+  if(!svc)return;
+  var base=checkoutPending&&checkoutPending.discPrice?checkoutPending.discPrice:svc.price;
+  var fee=parseFloat((base*0.05).toFixed(2));
+  var total=parseFloat((base+fee).toFixed(2));
+  var el=document.getElementById('zelle-address');if(el)el.textContent=payConfig.zelleEmail||'Tormil61@icloud.com';
+  var en=document.getElementById('zelle-name');if(en)en.textContent=payConfig.zelleName||'Milton Torres';
+  var eb=document.getElementById('zelle-base');if(eb)eb.textContent='$'+base.toFixed(2);
+  var ef=document.getElementById('zelle-fee');if(ef)ef.textContent='$'+fee.toFixed(2)+' (5%)';
+  var ea=document.getElementById('zelle-amount');if(ea)ea.textContent='$'+total.toFixed(2)+' USD';
+  var ck=document.getElementById('zelle-check');if(ck)ck.checked=false;
+  var sb=document.getElementById('zelle-submit-btn');if(sb){sb.disabled=true;sb.style.opacity='.5';}
+  setCheckoutStep('zelle');
+}
+function confirmZelle(){
+  var svc=checkoutPending&&checkoutPending.svc?checkoutPending.svc:matchedSvc;
+  if(!svc)return;
+  var base=checkoutPending&&checkoutPending.discPrice?checkoutPending.discPrice:svc.price;
+  var total=parseFloat((base*1.05).toFixed(2));
+  recordOrder('zelle','Pending Verification');
+  setCheckoutStep('done');
+}
 </script>
 <script>
 const SUPA_URL='https://fkiajefrdcgiobrzftjx.supabase.co';
