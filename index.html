@@ -3840,12 +3840,12 @@ function addService(){
 
 localStorage.removeItem("ra_services");
 localStorage.removeItem("ra_imei_checks");
-loadServicesFromStorage();
 loadImeiCheckTypes();
 loadOrders();
 loadAccounts();
 loadPayConfig();
 checkStripeReturn();
+// Show loading state until Supabase loads
 renderHome();
 
 function setCheckoutStep_zelle(){
@@ -3931,7 +3931,7 @@ window.updateOrderStatus=function(id,status){_origUpdateStatus(id,status);supaPa
 
 // Init - load from Supabase then render
 (async function(){
-  await Promise.all([loadServicesFromSupabase()]);
+  await loadServicesFromSupabase();
   const orders=await supaGet('orders','order=created_at.desc');
   if(orders&&orders.length){allOrders=orders.map(o=>({id:o.id,orderNumber:o.order_number,name:o.customer_name,email:o.email,desc:o.description,imei:o.imei,amount:parseFloat(o.amount)||0,cost:parseFloat(o.cost)||0,paymentMethod:o.payment_method,status:o.status,placed:o.placed,completed:o.completed,accountId:o.account_id,notes:o.notes||''}));saveOrders();}
 })();
