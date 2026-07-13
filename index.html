@@ -3903,6 +3903,16 @@ async function supaUpsert(t,d){
 }
 
 // Hook saveServicesToStorage to also sync to Supabase
+
+async function syncServicesToSupabase(){
+  try{
+    var rows=services.map(s=>({id:s.id,carrier:(s.carrier||'').trim(),stype:(s.stype||'').trim(),brand:(s.brand||'').trim(),series:(s.series||'').trim(),price:s.price||0,orig:s.orig||0,cost:s.cost||0,time:s.time||'24 hrs',rate:s.rate||'100%',notes:s.notes||'',description:s.description||'',supplier:s.supplier||'',hot:!!s.hot,recent:!!s.recent,active:s.active!==false,sickw_service_id:s.sickwServiceId||'',sickw_auto_submit:!!s.sickwAutoSubmit}));
+    var r=await fetch('https://fkiajefrdcgiobrzftjx.supabase.co/rest/v1/services',{method:'POST',headers:{'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk','Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(rows)});
+    if(r.ok){showToast('All changes saved!');renderHome();}
+    else{showToast('Save failed - try again');}
+    return r.ok;
+  }catch(e){console.log('Sync error:',e);showToast('Save error');}
+}
 const _origSaveSvc=saveServicesToStorage;
 window.saveServicesToStorage=function(){
   _origSaveSvc();
