@@ -3876,64 +3876,30 @@ function confirmZelle(){
 const SUPA_URL='https://fkiajefrdcgiobrzftjx.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk';
 const SH={'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
-async function supaGet(t,f){try{const r=await fetch(SUPA_URL+'/rest/v1/'+t+(f?'?'+f:''),{headers:SH});return await r.json();}catch(e){return[];}}
-async function supaPost(t,d){try{const r=await fetch(SUPA_URL+'/rest/v1/'+t,{method:'POST',headers:{...SH,'Prefer':'return=minimal'},body:JSON.stringify(d)});return r.ok;}catch(e){return false;}}
-async function supaPatch(t,d,f){try{const r=await fetch(SUPA_URL+'/rest/v1/'+t+'?'+f,{method:'PATCH',headers:{...SH,'Prefer':'return=minimal'},body:JSON.stringify(d)});return r.ok;}catch(e){return false;}}
-async function supaUpsert(t,d){try{const r=await fetch(SUPA_URL+'/rest/v1/'+t,{method:'POST',headers:{...SH,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(d)});return r.ok;}catch(e){return false;}}
-
-// Sync all services to Supabase
-async function syncServicesToSupabase(){
+async function supaGet(t,f){
   try{
-    var SURL='https://fkiajefrdcgiobrzftjx.supabase.co';
-    var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk';
-    var rows=services.map(s=>({id:s.id,carrier:(s.carrier||'').trim(),stype:(s.stype||'').trim(),brand:(s.brand||'').trim(),series:(s.series||'').trim(),price:s.price||0,orig:s.orig||0,cost:s.cost||0,time:s.time||'24 hrs',rate:s.rate||'100%',notes:s.notes||'',description:s.description||'',supplier:s.supplier||'',hot:!!s.hot,recent:!!s.recent,active:s.active!==false,sickw_service_id:s.sickwServiceId||'',sickw_auto_submit:!!s.sickwAutoSubmit}));
-    var r=await fetch(SURL+'/rest/v1/services',{method:'POST',headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(rows)});
-    if(r.ok){showToast('All changes saved!');}
-    else{showToast('Save failed - try again');}
+    var r=await fetch('https://fkiajefrdcgiobrzftjx.supabase.co/rest/v1/'+t+(f?'?'+f:''),{headers:{'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk'}});
+    if(!r.ok)return[];
+    return await r.json();
+  }catch(e){console.log('supaGet error:',e);return[];}
+}
+async function supaPost(t,d){
+  try{
+    var r=await fetch('https://fkiajefrdcgiobrzftjx.supabase.co/rest/v1/'+t,{method:'POST',headers:{'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk','Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(d)});
     return r.ok;
-  }catch(e){console.log('Sync error:',e);showToast('Save error - check connection');}
+  }catch(e){return false;}
 }
-async function loadServicesFromSupabase(){
+async function supaPatch(t,d,f){
   try{
-    const data=await supaGet('services','order=id.asc');
-    if(!data||!data.length)return;
-    services.length=0;
-    data.forEach(row=>{
-      if(row.active!==false){
-        services.push({id:row.id,carrier:(row.carrier||'').trim(),stype:(row.stype||'').trim(),brand:(row.brand||'').trim(),series:(row.series||'').trim(),price:parseFloat(row.price)||0,orig:parseFloat(row.orig)||0,cost:parseFloat(row.cost)||0,time:row.time||'24 hrs',rate:row.rate||'100%',notes:row.notes||'',description:row.description||'',supplier:row.supplier||'',hot:!!row.hot,recent:!!row.recent,active:true,sickwServiceId:row.sickw_service_id||'',sickwAutoSubmit:!!row.sickw_auto_submit});
-      }
-    });
-    renderHome();
-    console.log('Supabase fully replaced services:',services.length);
-  }catch(e){console.log('Supabase load error:',e);}
+    var r=await fetch('https://fkiajefrdcgiobrzftjx.supabase.co/rest/v1/'+t+'?'+f,{method:'PATCH',headers:{'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk','Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(d)});
+    return r.ok;
+  }catch(e){return false;}
 }
-async function supaGet(t,f){try{const r=await fetch(SUPA_URL+'/rest/v1/'+t+(f?'?'+f:''),{headers:SUPA_H});return r.json();}catch(e){return[];}}
-async function supaPost(t,d){try{const r=await fetch(SUPA_URL+'/rest/v1/'+t,{method:'POST',headers:SUPA_H,body:JSON.stringify(d)});return r.ok;}catch(e){return false;}}
-async function supaPatch(t,d,f){try{const r=await fetch(SUPA_URL+'/rest/v1/'+t+'?'+f,{method:'PATCH',headers:SUPA_H,body:JSON.stringify(d)});return r.ok;}catch(e){return false;}}
-async function supaUpsert(t,d){try{const r=await fetch(SUPA_URL+'/rest/v1/'+t,{method:'POST',headers:{...SUPA_H,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(d)});return r.ok;}catch(e){return false;}}
-
-// Save all services to Supabase
-async function syncServicesToSupabase(){
+async function supaUpsert(t,d){
   try{
-    const rows=services.map(s=>({id:s.id,carrier:s.carrier,stype:s.stype,brand:s.brand,series:s.series,price:s.price,orig:s.orig||0,cost:s.cost||0,time:s.time,rate:s.rate,notes:s.notes||'',description:s.description||'',supplier:s.supplier||'',hot:s.hot||false,recent:s.recent||false,active:s.active!==false,sickw_service_id:s.sickwServiceId||'',sickw_auto_submit:s.sickwAutoSubmit||false}));
-    await supaUpsert('services',rows);
-  }catch(e){console.log('Supabase sync services error:',e);}
-}
-
-// Load services from Supabase - overrides localStorage
-async function loadServicesFromSupabase(){
-  try{
-    const data=await supaGet('services','order=id.asc');
-    if(data&&data.length){
-      data.forEach(row=>{
-        const s=services.find(x=>x.id===row.id);
-        if(s){s.price=parseFloat(row.price)||s.price;s.orig=parseFloat(row.orig)||0;s.cost=parseFloat(row.cost)||0;s.time=row.time||s.time;s.active=row.active!==false;s.hot=row.hot||false;s.recent=row.recent||false;s.description=row.description||s.description||'';s.supplier=row.supplier||'';s.carrier=row.carrier||s.carrier;s.stype=row.stype||s.stype;s.brand=row.brand||s.brand;s.series=row.series||s.series;}
-        else if(row.active!==false){services.push({id:row.id,carrier:row.carrier,stype:row.stype,brand:row.brand,series:row.series,price:parseFloat(row.price)||0,orig:parseFloat(row.orig)||0,cost:parseFloat(row.cost)||0,time:row.time||'24 hrs',rate:row.rate||'100%',notes:row.notes||'',description:row.description||'',supplier:row.supplier||'',hot:row.hot||false,recent:row.recent||false,active:true,sickwServiceId:row.sickw_service_id||'',sickwAutoSubmit:row.sickw_auto_submit||false});}
-      });
-      renderHome();
-      console.log('Loaded',data.length,'services from Supabase');
-    }
-  }catch(e){console.log('Supabase load services error:',e);}
+    var r=await fetch('https://fkiajefrdcgiobrzftjx.supabase.co/rest/v1/'+t,{method:'POST',headers:{'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk','Authorization':'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk','Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(d)});
+    return r.ok;
+  }catch(e){return false;}
 }
 
 // Hook saveServicesToStorage to also sync to Supabase
