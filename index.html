@@ -3930,6 +3930,40 @@ const _origUpdateStatus=updateOrderStatus;
 window.updateOrderStatus=function(id,status){_origUpdateStatus(id,status);supaPatch('orders',{status:status,updated_at:new Date().toISOString()},'id=eq.'+id);};
 
 // Init - load from Supabase then render
+
+async function loadServicesFromSupabase(){
+  try{
+    var data = await supaGet('services','order=id.asc');
+    if(!data||!data.length)return;
+    services.length = 0;
+    data.forEach(function(row){
+      if(row.active!==false){
+        services.push({
+          id:row.id,
+          carrier:(row.carrier||'').trim(),
+          stype:(row.stype||'').trim(),
+          brand:(row.brand||'').trim(),
+          series:(row.series||'').trim(),
+          price:parseFloat(row.price)||0,
+          orig:parseFloat(row.orig)||0,
+          cost:parseFloat(row.cost)||0,
+          time:row.time||'24 hrs',
+          rate:row.rate||'100%',
+          notes:row.notes||'',
+          description:row.description||'',
+          supplier:row.supplier||'',
+          hot:!!row.hot,
+          recent:!!row.recent,
+          active:true,
+          sickwServiceId:row.sickw_service_id||'',
+          sickwAutoSubmit:!!row.sickw_auto_submit
+        });
+      }
+    });
+    renderHome();
+    console.log('Loaded from Supabase:', services.length);
+  }catch(e){console.log('Load error:',e);}
+}
 (async function(){
   await loadServicesFromSupabase();
   const orders=await supaGet('orders','order=created_at.desc');
