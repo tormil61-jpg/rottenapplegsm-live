@@ -3966,6 +3966,17 @@ async function loadServicesFromSupabase(){
 }
 (async function(){
   await loadServicesFromSupabase();
+  // Load custom IMEI checks from Supabase
+  try{
+    var imeiData=await supaGet('imei_checks','order=id.asc');
+    if(imeiData&&imeiData.length){
+      imeiData.forEach(function(row){
+        var t=imeiCheckTypes.find(function(x){return x.id===row.id;});
+        if(t){t.price=parseFloat(row.price)||t.price;t.active=row.active!==false;t.label=row.label||t.label;}
+        else if(row.active!==false){imeiCheckTypes.push({id:row.id,label:row.label||'New Check',icon:row.icon||'🔍',desc:row.description||'',description:row.description||'',price:parseFloat(row.price)||0,active:true,sickwServiceId:row.sickw_service_id||''});}
+      });
+    }
+  }catch(e){console.log('IMEI load error:',e);}
   const orders=await supaGet('orders','order=created_at.desc');
   if(orders&&orders.length){allOrders=orders.map(o=>({id:o.id,orderNumber:o.order_number,name:o.customer_name,email:o.email,desc:o.description,imei:o.imei,amount:parseFloat(o.amount)||0,cost:parseFloat(o.cost)||0,paymentMethod:o.payment_method,status:o.status,placed:o.placed,completed:o.completed,accountId:o.account_id,notes:o.notes||''}));saveOrders();}
 })();
