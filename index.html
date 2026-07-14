@@ -3954,9 +3954,7 @@ async function loadServicesFromSupabase(){
     }
   }catch(e){console.log('IMEI load error:',e);}
   // Re-render IMEI dropdown and admin
-  if(typeof renderImeiChecks==='function')renderImeiChecks();
-  if(typeof populateImeiSelect==='function')populateImeiSelect();
-  if(typeof buildImeiOptions==='function')buildImeiOptions();
+  if(typeof renderImeiCheckTypes==='function')renderImeiCheckTypes();
   // Re-render admin if open to show updated IMEI prices
   if(adminAuth&&adminTab==='imei_admin'){renderAdminPage();}
   const orders=await supaGet('orders','order=created_at.desc');
