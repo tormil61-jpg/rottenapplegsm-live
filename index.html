@@ -2024,9 +2024,9 @@ async function runImeiLookup(){
   const sickwServiceId=type.sickwServiceId;
   const sickwUrl=type.apiUrl||"https://sickw.com/api.php";
   let resultData=null,isLive=false;
-  if(sickwKey&&sickwServiceId){
+  if(sickwServiceId){
     try{
-      const res=await fetch(`${sickwUrl}?format=JSON&key=${sickwKey}&imei=${imei}&service=${sickwServiceId}`);
+      const res=await fetch('/.netlify/functions/sickw-check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imei,serviceId:sickwServiceId,apiUrl:sickwUrl})});
       const data=await res.json();
       if(data&&data.result){resultData=data.result;isLive=true;}
       else throw new Error(data?.result||"No result from sickw.com");
