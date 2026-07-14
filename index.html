@@ -3845,6 +3845,8 @@ function confirmZelle(){
   var base=checkoutPending&&checkoutPending.discPrice?checkoutPending.discPrice:svc.price;
   var total=parseFloat((base*1.05).toFixed(2));
   recordOrder('zelle','Pending Verification');
+  var numEl=document.getElementById('done-order-number');
+  if(numEl&&allOrders[0])numEl.textContent='Order #'+allOrders[0].orderNumber+' · '+allOrders[0].id;
   setCheckoutStep('done');
 }
 </script>
