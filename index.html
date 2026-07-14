@@ -1286,7 +1286,7 @@ const ADMIN_EMAIL="rottenapplegsm@gmail.com",WA="13238291991",DOMAIN="https://ww
 const loadEJS=pk=>new Promise(r=>{if(window.emailjs){r();return}const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";s.onload=()=>{window.emailjs.init(pk);r()};document.head.appendChild(s)});
 const sendEmail=async(cfg,tid,params)=>{if(!cfg.emailjsPublicKey||!cfg.emailjsServiceId||!tid)return;try{await loadEJS(cfg.emailjsPublicKey);await window.emailjs.send(cfg.emailjsServiceId,tid,{to_email:ADMIN_EMAIL,...params})}catch(e){console.warn("Email fail",e)}};
 const notifyNew=(cfg,o)=>sendEmail(cfg,cfg.emailjsTemplateNew,{order_id:`#${o.orderNumber} (${o.id})`,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,imei_masked:o.imeiMasked,amount:`$${o.amount.toFixed(2)}`,payment_method:o.paymentMethod,placed:o.placed});
-const notifyStatus=(cfg,o,st)=>{if(!["Completed","Refunded"].includes(st))return;sendEmail(cfg,cfg.emailjsTemplateStatus,{order_id:o.id,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,amount:`$${o.amount.toFixed(2)}`,new_status:st})};
+const notifyStatus=(cfg,o,st)=>{if(!["Completed","Refunded","Cancelled"].includes(st))return;sendEmail(cfg,cfg.emailjsTemplateStatus,{order_id:o.id,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,amount:`$${o.amount.toFixed(2)}`,new_status:st})};
 
 // ═══════════════════════════════════════════════════════════════════
 // DATA
