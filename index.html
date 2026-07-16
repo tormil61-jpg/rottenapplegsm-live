@@ -3715,7 +3715,7 @@ function saveAccounts(){
   try{localStorage.setItem("ra_accounts",JSON.stringify(accounts));}catch(e){}
   if(typeof supaUpsert!=="undefined"&&accounts.length){
     var rows=accounts.map(function(a){return {id:a.id,name:a.name,email:a.email,password_hash:a.passwordHash||"",balance:parseFloat(a.balance)||0,created_at:a.createdAt||new Date().toISOString().split("T")[0]};});
-    supaUpsert("accounts",rows);
+    supaUpsert("accounts",rows).then(function(ok){if(ok)console.log('Accounts saved to Supabase');else console.log('Accounts Supabase save FAILED');}).catch(function(e){console.log('Accounts save error:',e);});
   }
 }
 function loadAccounts(){try{var s=localStorage.getItem("ra_accounts");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p)&&p.length){accounts=p;}}catch(e){}}
@@ -3855,7 +3855,6 @@ localStorage.removeItem("ra_services");
 localStorage.removeItem("ra_imei_checks");
 loadImeiCheckTypes();
 loadOrders();
-localStorage.removeItem("ra_accounts");
 loadAccounts();
 loadPayConfig();
 checkStripeReturn();
