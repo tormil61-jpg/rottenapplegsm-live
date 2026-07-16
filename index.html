@@ -3295,6 +3295,14 @@ function renderAdminPage(){
           </div>
         </div>`}).join("")
   } else if(adminTab==="accounts"){
+    // Reload accounts from Supabase fresh
+    supaGet('accounts','order=created_at.desc').then(function(data){
+      if(data&&data.length){
+        accounts=data.map(function(r){return {id:r.id,name:r.name,email:r.email,passwordHash:r.password_hash||'',balance:parseFloat(r.balance)||0,spend:0,createdAt:r.created_at,loginCount:1};});
+        saveAccounts();
+        renderAdminPage();
+      }
+    }).catch(function(e){console.log('accounts reload error:',e);});
     content=accounts.length===0
       ?`<div style="text-align:center;padding:60px;color:var(--muted)">No accounts yet.</div>`
       :accounts.map(acc=>{
