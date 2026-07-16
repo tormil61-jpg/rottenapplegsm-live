@@ -1292,6 +1292,12 @@ const notifyStatus=(cfg,o,st)=>{if(!["Completed","Refunded","Cancelled"].include
 // DATA
 // ═══════════════════════════════════════════════════════════════════
 const SERVICES=[]
+const LOYALTY_TIERS=[
+  {min:0,label:"Standard",icon:"",discount:0,color:"var(--muted)",bg:"rgba(255,255,255,.06)",border:"rgba(255,255,255,.12)"},
+  {min:200,label:"Silver",icon:"🥈",discount:3,color:"#94a3b8",bg:"rgba(148,163,184,.1)",border:"rgba(148,163,184,.3)"},
+  {min:500,label:"Gold",icon:"🥇",discount:5,color:"#f59e0b",bg:"rgba(245,158,11,.1)",border:"rgba(245,158,11,.3)"},
+  {min:1000,label:"Platinum",icon:"💎",discount:8,color:"#818cf8",bg:"rgba(129,140,248,.1)",border:"rgba(129,140,248,.3)"}
+];
 function getTier(spent){
   let tier=LOYALTY_TIERS[0];
   for(const t of LOYALTY_TIERS){if(spent>=t.minSpend)tier=t;}
