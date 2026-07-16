@@ -3943,6 +3943,7 @@ async function loadServicesFromSupabase(){
     if(typeof renderCarrierOptions==='function')renderCarrierOptions();
     if(typeof renderCarrierDropdown==='function')renderCarrierDropdown();
     if(typeof populateCarrierSelect==='function')populateCarrierSelect();
+    if(selCarrier&&selStype&&selSeries&&typeof onSeriesChange==='function')onSeriesChange();
     console.log('Loaded from Supabase:', services.length);
   }catch(e){console.log('Load error:',e);}
 }
