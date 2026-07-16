@@ -1547,7 +1547,12 @@ async function handleRegister(){
   // Clear sensitive form fields immediately
   document.getElementById("auth-pw").value="";
   document.getElementById("auth-pw2").value="";
-  showPage("home");showToast("Account created! Welcome, "+newAcc.name.split(" ")[0]+"!");
+  // Save to Supabase then redirect
+  supaUpsert("accounts",[{id:newAcc.id,name:newAcc.name,email:newAcc.email,password_hash:newAcc.passwordHash||"",balance:0,created_at:newAcc.createdAt||new Date().toISOString().split("T")[0]}]).then(function(){
+    showPage("home");showToast("Account created! Welcome, "+newAcc.name.split(" ")[0]+"!");
+  }).catch(function(){
+    showPage("home");showToast("Account created! Welcome, "+newAcc.name.split(" ")[0]+"!");
+  });
 }
 
 function handleLogout(){
