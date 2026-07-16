@@ -3939,6 +3939,8 @@ async function loadServicesFromSupabase(){
       }
     });
     renderHome();
+    if(typeof updateOrderUI==='function')updateOrderUI();
+    if(typeof renderCarrierOptions==='function')renderCarrierOptions();
     console.log('Loaded from Supabase:', services.length);
   }catch(e){console.log('Load error:',e);}
 }
