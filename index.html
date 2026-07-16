@@ -1509,7 +1509,7 @@ async function handleRegister(){
   const {passwordHash:_,...safe}=newAcc;
   setCurrentUser(safe);
   btn.textContent="Create Account";btn.disabled=false;
-  showPage("home");showToast("Account created! Welcome, "+newAcc.name.split(" ")[0]+"!");
+  supaUpsert("accounts",[{id:newAcc.id,name:newAcc.name,email:newAcc.email,password_hash:newAcc.passwordHash||"",balance:0,created_at:newAcc.createdAt||new Date().toISOString().split("T")[0]}]).then(function(){showPage("home");}).catch(function(){showPage("home");});//showToast("Account created! Welcome, "+newAcc.name.split(" ")[0]+"!");
 }
 async function handleRegister(){
   const errEl=document.getElementById("auth-error");
