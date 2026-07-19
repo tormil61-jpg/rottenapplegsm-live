@@ -2930,7 +2930,7 @@ function confirmDeleteAccount(){
 // ═══════════════════════════════════════════════════════════════════
 // Admin credentials — password stored as SHA-256 hash, never plaintext
 // Hash of "RottenApple2025" — change by running: crypto.subtle.digest('SHA-256', new TextEncoder().encode('YourNewPassword')).then(b=>console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
-const ADMIN_PW_HASH="c4f5d360cb05ca868d4be1adb24f2d7239a33fc3a2b4a7d6f7b08c61e6431f59";
+const ADMIN_PW_HASH="6588581c216a114eb32fd3f24e05a8def4ba6181b827a88fd64470bfe6b342ff";
 let adminLockout=false;
 function renderAdminPage(){
   const el=document.getElementById("admin-content");
