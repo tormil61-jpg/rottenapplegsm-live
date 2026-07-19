@@ -3327,10 +3327,7 @@ function renderAdminPage(){
               <div style="color:var(--muted);font-size:12px">balance · ${accOrders.length} orders</div>
             </div>
           </div>
-          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-            <span style="color:var(--muted);font-size:13px">Adjust balance:</span>
-            ${[-50,-20,-10,10,20,50].map(d=>`<button onclick="adminAdjustBalance('${acc.id}',${d},'${acc.name}')" style="padding:5px 10px;border-radius:7px;border:1px solid ${d>0?"rgba(34,197,94,.3)":"rgba(239,68,68,.3)"};background:${d>0?"rgba(34,197,94,.08)":"rgba(239,68,68,.08)"};color:${d>0?"var(--green)":"var(--red)"};cursor:pointer;font-size:13px;font-weight:600">${d>0?"+":""}${d}</button>`).join("")}
-          </div>
+          
         </div>`}).join("")
   } else if(adminTab==="imei_admin"){
     content=`
@@ -3713,9 +3710,7 @@ async function refreshOrderFromSupplier(orderId){
   if(result){showToast("Status updated: "+o.status);renderAdminPage();}
   else{showToast("Could not reach supplier API.");}
 }
-function adminAdjustBalance(uid,delta,name){updateBalance(uid,delta);showToast("Balance "+(delta>0?"+":"")+"$"+delta+" for "+name);renderAdminPage()
-  saveAccounts();
-}
+function adminAdjustBalance(uid,delta,name){showToast("Balance adjustments disabled for security.");}
 function saveAccounts(){
   try{localStorage.setItem("ra_accounts",JSON.stringify(accounts));}catch(e){}
   if(typeof supaUpsert!=="undefined"&&accounts.length){
