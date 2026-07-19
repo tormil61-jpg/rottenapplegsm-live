@@ -3305,7 +3305,6 @@ function renderAdminPage(){
       if(data&&data.length){
         accounts=data.map(function(r){return {id:r.id,name:r.name,email:r.email,passwordHash:r.password_hash||'',balance:parseFloat(r.balance)||0,spend:0,createdAt:r.created_at,loginCount:1};});
         saveAccounts();
-        renderAdminPage();
       }
     }).catch(function(e){console.log('accounts reload error:',e);});
     content=accounts.length===0
