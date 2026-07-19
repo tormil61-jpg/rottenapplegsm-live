@@ -1212,57 +1212,47 @@ select option{background:#0f172a!important;color:#f0eeff!important}
 ═══════════════════════════════════════════════════════════════ -->
 <div id="page-account" class="page">
   <nav>
-    <div class="nav-brand" onclick="showPage('home')" style="cursor:pointer">
-      <span style="font-weight:800;font-size:18px;color:#fff">Rotten Apple GSM</span>
+    <div class="nav-brand" onclick="showPage('home')">
+      <svg width="36" height="43" viewBox="0 0 430 520" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;display:block;filter:drop-shadow(0 2px 10px rgba(76,175,47,.5))">
+  <defs>
+    <mask id="lm3"><rect width="430" height="520" fill="white"/><circle cx="368" cy="245" r="76" fill="black"/></mask>
+    <clipPath id="lc3"><path d="M215 115 C195 115,155 107,118 126 C72 150,42 198,36 250 C26 318,46 390,88 440 C110 467,136 484,163 486 C186 488,200 478,215 478 C230 478,244 488,267 486 C294 484,320 467,342 440 C384 390,404 318,394 250 C388 198,358 150,312 126 C275 107,235 115,215 115Z"/></clipPath>
+  </defs>
+  <g clip-path="url(#lc3)" mask="url(#lm3)">
+    <rect x="0" y="115" width="430" height="55" fill="#4caf2f"/>
+    <rect x="0" y="170" width="430" height="52" fill="#8fc01e"/>
+    <rect x="0" y="222" width="430" height="52" fill="#f6c009"/>
+    <rect x="0" y="274" width="430" height="52" fill="#f08000"/>
+    <rect x="0" y="326" width="430" height="52" fill="#dd2828"/>
+    <rect x="0" y="378" width="430" height="52" fill="#7b2d8b"/>
+    <rect x="0" y="430" width="430" height="56" fill="#1b9fd4"/>
+  </g>
+  <ellipse cx="230" cy="60" rx="28" ry="58" fill="#4caf2f"/>
+</svg>
+      <span class="brand-name">Rotten Apple GSM</span>
     </div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <span id="acct-balance-nav" style="background:rgba(29,78,216,.2);border:1px solid rgba(29,78,216,.4);padding:5px 12px;border-radius:100px;font-size:13px;font-weight:700;color:#60a5fa">$0.00</span>
-      <button onclick="showPage('order')" class="btn" style="font-size:13px;padding:8px 14px">+ New Order</button>
-      <button onclick="signOut()" style="background:none;border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--muted);font-size:13px;cursor:pointer">Sign Out</button>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <div style="background:rgba(29,78,216,.15);border:1px solid var(--border);border-radius:10px;padding:7px 14px;font-size:13px">
+        <span style="color:var(--muted)">Balance: </span><span id="acc-nav-balance" style="color:var(--purpleL);font-weight:700">$0.00</span>
+      </div>
+      <button class="btn-ghost btn-sm" onclick="showPage('home')">Home</button>
+      <button onclick="handleLogout()" style="background:transparent;border:1px solid rgba(239,68,68,.3);color:var(--red);padding:7px 14px;border-radius:8px;font-size:13px">Log Out</button>
     </div>
   </nav>
-  <div style="max-width:1000px;margin:0 auto;padding:20px 16px">
-    <div style="margin-bottom:20px">
-      <h2 id="acct-welcome" style="font-size:22px;font-weight:800;margin-bottom:2px">Hi!</h2>
-      <div style="color:var(--muted);font-size:13px">Your activity overview</div>
+  <div style="max-width:1000px;margin:0 auto;padding:32px 24px;position:relative;z-index:1">
+    <div style="margin-bottom:32px">
+      <div id="acc-welcome" style="font-weight:800;font-size:26px;margin-bottom:4px">Welcome back 👋</div>
+      <div style="color:var(--muted);font-size:14px">Manage your orders and account balance.</div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-      <div class="card-sm" style="text-align:center;padding:16px">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Total Orders</div>
-        <div id="acct-stat-total" style="font-size:26px;font-weight:800">0</div>
-      </div>
-      <div class="card-sm" style="text-align:center;padding:16px">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Pending</div>
-        <div id="acct-stat-pending" style="font-size:26px;font-weight:800;color:#f97316">0</div>
-      </div>
-      <div class="card-sm" style="text-align:center;padding:16px">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Completed</div>
-        <div id="acct-stat-completed" style="font-size:26px;font-weight:800;color:#4ade80">0</div>
-      </div>
-      <div class="card-sm" style="text-align:center;padding:16px">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Balance</div>
-        <div id="acct-stat-balance" style="font-size:26px;font-weight:800;color:#60a5fa">$0.00</div>
-      </div>
-    </div>
-    <div class="card-sm" style="margin-bottom:20px;padding:20px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-        <div style="font-weight:700;font-size:15px">Recent Orders</div>
-        <button onclick="document.getElementById('acct-all-orders').style.display=document.getElementById('acct-all-orders').style.display==='none'?'block':'none'" style="background:none;border:none;color:var(--blue);font-size:13px;cursor:pointer;font-weight:600">View all</button>
-      </div>
-      <div id="acct-recent-orders">
-        <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">No orders yet.</div>
-      </div>
-    </div>
-    <div id="acct-all-orders" style="display:none" class="card-sm">
-      <div style="font-weight:700;font-size:15px;margin-bottom:14px">All Orders</div>
-      <div id="acct-orders-list"></div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px">
-      <button onclick="showPage('order')" style="padding:14px;border-radius:12px;border:1px solid rgba(29,78,216,.4);background:rgba(29,78,216,.1);color:#fff;font-weight:700;font-size:13px;cursor:pointer">📱 New Unlock Order</button>
-      <button onclick="showPage('imei')" style="padding:14px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.06);color:#fff;font-weight:700;font-size:13px;cursor:pointer">🔍 IMEI Check</button>
-    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:32px" id="acc-stats"></div>
+    <div class="tabs" id="acc-tabs"></div>
+    <div id="acc-tab-content"></div>
   </div>
+</div>
 
+<!-- ═══════════════════════════════════════════════════════════════
+     ADMIN PAGE
+═══════════════════════════════════════════════════════════════ -->
 <div id="page-admin" class="page">
   <div style="max-width:1100px;margin:0 auto;padding:24px;position:relative;z-index:1">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
@@ -2615,34 +2605,270 @@ function executeDeposit(){
 // ACCOUNT PAGE
 // ═══════════════════════════════════════════════════════════════════
 function renderAccountPage(){
-  if(!currentUser)return;
-  var u=currentUser;
-  var bal=typeof getUserBalance==='function'?getUserBalance():(u.balance||0);
-  var el=document.getElementById('acct-welcome');
-  if(el)el.textContent='Hi, '+(u.name||'').split(' ')[0]+'!';
-  var bn=document.getElementById('acct-balance-nav');
-  if(bn)bn.textContent='$'+parseFloat(bal).toFixed(2);
-  var sb=document.getElementById('acct-stat-balance');
-  if(sb)sb.textContent='$'+parseFloat(bal).toFixed(2);
-  var myOrders=allOrders.filter(function(o){return o.accountId===u.id;});
-  var pending=myOrders.filter(function(o){return o.status==='Pending Verification'||o.status==='Processing';}).length;
-  var done=myOrders.filter(function(o){return o.status==='Completed';}).length;
-  var st=document.getElementById('acct-stat-total');if(st)st.textContent=myOrders.length;
-  var sp=document.getElementById('acct-stat-pending');if(sp)sp.textContent=pending;
-  var sc=document.getElementById('acct-stat-completed');if(sc)sc.textContent=done;
-  var makeRow=function(o){
-    var col=o.status==='Completed'?'#4ade80':o.status==='Processing'||o.status==='Pending Verification'?'#f97316':'#f87171';
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">'
-      +'<div><div style="font-weight:600;font-size:13px">'+(o.desc||'Unlock Service')+'</div>'
-      +'<div style="font-size:11px;color:var(--muted)">#'+(o.orderNumber||o.id)+' · '+(o.placed||'')+'</div></div>'
-      +'<div style="text-align:right"><div style="font-weight:700;font-size:13px">$'+parseFloat(o.amount||0).toFixed(2)+'</div>'
-      +'<div style="font-size:11px;color:'+col+';font-weight:600">'+o.status+'</div></div>'
-      +'</div>';
-  };
-  var ro=document.getElementById('acct-recent-orders');
-  if(ro)ro.innerHTML=myOrders.length===0?'<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">No orders yet. <span onclick="showPage('order')" style="color:var(--blue);cursor:pointer">Place your first order →</span></div>':myOrders.slice(0,3).map(makeRow).join('');
-  var ol=document.getElementById('acct-orders-list');
-  if(ol)ol.innerHTML=myOrders.length===0?'<div style="text-align:center;padding:20px;color:var(--muted)">No orders yet.</div>':myOrders.map(makeRow).join('');
+  if(!currentUser){showPage("home");return}
+  document.getElementById("acc-nav-balance").textContent="$"+getUserBalance().toFixed(2);
+  document.getElementById("acc-welcome").textContent="Welcome back, "+currentUser.name.split(" ")[0]+" 👋";
+  const userOrders=allOrders.filter(o=>o.accountId===currentUser.id);
+  const pending=userOrders.filter(o=>["Pending Verification","Processing","Submitted to Supplier","In Progress"].includes(o.status));
+  const completed=userOrders.filter(o=>o.status==="Completed");
+  const spent=getUserSpend(currentUser.id);
+  const tier=getTier(spent);
+  const nextTier=getNextTier(tier);
+  // Stats
+  document.getElementById("acc-stats").innerHTML=[
+    {label:"Account Balance",value:"$"+getUserBalance().toFixed(2),color:"var(--purpleL)",icon:"💼",click:"openDeposit()",extra:`<div style="font-size:12px;color:var(--purple);margin-top:6px;font-weight:600">+ Add Funds</div>`},
+    {label:"Pending Orders",value:pending.length,color:"var(--orange)",icon:"⏳"},
+    {label:"Completed",value:completed.length,color:"var(--green)",icon:"✅"},
+    {label:"Total Spent",value:"$"+spent.toFixed(2),color:"var(--cyan)",icon:"💳"},
+  ].map(s=>`<div class="stat-card${s.click?" clickable":""}" ${s.click?`onclick="${s.click}"`:""}>
+    <div style="font-size:22px;margin-bottom:8px">${s.icon}</div>
+    <div style="font-weight:800;font-size:22px;color:${s.color};margin-bottom:4px">${s.value}</div>
+    <div style="color:var(--muted);font-size:13px">${s.label}</div>
+    ${s.extra||""}
+  </div>`).join("");
+
+  // Loyalty tier card
+  const tierProgress=nextTier?Math.min(100,Math.round(((spent-tier.minSpend)/(nextTier.minSpend-tier.minSpend))*100)):100;
+  document.getElementById("acc-stats").innerHTML+=`
+  <div class="stat-card" style="grid-column:1/-1;background:${tier.bg};border-color:${tier.border}">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="font-size:36px">${tier.icon}</div>
+        <div>
+          <div style="font-size:11px;color:${tier.color};font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px">Loyalty Tier</div>
+          <div style="font-weight:800;font-size:22px;color:${tier.color}">${tier.label}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">${tier.perks}</div>
+        </div>
+      </div>
+      <div style="text-align:right">
+        ${tier.discount>0
+          ?`<div style="font-size:13px;font-weight:700;color:${tier.color}">${tier.discount}% off every order</div>`
+          :`<div style="font-size:13px;color:var(--muted)">Spend $${nextTier?nextTier.minSpend:0} to unlock discounts</div>`}
+        ${nextTier?`<div style="font-size:12px;color:var(--muted);margin-top:2px">$${Math.max(0,nextTier.minSpend-spent).toFixed(2)} more to reach ${nextTier.icon} ${nextTier.label}</div>`
+          :`<div style="font-size:12px;color:${tier.color};margin-top:2px">Maximum tier reached 🎉</div>`}
+      </div>
+    </div>
+    ${nextTier?`
+    <div style="margin-top:14px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px">
+        <span>${tier.icon} ${tier.label} ($${tier.minSpend})</span>
+        <span>${nextTier.icon} ${nextTier.label} ($${nextTier.minSpend})</span>
+      </div>
+      <div style="height:8px;background:rgba(255,255,255,.1);border-radius:100px;overflow:hidden">
+        <div style="height:100%;width:${tierProgress}%;background:${tier.color};border-radius:100px;transition:width .6s"></div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;text-align:center">${tierProgress}% to ${nextTier.label} · ${nextTier.discount}% discount</div>
+    </div>`:""}
+  </div>`;
+  // Tabs
+  const userImeiHistory=imeiHistory.filter(h=>h.accountId===currentUser.id);
+  const userTickets=tickets.filter(t=>t.email===currentUser.email);
+  const tabs=[
+    ["orders",`All Orders (${userOrders.length})`],
+    ["pending",`Pending (${pending.length})`],
+    ["completed",`Completed (${completed.length})`],
+    ["imei",`IMEI Checks (${userImeiHistory.length})`],
+    ["support",`Support (${userTickets.filter(t=>t.status==="Open").length} open)`],
+    ["deposit","Add Funds"],
+    ["settings","Settings"],
+  ];
+  document.getElementById("acc-tabs").innerHTML=tabs.map(([k,l])=>`<button class="tab${accountTab===k?" active":""}" onclick="setAccountTab('${k}')">${l}</button>`).join("");
+  // Content
+  const display=accountTab==="pending"?pending:accountTab==="completed"?completed:userOrders;
+  let html="";
+  if(accountTab==="imei"){
+    if(userImeiHistory.length===0){
+      html=`<div style="text-align:center;padding:60px 24px;color:var(--muted)">
+        <div style="font-size:40px;margin-bottom:12px">🔍</div>
+        <div style="font-weight:600;font-size:16px;margin-bottom:8px">No IMEI checks yet</div>
+        <div style="font-size:14px;margin-bottom:20px">Run a paid IMEI check from the home page to see results here.</div>
+        <button class="btn" onclick="showPage('home');setTimeout(()=>scrollToSection('imei-check'),200)">Go to IMEI Checker</button>
+      </div>`
+    } else {
+      html=userImeiHistory.map(h=>`<div class="card-sm" style="margin-bottom:12px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
+              <span style="font-size:16px">${h.typeIcon}</span>
+              <span style="font-weight:700;font-size:14px">${h.typeLabel}</span>
+              <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;${h.isLive?"background:rgba(34,197,94,.15);color:var(--green)":"background:rgba(249,115,22,.12);color:var(--orange)"}">${h.isLive?"Live":"Demo"}</span>
+            </div>
+            <div style="color:var(--muted);font-size:12px">IMEI: ${h.imeiMasked} · ${h.date}</div>
+          </div>
+          <div style="font-weight:700;font-size:15px;color:var(--purpleL)">$${h.price.toFixed(2)}</div>
+        </div>
+        <div style="background:var(--surface3);border-radius:8px;padding:12px;font-size:12px;line-height:1.8;white-space:pre-wrap;word-break:break-word;color:#f0eeff;max-height:160px;overflow-y:auto">${sanitize(h.result)}</div>
+      </div>`).join("")
+    }
+  } else if(["orders","pending","completed"].includes(accountTab)){
+    if(display.length===0){
+      html=`<div style="text-align:center;padding:60px 24px;color:var(--muted)">
+        <div style="font-size:40px;margin-bottom:12px">📭</div>
+        <div style="font-weight:600;font-size:16px;margin-bottom:8px">No orders here yet</div>
+        <button class="btn" onclick="showPage('home');setTimeout(()=>scrollToSection('selector'),200)">Browse Services</button>
+      </div>`
+    } else {
+      html=display.map(o=>`<div class="card-sm" style="margin-bottom:12px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">
+              <span style="font-weight:800;font-size:16px;color:var(--purpleL)">#${o.orderNumber||"—"}</span>
+              <span style="font-weight:600;font-size:13px;color:var(--muted)">${o.id}</span>
+              ${statusBadge(o.status)}
+            </div>
+            <div style="font-weight:600;font-size:14px;margin-bottom:4px">${o.carrier} – ${o.stype}</div>
+            <div style="color:var(--muted);font-size:13px">${o.series}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-weight:800;font-size:18px;color:var(--purpleL)">$${o.amount.toFixed(2)}</div>
+            <div style="color:var(--muted);font-size:12px">${o.paymentMethod}</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;border-top:1px solid var(--border);padding-top:14px">
+          ${[["IMEI",o.imeiMasked],["Email",o.email],["Placed",o.placed],["Supplier ID",o.supplierOrderId||"Processing"]].map(([l,v])=>`<div><div style="color:var(--muted);font-size:11px;margin-bottom:2px">${l}</div><div style="font-size:13px;font-weight:500;word-break:break-all">${v}</div></div>`).join("")}
+        </div>
+      </div>`).join("")
+    }
+  } else if(accountTab==="deposit"){
+    html=`<div style="max-width:460px">
+      <div style="font-weight:700;font-size:17px;margin-bottom:6px">Add Funds</div>
+      <div style="color:var(--muted);font-size:14px;margin-bottom:24px">Store balance for instant checkout.</div>
+      <div class="card" style="margin-bottom:16px">
+        <div style="color:var(--muted);font-size:13px;margin-bottom:4px">Current Balance</div>
+        <div style="font-weight:800;font-size:32px;color:var(--purpleL)">$${getUserBalance().toFixed(2)}</div>
+      </div>
+      <button class="btn" onclick="openDeposit()" style="width:100%;font-size:15px;padding:14px">+ Add Funds</button>
+    </div>`
+  } else if(accountTab==="support"){
+    const userTickets=tickets.filter(t=>t.email===currentUser.email);
+    html=`<div style="max-width:600px;display:flex;flex-direction:column;gap:16px">
+
+      <!-- Submit new ticket -->
+      <div class="card">
+        <div style="font-weight:700;font-size:17px;margin-bottom:4px">🎫 Submit a Support Ticket</div>
+        <div style="color:var(--muted);font-size:13px;margin-bottom:18px">We respond within 24 hours. For instant help use WhatsApp below.</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <label class="lbl">Subject</label>
+            <input class="inp" id="ticket-subject" placeholder="e.g. My order #1001 is not complete yet"/>
+          </div>
+          <div>
+            <label class="lbl">Message</label>
+            <textarea class="inp" id="ticket-message" placeholder="Describe your issue — include your order number and IMEI if relevant." style="resize:vertical;min-height:100px;line-height:1.6"></textarea>
+          </div>
+          <button class="btn" onclick="submitTicketFromAccount()" style="width:100%;padding:13px;font-size:15px">Submit Ticket</button>
+          <div style="text-align:center;font-size:12px;color:var(--muted)">Or reach us directly on
+            <a href="https://wa.me/13238291991" target="_blank" style="color:#25D366;font-weight:700;text-decoration:none">WhatsApp (323) 829-1991</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Previous tickets -->
+      ${userTickets.length===0
+        ?`<div style="text-align:center;padding:40px;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:14px">
+            <div style="font-size:36px;margin-bottom:10px">🎫</div>
+            <div style="font-weight:600;font-size:15px;margin-bottom:6px">No tickets yet</div>
+            <div style="font-size:13px">Submit a ticket above and we'll get back to you within 24 hours.</div>
+          </div>`
+        :`<div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:12px">Your Tickets</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            ${userTickets.map(t=>`
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;border-left:3px solid ${t.status==="Open"?"var(--orange)":"var(--muted)"}">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+                <div style="font-weight:700;font-size:14px">${sanitize(t.subject)}</div>
+                <span style="font-size:11px;padding:2px 10px;border-radius:100px;font-weight:700;${t.status==="Open"?"background:rgba(249,115,22,.12);color:var(--orange)":"background:var(--surface2);color:var(--muted)"}">${t.status}</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);margin-bottom:10px">${t.date}</div>
+              <div style="background:var(--surface2);border-radius:8px;padding:12px;font-size:13px;color:#f0eeff;line-height:1.6">${sanitize(t.message)}</div>
+              ${t.reply?`
+              <div style="margin-top:10px;background:rgba(29,78,216,.08);border:1px solid rgba(29,78,216,.2);border-radius:8px;padding:12px">
+                <div style="font-size:11px;font-weight:700;color:var(--purpleL);margin-bottom:4px">Rotten Apple GSM replied:</div>
+                <div style="font-size:13px;color:#f0eeff;line-height:1.6">${sanitize(t.reply)}</div>
+              </div>`:""}
+            </div>`).join("")}
+          </div>
+        </div>`}
+    </div>`;
+  } else if(accountTab==="settings"){
+    const acc=accounts.find(a=>a.id===currentUser.id);
+    const userTier=getTier(getUserSpend(currentUser.id));
+    html=`<div style="max-width:500px;display:flex;flex-direction:column;gap:16px">
+
+      <!-- Account Info -->
+      <div class="card">
+        <div style="font-weight:700;font-size:17px;margin-bottom:20px">Account Info</div>
+        ${[
+          ["Name",currentUser.name],
+          ["Email",currentUser.email],
+          ["Account ID",currentUser.id],
+          ["Member Since",currentUser.createdAt],
+          ["Last Login",acc?.lastLogin?new Date(acc.lastLogin).toLocaleString():"—"],
+          ["Login Count",acc?.loginCount||1],
+          ["Loyalty Tier",`${userTier.icon} ${userTier.label} — ${userTier.discount>0?userTier.discount+"% discount":"No discount yet"}`],
+        ].map(([l,v])=>`
+          <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);gap:12px">
+            <span style="color:var(--muted);font-size:14px">${l}</span>
+            <span style="font-size:14px;font-weight:500;text-align:right;word-break:break-all">${v}</span>
+          </div>`).join("")}
+      </div>
+
+      <!-- Change Password -->
+      <div class="card">
+        <div style="font-weight:700;font-size:16px;margin-bottom:16px">🔑 Change Password</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div><label class="lbl">Current Password</label><input class="inp" type="password" id="cp-current" placeholder="Current password" autocomplete="current-password"/></div>
+          <div><label class="lbl">New Password</label><input class="inp" type="password" id="cp-new" placeholder="Min 8 chars, 1 uppercase, 1 number, 1 special" autocomplete="new-password"/></div>
+          <div><label class="lbl">Confirm New Password</label><input class="inp" type="password" id="cp-confirm" placeholder="Repeat new password" autocomplete="new-password"/></div>
+          <div id="cp-error" style="color:var(--red);font-size:13px;display:none"></div>
+          <div id="cp-success" style="color:var(--green);font-size:13px;display:none"></div>
+          <button class="btn" onclick="changePassword()" style="width:100%;padding:12px">Update Password</button>
+        </div>
+      </div>
+
+      <!-- Data & Privacy -->
+      <div class="card" style="border:1px solid rgba(34,211,238,.2)">
+        <div style="font-weight:700;font-size:16px;margin-bottom:10px">🔒 Your Data & Privacy</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">
+          Rotten Apple GSM stores only your name, email (hashed), account balance, and order history. Your full IMEI numbers are never stored — only masked versions (e.g. 123*****789). Passwords are SHA-256 hashed and never readable. We never sell or share your data with third parties.
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <button onclick="exportMyData()" style="padding:11px 20px;background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.25);border-radius:10px;color:var(--cyan);cursor:pointer;font-weight:600;font-size:13px;width:100%">📥 Download My Data</button>
+          <button onclick="confirmDeleteAccount()" style="padding:11px 20px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.25);border-radius:10px;color:var(--red);cursor:pointer;font-weight:600;font-size:13px;width:100%">🗑 Delete My Account & All Data</button>
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <button onclick="handleLogout()" style="padding:13px 24px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:10px;color:var(--red);cursor:pointer;font-weight:700;font-size:14px;width:100%">
+        🚪 Log Out Securely
+      </button>
+    </div>`
+  }
+  document.getElementById("acc-tab-content").innerHTML=html;
+}
+// ── Account self-service security functions ───────────────────────
+async function changePassword(){
+  const errEl=document.getElementById("cp-error");
+  const okEl=document.getElementById("cp-success");
+  errEl.style.display="none";okEl.style.display="none";
+  const current=document.getElementById("cp-current")?.value||"";
+  const newPw=document.getElementById("cp-new")?.value||"";
+  const confirm=document.getElementById("cp-confirm")?.value||"";
+  if(!current||!newPw||!confirm){errEl.textContent="Fill in all fields.";errEl.style.display="block";return}
+  if(newPw.length<8){errEl.textContent="New password must be at least 8 characters.";errEl.style.display="block";return}
+  if(!/[A-Z]/.test(newPw)){errEl.textContent="Must contain at least one uppercase letter.";errEl.style.display="block";return}
+  if(!/[0-9]/.test(newPw)){errEl.textContent="Must contain at least one number.";errEl.style.display="block";return}
+  if(!/[^A-Za-z0-9]/.test(newPw)){errEl.textContent="Must contain at least one special character.";errEl.style.display="block";return}
+  if(newPw!==confirm){errEl.textContent="New passwords do not match.";errEl.style.display="block";return}
+  const currentHash=await hashPassword(current);
+  const acc=accounts.find(a=>a.id===currentUser.id);
+  if(!acc||acc.passwordHash!==currentHash){errEl.textContent="Current password is incorrect.";errEl.style.display="block";return}
+  acc.passwordHash=await hashPassword(newPw);
+  // Wipe form fields immediately
+  document.getElementById("cp-current").value="";
+  document.getElementById("cp-new").value="";
+  document.getElementById("cp-confirm").value="";
+  okEl.textContent="✓ Password updated successfully.";okEl.style.display="block";
 }
 
 function exportMyData(){
