@@ -3324,6 +3324,7 @@ function renderAdminPage(){
             <div style="text-align:right">
               <div style="font-weight:800;font-size:20px;color:var(--purpleL)">$${acc.balance.toFixed(2)}</div>
               <div style="color:var(--muted);font-size:12px">balance · ${accOrders.length} orders</div>
+              <button onclick="deleteAccount('${acc.id}','${acc.name}')" style="margin-top:8px;background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Delete Account</button>
             </div>
           </div>
           
@@ -3708,6 +3709,18 @@ async function refreshOrderFromSupplier(orderId){
   const result=await checkSupplierOrderStatus(o,svc);
   if(result){showToast("Status updated: "+o.status);renderAdminPage();}
   else{showToast("Could not reach supplier API.");}
+}
+function deleteAccount(id, name){
+  if(!confirm('Delete account for '+name+'? This cannot be undone.'))return;
+  var SURL='https://fkiajefrdcgiobrzftjx.supabase.co';
+  var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk';
+  fetch(SURL+'/rest/v1/accounts?id=eq.'+id,{method:'DELETE',headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY}})
+    .then(function(){
+      accounts=accounts.filter(function(a){return a.id!==id;});
+      saveAccounts();
+      renderAdminPage();
+      showToast('Account deleted.');
+    }).catch(function(){showToast('Delete failed.');});
 }
 function adminAdjustBalance(uid,delta,name){showToast("Balance adjustments disabled for security.");}
 function saveAccounts(){
