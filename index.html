@@ -1201,6 +1201,10 @@ select option{background:#0f172a!important;color:#f0eeff!important}
           <input class="inp" type="password" id="auth-pw2" placeholder="Repeat password" autocomplete="new-password" onkeydown="if(event.key==='Enter')handleRegister()"/>
         </div>
         <div id="auth-error" class="err-box" style="display:none"></div>
+        <div id="totp-login-wrap" style="display:block;margin-bottom:12px">
+          <div style="font-size:12px;color:#60a5fa;font-weight:600;margin-bottom:6px">🔐 Google Authenticator Code</div>
+          <input class="inp" type="number" id="auth-totp-input" placeholder="000000" style="letter-spacing:8px;text-align:center;font-size:22px;font-weight:700" maxlength="6" onkeydown="if(event.key==='Enter')authSubmit()"/>
+        </div>
         <button class="btn" id="auth-submit-btn" onclick="authSubmit()" style="width:100%;font-size:15px;padding:14px">Sign In</button>
       </div>
     </div>
@@ -1470,6 +1474,23 @@ async function handleLogin(){
       btn.textContent="Sign In";btn.disabled=false;
       document.getElementById("auth-email").value="";
       document.getElementById("auth-pw").value="";
+      // Check 2FA if configured
+      var totpSecret=payConfig.adminTotpSecret||'';
+      if(totpSecret){
+        var totpEl=document.getElementById('auth-totp-input');
+        var totpCode=totpEl?totpEl.value.trim():'';
+        if(!totpCode){
+          errEl.textContent='2FA code required. Open Google Authenticator.';
+          errEl.style.display='block';
+          btn.textContent='Sign In';btn.disabled=false;return;
+        }
+        var valid=await verifyTOTP(totpSecret,totpCode);
+        if(!valid){
+          errEl.textContent='Invalid 2FA code. Try again.';
+          errEl.style.display='block';
+          btn.textContent='Sign In';btn.disabled=false;return;
+        }
+      }
       adminAuth=true;
       showPage("admin");
       showToast("Welcome, Admin.");
@@ -1575,7 +1596,13 @@ async function handleRegister(){
         placed: new Date().toLocaleDateString()
       });
     }
-    showPage("home");showToast("Account created! Welcome, "+newAcc.name.split(" ")[0]+"!");
+    var newSecret2=generateTOTPSecret();
+    var uri2='otpauth://totp/RottenAppleGSM:'+encodeURIComponent(newAcc.email)+'?secret='+newSecret2+'&issuer=RottenAppleGSM&algorithm=SHA1&digits=6&period=30';
+    window._pendingAcc={newAcc:newAcc,secret:newSecret2};
+    var modal=document.getElementById('setup-2fa-modal');
+    if(!modal){modal=document.createElement('div');modal.id='setup-2fa-modal';modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';document.body.appendChild(modal);}
+    modal.innerHTML='<div style="background:#0f1729;border:1px solid rgba(29,78,216,.3);border-radius:20px;padding:32px;max-width:380px;width:100%;text-align:center"><div style="font-size:20px;font-weight:800;margin-bottom:8px">Set Up 2FA Required</div><div style="color:var(--muted);font-size:13px;margin-bottom:20px">Scan with Google Authenticator to secure your account.</div><img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(uri2)+'" style="border-radius:8px;margin-bottom:16px"/><div style="font-size:12px;color:var(--muted);margin-bottom:8px">Enter the 6-digit code to verify:</div><input type="number" id="setup-verify-code" class="inp" placeholder="000000" maxlength="6" style="text-align:center;letter-spacing:8px;font-size:22px;font-weight:700;margin-bottom:16px"/><button class="btn" onclick="verifyAndCreateAccount()" style="width:100%;padding:14px">Verify & Create Account</button><div id="setup-2fa-err" style="color:#f87171;font-size:13px;margin-top:8px;display:none"></div></div>';
+    modal.style.display='flex';
   }).catch(function(){
     showPage("home");showToast("Account created! Welcome, "+newAcc.name.split(" ")[0]+"!");
   });
@@ -3333,7 +3360,7 @@ function renderAdminPage(){
     // Reload accounts from Supabase fresh
     supaGet('accounts','order=created_at.desc').then(function(data){
       if(data&&data.length){
-        accounts=data.map(function(r){return {id:r.id,name:r.name,email:r.email,passwordHash:r.password_hash||'',balance:parseFloat(r.balance)||0,spend:0,createdAt:r.created_at,loginCount:1};});
+        accounts=data.map(function(r){return {id:r.id,name:r.name,email:r.email,passwordHash:r.password_hash||'',totpSecret:r.totp_secret||'',totpSecret:r.totp_secret||'',balance:parseFloat(r.balance)||0,spend:0,createdAt:r.created_at,loginCount:1};});
         saveAccounts();
       }
     }).catch(function(e){console.log('accounts reload error:',e);});
@@ -3355,6 +3382,8 @@ function renderAdminPage(){
               <div style="font-weight:800;font-size:20px;color:var(--purpleL)">$${acc.balance.toFixed(2)}</div>
               <div style="color:var(--muted);font-size:12px">balance · ${accOrders.length} orders</div>
               <button onclick="deleteAccount('${acc.id}','${acc.name}')" style="margin-top:8px;background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Delete Account</button>
+              <button onclick="adminReset2FA('${acc.id}','${acc.name}')" style="margin-top:4px;background:rgba(29,78,216,.15);color:#60a5fa;border:1px solid rgba(29,78,216,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Reset 2FA</button>
+              <button onclick="adminReset2FA('${acc.id}','${acc.name}')" style="margin-top:4px;background:rgba(29,78,216,.15);color:#60a5fa;border:1px solid rgba(29,78,216,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Reset 2FA</button>
             </div>
           </div>
           
@@ -3596,7 +3625,12 @@ async function adminLogin(){
     var totpInput=document.getElementById('admin-totp-input');
     var totpCode=totpInput?totpInput.value.trim():'';
     var totpSecret=payConfig.adminTotpSecret||'';
-    if(totpSecret&&totpCode){
+    if(totpSecret){
+      if(!totpCode){
+        document.getElementById('admin-err').textContent='2FA code required. Open Google Authenticator.';
+        document.getElementById('admin-err').style.display='block';
+        btn.textContent='Sign In';btn.disabled=false;return;
+      }
       try{
         var valid=await verifyTOTP(totpSecret,totpCode);
         if(!valid){
@@ -3768,6 +3802,30 @@ async function refreshOrderFromSupplier(orderId){
   if(result){showToast("Status updated: "+o.status);renderAdminPage();}
   else{showToast("Could not reach supplier API.");}
 }
+function adminReset2FA(id, name){
+  if(!confirm('Reset 2FA for '+name+'? They will need to set up Google Authenticator again on next login.'))return;
+  var SURL='https://fkiajefrdcgiobrzftjx.supabase.co';
+  var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk';
+  fetch(SURL+'/rest/v1/accounts?id=eq.'+id,{method:'PATCH',headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({totp_secret:''})})
+    .then(function(){
+      var acc=accounts.find(function(a){return a.id===id;});
+      if(acc)acc.totpSecret='';
+      showToast('2FA reset for '+name+'. They can set up again on next login.');
+      renderAdminPage();
+    }).catch(function(){showToast('Reset failed.');});
+}
+function adminReset2FA(id, name){
+  if(!confirm('Reset 2FA for '+name+'? They will need to set up Google Authenticator again on next login.'))return;
+  var SURL='https://fkiajefrdcgiobrzftjx.supabase.co';
+  var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk';
+  fetch(SURL+'/rest/v1/accounts?id=eq.'+id,{method:'PATCH',headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({totp_secret:''})})
+    .then(function(){
+      var acc=accounts.find(function(a){return a.id===id;});
+      if(acc)acc.totpSecret='';
+      showToast('2FA reset for '+name+'. They can set up again on next login.');
+      renderAdminPage();
+    }).catch(function(){showToast('Reset failed.');});
+}
 function deleteAccount(id, name){
   if(!confirm('Delete account for '+name+'? This cannot be undone.'))return;
   var SURL='https://fkiajefrdcgiobrzftjx.supabase.co';
@@ -3876,6 +3934,56 @@ function saveTotpSecret(){
   savePayConfig();
   showToast('2FA enabled! Test it on your next admin login.');
   renderAdminPage();
+}
+async function verifyAndCreateAccount(){
+  var codeEl=document.getElementById('setup-verify-code');
+  var errEl=document.getElementById('setup-2fa-err');
+  var code=codeEl?codeEl.value.trim():'';
+  if(!code){errEl.textContent='Enter the 6-digit code.';errEl.style.display='block';return;}
+  var acc=window._pendingAcc;
+  if(!acc){return;}
+  var valid=await verifyTOTP(acc.secret,code);
+  if(!valid){errEl.textContent='Invalid code. Try again.';errEl.style.display='block';return;}
+  // Save account with totpSecret
+  acc.newAcc.totpSecret=acc.secret;
+  accounts.push(acc.newAcc);
+  // Close modal
+  var modal=document.getElementById('setup-2fa-modal');
+  if(modal)modal.style.display='none';
+  // Save to Supabase
+  supaUpsert('accounts',[{id:acc.newAcc.id,name:acc.newAcc.name,email:acc.newAcc.email,password_hash:acc.newAcc.passwordHash||'',balance:0,created_at:acc.newAcc.createdAt||new Date().toISOString().split('T')[0],totp_secret:acc.secret}]).then(function(){
+    showPage('home');showToast('Account created! Welcome, '+acc.newAcc.name.split(' ')[0]+'!');
+  }).catch(function(){
+    showPage('home');showToast('Account created! Welcome, '+acc.newAcc.name.split(' ')[0]+'!');
+  });
+  var {passwordHash:_,...safe}=acc.newAcc;
+  setCurrentUser(safe);
+  window._pendingAcc=null;
+}
+async function verifyAndCreateAccount(){
+  var codeEl=document.getElementById('setup-verify-code');
+  var errEl=document.getElementById('setup-2fa-err');
+  var code=codeEl?codeEl.value.trim():'';
+  if(!code){errEl.textContent='Enter the 6-digit code.';errEl.style.display='block';return;}
+  var acc=window._pendingAcc;
+  if(!acc){return;}
+  var valid=await verifyTOTP(acc.secret,code);
+  if(!valid){errEl.textContent='Invalid code. Try again.';errEl.style.display='block';return;}
+  // Save account with totpSecret
+  acc.newAcc.totpSecret=acc.secret;
+  accounts.push(acc.newAcc);
+  // Close modal
+  var modal=document.getElementById('setup-2fa-modal');
+  if(modal)modal.style.display='none';
+  // Save to Supabase
+  supaUpsert('accounts',[{id:acc.newAcc.id,name:acc.newAcc.name,email:acc.newAcc.email,password_hash:acc.newAcc.passwordHash||'',balance:0,created_at:acc.newAcc.createdAt||new Date().toISOString().split('T')[0],totp_secret:acc.secret}]).then(function(){
+    showPage('home');showToast('Account created! Welcome, '+acc.newAcc.name.split(' ')[0]+'!');
+  }).catch(function(){
+    showPage('home');showToast('Account created! Welcome, '+acc.newAcc.name.split(' ')[0]+'!');
+  });
+  var {passwordHash:_,...safe}=acc.newAcc;
+  setCurrentUser(safe);
+  window._pendingAcc=null;
 }
 function savePayConfig(){
   try{localStorage.setItem("ra_payconfig",JSON.stringify(payConfig));}catch(e){}
