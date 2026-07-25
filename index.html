@@ -1266,7 +1266,6 @@ select option{background:#0f172a!important;color:#f0eeff!important}
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/otpauth@9.3.6/dist/otpauth.umd.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════════════
 // SECURITY HELPERS
@@ -3594,10 +3593,10 @@ async function adminLogin(){
     var totpInput=document.getElementById('admin-totp-input');
     var totpCode=totpInput?totpInput.value.trim():'';
     var totpSecret=payConfig.adminTotpSecret||'';
-    if(totpSecret&&typeof otpauth!=='undefined'){
+    if(totpSecret&&totpCode){
       try{
-        var totp=new otpauth.TOTP({secret:otpauth.Secret.fromBase32(totpSecret),digits:6,period:30});
-        if(totp.validate({token:totpCode,window:1})===null){
+        var valid=await verifyTOTP(totpSecret,totpCode);
+        if(!valid){
           document.getElementById('admin-err').textContent='Invalid 2FA code. Check Google Authenticator.';
           document.getElementById('admin-err').style.display='block';
           btn.textContent='Sign In';btn.disabled=false;return;
@@ -3822,18 +3821,51 @@ function deployToGitHub(){
     supaUpsert('accounts', rows);
   }
 }
+function generateTOTPSecret(){
+  var chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  var secret='';
+  var arr=new Uint8Array(20);
+  crypto.getRandomValues(arr);
+  arr.forEach(function(b){secret+=chars[b%32];});
+  return secret;
+}
+async function verifyTOTP(secret,token){
+  var base32chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  var bits='';
+  secret.toUpperCase().replace(/=/g,'').split('').forEach(function(c){
+    var v=base32chars.indexOf(c);
+    if(v>=0)bits+=v.toString(2).padStart(5,'0');
+  });
+  var bytes=[];
+  for(var i=0;i+8<=bits.length;i+=8)bytes.push(parseInt(bits.slice(i,i+8),2));
+  var keyData=new Uint8Array(bytes);
+  var key=await crypto.subtle.importKey('raw',keyData,{name:'HMAC',hash:'SHA-1'},false,['sign']);
+  var now=Math.floor(Date.now()/1000);
+  for(var w=-1;w<=1;w++){
+    var t=Math.floor((now+w*30)/30);
+    var tb=new ArrayBuffer(8);
+    var tv=new DataView(tb);
+    tv.setUint32(4,t,false);
+    var sig=await crypto.subtle.sign('HMAC',key,tb);
+    var sa=new Uint8Array(sig);
+    var o=sa[19]&0xf;
+    var code=((sa[o]&0x7f)<<24|(sa[o+1]&0xff)<<16|(sa[o+2]&0xff)<<8|(sa[o+3]&0xff))%1000000;
+    if(code.toString().padStart(6,'0')===token.trim())return true;
+  }
+  return false;
+}
 function setup2FA(){
-  if(typeof otpauth==='undefined'){showToast('2FA library not loaded. Refresh and try again.');return;}
-  var secret=new otpauth.Secret();
-  var totp=new otpauth.TOTP({issuer:'RottenAppleGSM',label:payConfig.zelleEmail||'admin',secret:secret,digits:6,period:30});
-  var uri=totp.toString();
+  var secret=generateTOTPSecret();
+  var issuer='RottenAppleGSM';
+  var label=payConfig.zelleEmail||'admin';
+  var uri='otpauth://totp/'+encodeURIComponent(issuer)+':'+encodeURIComponent(label)+'?secret='+secret+'&issuer='+encodeURIComponent(issuer)+'&algorithm=SHA1&digits=6&period=30';
   var qrDiv=document.getElementById('totp-qr');
   var secretInput=document.getElementById('totp-secret-display');
   var setupArea=document.getElementById('totp-setup-area');
-  if(secretInput)secretInput.value=secret.base32;
+  if(secretInput)secretInput.value=secret;
   if(qrDiv)qrDiv.innerHTML='<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(uri)+'" style="border-radius:8px"/>';
   if(setupArea)setupArea.style.display='block';
-  window._totpNewSecret=secret.base32;
+  window._totpNewSecret=secret;
 }
 function saveTotpSecret(){
   if(!window._totpNewSecret){showToast('Generate a secret first.');return;}
