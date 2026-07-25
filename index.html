@@ -3874,7 +3874,12 @@ function saveTotpSecret(){
   showToast('2FA enabled! Test it on your next admin login.');
   renderAdminPage();
 }
-function savePayConfig(){try{localStorage.setItem("ra_payconfig",JSON.stringify(payConfig));}catch(e){}}
+function savePayConfig(){
+  try{localStorage.setItem("ra_payconfig",JSON.stringify(payConfig));}catch(e){}
+  if(typeof supaUpsert!=="undefined"){
+    supaUpsert("config",[{key:"payconfig",value:JSON.stringify(payConfig)}]).catch(function(e){console.log("payconfig save error:",e);});
+  }
+}
 function loadPayConfig(){try{var s=localStorage.getItem("ra_payconfig");if(!s)return;var p=JSON.parse(s);if(p&&typeof p==="object")Object.assign(payConfig,p);}catch(e){}}
 function saveOrders(){try{localStorage.setItem("ra_orders",JSON.stringify(orders||[]));}catch(e){}}
 function loadOrders(){try{var s=localStorage.getItem("ra_orders");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p)&&p.length)orders=p;}catch(e){}}
@@ -4134,6 +4139,15 @@ async function loadServicesFromSupabase(){
       saveAccounts();
     }
   }catch(e){console.log('Accounts load error:',e);}
+  // Load payConfig from Supabase
+  try{
+    var cfgData=await supaGet('config','key=eq.payconfig');
+    if(cfgData&&cfgData.length&&cfgData[0].value){
+      var savedCfg=JSON.parse(cfgData[0].value);
+      Object.assign(payConfig,savedCfg);
+      localStorage.setItem('ra_payconfig',JSON.stringify(payConfig));
+    }
+  }catch(e){console.log('payconfig load error:',e);}
   const orders=await supaGet('orders','order=created_at.desc');
   if(orders&&orders.length){allOrders=orders.map(o=>({id:o.id,orderNumber:o.order_number,name:o.customer_name,email:o.email,desc:o.description,imei:o.imei,amount:parseFloat(o.amount)||0,cost:parseFloat(o.cost)||0,paymentMethod:o.payment_method,status:o.status,placed:o.placed,completed:o.completed,accountId:o.account_id,notes:o.notes||''}));saveOrders();}
 })();
