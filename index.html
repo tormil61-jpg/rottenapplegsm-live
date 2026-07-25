@@ -2965,7 +2965,10 @@ function renderAdminPage(){
       <div style="font-size:22px;font-weight:800;margin-bottom:6px">Admin Login</div>
       <div style="color:var(--muted);font-size:13px;margin-bottom:22px">Strong password required.</div>
       <input class="inp" type="password" id="admin-pw-input" placeholder="Admin password" style="margin-bottom:12px" onkeydown="if(event.key==='Enter')adminLogin()" ${adminLockout?"disabled":""}/>
-      <input class="inp" type="text" id="admin-totp-input" placeholder="2FA code (leave blank if not set up)" style="margin-bottom:12px;letter-spacing:4px;text-align:center;font-size:18px" maxlength="6" onkeydown="if(event.key==='Enter')adminLogin()" ${adminLockout?"disabled":""}/>
+      <div style="margin-bottom:12px">
+        <div style="font-size:12px;color:#60a5fa;font-weight:600;margin-bottom:6px;text-align:left">🔐 Google Authenticator Code</div>
+        <input class="inp" type="number" id="admin-totp-input" placeholder="000000" style="letter-spacing:8px;text-align:center;font-size:22px;font-weight:700" maxlength="6" onkeydown="if(event.key==='Enter')adminLogin()" ${adminLockout?"disabled":""}/>
+      </div>
       <button class="btn" onclick="adminLogin()" style="width:100%" ${adminLockout?"disabled":""}>
         ${adminLockout?"Locked":"Login"}
       </button>
