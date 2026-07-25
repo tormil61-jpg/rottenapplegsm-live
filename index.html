@@ -1549,6 +1549,20 @@ async function handleRegister(){
   document.getElementById("auth-pw2").value="";
   // Save to Supabase then redirect
   supaUpsert("accounts",[{id:newAcc.id,name:newAcc.name,email:newAcc.email,password_hash:newAcc.passwordHash||"",balance:0,created_at:newAcc.createdAt||new Date().toISOString().split("T")[0]}]).then(function(){
+    // Notify admin of new account
+    if(typeof emailjs!=="undefined"&&payConfig.emailjsServiceId&&payConfig.emailjsPublicKey){
+      emailjs.init(payConfig.emailjsPublicKey);
+      emailjs.send(payConfig.emailjsServiceId, payConfig.emailjsTemplateNew||"template_8hpp3n8", {
+        order_id: newAcc.id,
+        customer_name: newAcc.name,
+        customer_email: newAcc.email,
+        service: "New Customer Account Created",
+        imei_masked: "N/A",
+        amount: "$0.00",
+        payment_method: "Registration",
+        placed: new Date().toLocaleDateString()
+      });
+    }
     showPage("home");showToast("Account created! Welcome, "+newAcc.name.split(" ")[0]+"!");
   }).catch(function(){
     showPage("home");showToast("Account created! Welcome, "+newAcc.name.split(" ")[0]+"!");
