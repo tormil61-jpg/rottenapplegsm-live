@@ -1266,6 +1266,7 @@ select option{background:#0f172a!important;color:#f0eeff!important}
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/otpauth/9.3.6/otpauth.umd.min.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════════════════
 // SECURITY HELPERS
@@ -1345,7 +1346,7 @@ let suppliers=[
 
 // Support tickets
 let tickets=[]; // starts at #1001 for first order
-let payConfig={backendUrl:"",stripePublicKey:"pk_live_51RAdiy1im1pzQEDTBG0uDRJunjMRS084946lVYkl0i5irM9Fb787d6rH0vMOQ6JKGA6lsI6XizEzU9SO7Y9LJmp000SIAZMg1A",stripePaymentLink_disabled:"",paypalClientId:"AVNQLqpnuHw6iz1WhMle_P_GsQRaAvpE0zHHy82EOlf3tzPiUWbnPuP_CkvXJ_W6Ue4D6OlZSTINacqs",btcAddress:"3H1wo2u43uh7kwfZk3L5JD7pJpTz3JT768",usdtAddress:"0x5CDA5992AB8CFD42C135F12756809AFea7d746F8",githubToken:"",zelleEmail:"Tormil61@icloud.com",zelleName:"Milton Torres",emailjsPublicKey:"HVDMR09St7qz-fUxV",emailjsServiceId:"service_zfgxbhe",emailjsTemplateNew:"template_8hpp3n8",emailjsTemplateStatus:"template_ts2m4ye"};
+let payConfig={backendUrl:"",stripePublicKey:"pk_live_51RAdiy1im1pzQEDTBG0uDRJunjMRS084946lVYkl0i5irM9Fb787d6rH0vMOQ6JKGA6lsI6XizEzU9SO7Y9LJmp000SIAZMg1A",stripePaymentLink_disabled:"",paypalClientId:"AVNQLqpnuHw6iz1WhMle_P_GsQRaAvpE0zHHy82EOlf3tzPiUWbnPuP_CkvXJ_W6Ue4D6OlZSTINacqs",btcAddress:"3H1wo2u43uh7kwfZk3L5JD7pJpTz3JT768",usdtAddress:"0x5CDA5992AB8CFD42C135F12756809AFea7d746F8",githubToken:"",adminTotpSecret:"",zelleEmail:"Tormil61@icloud.com",zelleName:"Milton Torres",emailjsPublicKey:"HVDMR09St7qz-fUxV",emailjsServiceId:"service_zfgxbhe",emailjsTemplateNew:"template_8hpp3n8",emailjsTemplateStatus:"template_ts2m4ye"};
 
 // Supplier API configs — DhruFusion standard format
 const SUPPLIER_APIS={
@@ -2965,6 +2966,7 @@ function renderAdminPage(){
       <div style="font-size:22px;font-weight:800;margin-bottom:6px">Admin Login</div>
       <div style="color:var(--muted);font-size:13px;margin-bottom:22px">Strong password required.</div>
       <input class="inp" type="password" id="admin-pw-input" placeholder="Admin password" style="margin-bottom:12px" onkeydown="if(event.key==='Enter')adminLogin()" ${adminLockout?"disabled":""}/>
+      <input class="inp" type="text" id="admin-totp-input" placeholder="2FA code (leave blank if not set up)" style="margin-bottom:12px;letter-spacing:4px;text-align:center;font-size:18px" maxlength="6" onkeydown="if(event.key==='Enter')adminLogin()" ${adminLockout?"disabled":""}/>
       <button class="btn" onclick="adminLogin()" style="width:100%" ${adminLockout?"disabled":""}>
         ${adminLockout?"Locked":"Login"}
       </button>
@@ -3471,6 +3473,19 @@ function renderAdminPage(){
         </div>
       </div>
 
+      <!-- 2FA Setup -->
+      <div class="card-sm" style="margin-bottom:16px">
+        <div style="font-weight:700;font-size:16px;margin-bottom:4px">🔐 Two-Factor Authentication (Admin)</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:10px">Add Google Authenticator to your admin login. Scan the QR code with the app, then save the secret.</div>
+        <button onclick="setup2FA()" class="btn" style="margin-bottom:10px;font-size:13px">Generate 2FA Secret & QR Code</button>
+        <div id="totp-setup-area" style="display:none;margin-bottom:10px">
+          <div id="totp-qr" style="margin-bottom:8px"></div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Scan with Google Authenticator, then save:</div>
+          <input class="inp" id="totp-secret-display" readonly style="font-family:monospace;font-size:12px;margin-bottom:8px"/>
+          <button onclick="saveTotpSecret()" class="btn" style="font-size:13px">Save & Enable 2FA</button>
+        </div>
+        <div style="font-size:12px;color:var(--muted)">Status: <span id="totp-status" style="font-weight:700;color:${payConfig.adminTotpSecret?'#4ade80':'#f97316'}">${payConfig.adminTotpSecret?'Enabled':'Not configured'}</span></div>
+      </div>
       <!-- EmailJS -->
       <div class="card-sm">
         <div style="font-weight:700;font-size:15px;margin-bottom:4px">✉️ EmailJS Notifications</div>
@@ -3575,7 +3590,22 @@ async function adminLogin(){
   if(adminLockout){showToast("Account locked. Refresh and try again.");return}
   if(rateLimit("admin_login",5,300000)){adminLockout=true;document.getElementById("admin-err").textContent="Too many failed attempts. Locked for this session.";return}
   const inputHash=await hashPassword(pw);
-  if(inputHash===ADMIN_PW_HASH){adminAuth=true;renderAdminPage()}
+  if(inputHash===ADMIN_PW_HASH){
+    var totpInput=document.getElementById('admin-totp-input');
+    var totpCode=totpInput?totpInput.value.trim():'';
+    var totpSecret=payConfig.adminTotpSecret||'';
+    if(totpSecret&&typeof otpauth!=='undefined'){
+      try{
+        var totp=new otpauth.TOTP({secret:otpauth.Secret.fromBase32(totpSecret),digits:6,period:30});
+        if(totp.validate({token:totpCode,window:1})===null){
+          document.getElementById('admin-err').textContent='Invalid 2FA code. Check Google Authenticator.';
+          document.getElementById('admin-err').style.display='block';
+          btn.textContent='Sign In';btn.disabled=false;return;
+        }
+      }catch(e){console.log('2FA error:',e);}
+    }
+    adminAuth=true;renderAdminPage()
+  }
   else{document.getElementById("admin-err").textContent="Incorrect password.";if(document.getElementById("admin-pw-input"))document.getElementById("admin-pw-input").value=""}
 }
 function addSupplier(){
@@ -3791,6 +3821,26 @@ function deployToGitHub(){
     });
     supaUpsert('accounts', rows);
   }
+}
+function setup2FA(){
+  if(typeof otpauth==='undefined'){showToast('2FA library not loaded. Refresh and try again.');return;}
+  var secret=new otpauth.Secret();
+  var totp=new otpauth.TOTP({issuer:'RottenAppleGSM',label:payConfig.zelleEmail||'admin',secret:secret,digits:6,period:30});
+  var uri=totp.toString();
+  var qrDiv=document.getElementById('totp-qr');
+  var secretInput=document.getElementById('totp-secret-display');
+  var setupArea=document.getElementById('totp-setup-area');
+  if(secretInput)secretInput.value=secret.base32;
+  if(qrDiv)qrDiv.innerHTML='<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(uri)+'" style="border-radius:8px"/>';
+  if(setupArea)setupArea.style.display='block';
+  window._totpNewSecret=secret.base32;
+}
+function saveTotpSecret(){
+  if(!window._totpNewSecret){showToast('Generate a secret first.');return;}
+  payConfig.adminTotpSecret=window._totpNewSecret;
+  savePayConfig();
+  showToast('2FA enabled! Test it on your next admin login.');
+  renderAdminPage();
 }
 function savePayConfig(){try{localStorage.setItem("ra_payconfig",JSON.stringify(payConfig));}catch(e){}}
 function loadPayConfig(){try{var s=localStorage.getItem("ra_payconfig");if(!s)return;var p=JSON.parse(s);if(p&&typeof p==="object")Object.assign(payConfig,p);}catch(e){}}
