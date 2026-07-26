@@ -428,7 +428,7 @@ nav{
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 14px rgba(34,197,94,0)}}
 
 select{background:var(--surface2)!important;color:#f0eeff!important;border:1px solid var(--border)!important}
-select option{background:#0f172a!important;color:#f0eeff!important}
+select option{background:#000008!important;color:#f0eeff!important}
 
 /* ═══ TRON FONTS & BG ONLY ═══ */
 h1,h2,h3,.hero-title,.section-title{font-family:'Orbitron',monospace !important;letter-spacing:0.04em;}
@@ -637,6 +637,55 @@ div[style*="font-weight:700"][style*="font-size:14"] {
   font-family:'Orbitron',monospace !important;
   text-shadow:0 0 14px rgba(0,245,255,0.4) !important;
 }
+
+/* ═══ HOW IT WORKS + CONTACT SECTION FIX ═══ */
+/* Force all section backgrounds to Tron black */
+section, .section, [class*="section"], [id*="how"], [id*="contact"], [id*="about"] {
+  background:#000008 !important;
+  background-color:#000008 !important;
+}
+
+/* How it works step cards */
+[class*="step"], [class*="how"], [style*="step"] {
+  font-family:'Orbitron',monospace !important;
+  background:rgba(0,4,20,0.85) !important;
+  border:1px solid rgba(0,245,255,0.18) !important;
+}
+
+/* All divs with white/light backgrounds that shouldn't be */
+div[style*="background:#0"], div[style*="background: #0"] {
+  background:#000008 !important;
+}
+
+/* Contact section */
+[id*="contact"] *, [class*="contact"] * {
+  font-family:'Share Tech Mono',monospace !important;
+}
+
+/* Force page backgrounds */
+.page, [id^="page-"] {
+  background:#000008 !important;
+  background-color:#000008 !important;
+}
+
+/* Any remaining white or light colored card backgrounds */
+[style*="background:white"], [style*="background: white"],
+[style*="background:#fff"], [style*="background: #fff"] {
+  background:rgba(0,4,20,0.85) !important;
+}
+
+/* Step number circles */
+[style*="border-radius:50%"][style*="background"] {
+  background:rgba(0,245,255,0.15) !important;
+  border:1px solid rgba(0,245,255,0.4) !important;
+  color:#00f5ff !important;
+  font-family:'Orbitron',monospace !important;
+  box-shadow:0 0 12px rgba(0,245,255,0.2) !important;
+}
+
+/* All remaining inline font families that are system fonts */
+* { font-family:inherit; }
+body { font-family:'Share Tech Mono',monospace !important; }
 </style>
 <body>
 <canvas id="tron-bg" style="position:fixed;inset:0;z-index:0;opacity:0.45;"></canvas>
@@ -1381,7 +1430,7 @@ div[style*="font-weight:700"][style*="font-size:14"] {
      AUTH PAGE
 ═══════════════════════════════════════════════════════════════ -->
 <div id="page-auth" class="page">
-  <div style="background:#07050f;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;position:relative">
+  <div style="background:#000008;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;position:relative">
     <div style="position:fixed;width:500px;height:500px;border-radius:50%;background:#1d4ed8;filter:blur(120px);opacity:.13;top:-150px;left:-150px;pointer-events:none"></div>
     <button onclick="showPage('home')" style="position:fixed;top:20px;left:20px;background:transparent;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;font-size:13px">← Back</button>
     <div style="width:100%;max-width:420px;position:relative;z-index:1">
