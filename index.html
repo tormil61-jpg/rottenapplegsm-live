@@ -214,7 +214,7 @@ html{scroll-behavior:smooth}
 
 /* ── Body with visible gradient background ── */
 body{
-  background:#020817;
+  background:#000008;
   background-image:
     radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(29,78,216,.45) 0%, transparent 60%),
     radial-gradient(ellipse 65% 55% at 90% 100%,  rgba(30,58,138,.40) 0%, transparent 60%),
@@ -314,7 +314,7 @@ nav{
 .card-sm::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);pointer-events:none}
 
 /* ── Glow blobs ── */
-.blob{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
+.blob{display:none !important;position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
 .blob-purple{width:900px;height:900px;background:radial-gradient(circle,rgba(29,78,216,.9),transparent 70%);opacity:.30;top:-300px;left:-300px;animation:blobFloat1 14s ease-in-out infinite}
 .blob-pink{width:700px;height:700px;background:radial-gradient(circle,rgba(37,99,235,.9),transparent 70%);opacity:.25;bottom:-200px;right:-200px;animation:blobFloat2 17s ease-in-out infinite}
 .blob-rainbow{width:400px;height:400px;background:conic-gradient(from 0deg,#22c55e,#facc15,#f97316,#ef4444,#a855f7,#3b82f6,#22c55e);opacity:.07;top:40%;left:50%;transform:translate(-50%,-50%);animation:blobSpin 25s linear infinite}
@@ -443,6 +443,8 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 nav{position:relative;z-index:10;}
 </style>
 <body>
+<canvas id="tron-bg" style="position:fixed;inset:0;z-index:0;opacity:0.45;"></canvas>
+<div style="position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at center,rgba(0,0,8,0.35) 0%,rgba(0,0,8,0.6) 65%,rgba(0,0,8,0.85) 100%);pointer-events:none;"></div>
 
 <!-- Glow blobs -->
 <div class="blob blob-purple"></div>
