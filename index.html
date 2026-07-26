@@ -441,6 +441,117 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .tron-overlay{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at center,rgba(0,0,8,0.35) 0%,rgba(0,0,8,0.6) 65%,rgba(0,0,8,0.85) 100%);pointer-events:none;}
 .page{position:relative;z-index:1;}
 nav{position:relative;z-index:10;}
+
+/* ═══ TRON VISUAL STYLES ═══ */
+/* Glowing cyan headings */
+h1,h2,.hero-title{color:#ffffff !important;text-shadow:0 0 30px rgba(0,245,255,0.15) !important;}
+h1 span[style*="grad"],h1 span[style*="blue"],.accent-text{
+  background:linear-gradient(135deg,#00f5ff,#0088ff) !important;
+  -webkit-background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  text-shadow:none !important;
+  filter:drop-shadow(0 0 12px rgba(0,245,255,0.4)) !important;
+}
+
+/* Cards with Tron borders */
+.card,.card-sm{
+  border:1px solid rgba(0,245,255,0.2) !important;
+  background:rgba(0,4,20,0.85) !important;
+  position:relative !important;
+}
+.card::before,.card-sm::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,245,255,0.5),transparent);
+  pointer-events:none;
+}
+
+/* Buttons - Tron style */
+.btn{
+  border:1px solid rgba(0,245,255,0.45) !important;
+  background:rgba(0,245,255,0.1) !important;
+  color:#00f5ff !important;
+  font-family:'Orbitron',monospace !important;
+  font-size:11px !important;
+  letter-spacing:0.1em !important;
+  text-transform:uppercase !important;
+  text-shadow:0 0 8px rgba(0,245,255,0.4) !important;
+  box-shadow:0 0 12px rgba(0,245,255,0.15),inset 0 0 12px rgba(0,245,255,0.05) !important;
+}
+.btn:hover{
+  background:rgba(0,245,255,0.2) !important;
+  box-shadow:0 0 24px rgba(0,245,255,0.3) !important;
+}
+
+/* Inputs */
+input.inp,select.sel{
+  background:rgba(0,245,255,0.04) !important;
+  border:1px solid rgba(0,245,255,0.2) !important;
+  color:#d0f4ff !important;
+  font-family:'Share Tech Mono',monospace !important;
+}
+input.inp::placeholder{color:rgba(0,245,255,0.3) !important;}
+input.inp:focus,select.sel:focus{
+  border-color:#00f5ff !important;
+  box-shadow:0 0 0 2px rgba(0,245,255,0.12) !important;
+  outline:none !important;
+}
+
+/* Nav brand glow */
+.nav-brand,.nav-brand *{
+  font-family:'Orbitron',monospace !important;
+  color:#00f5ff !important;
+  text-shadow:0 0 10px rgba(0,245,255,0.5) !important;
+}
+
+/* Price display */
+[style*="--purpleL"],[style*="color:var(--purpleL)"]{
+  color:#00f5ff !important;
+  text-shadow:0 0 12px rgba(0,245,255,0.4) !important;
+}
+
+/* Section eyebrows */
+[style*="text-transform:uppercase"]{
+  font-family:'Share Tech Mono',monospace !important;
+  letter-spacing:0.2em !important;
+  color:rgba(0,245,255,0.6) !important;
+}
+
+/* Method buttons in checkout */
+.method-btn{
+  background:rgba(0,4,20,0.85) !important;
+  border:1px solid rgba(0,245,255,0.18) !important;
+}
+.method-btn:hover{
+  border-color:rgba(0,245,255,0.5) !important;
+  background:rgba(0,245,255,0.06) !important;
+  box-shadow:0 0 12px rgba(0,245,255,0.1) !important;
+}
+
+/* Status badges */
+span[style*="border-radius"]{
+  font-family:'Share Tech Mono',monospace !important;
+  letter-spacing:0.08em !important;
+}
+
+/* Service tags/pills */
+[style*="100% Success"],[style*="Success Rate"]{
+  color:#00ff64 !important;
+  border-color:rgba(0,255,100,0.3) !important;
+}
+
+/* Admin tabs */
+[onclick*="adminTab"]{
+  font-family:'Orbitron',monospace !important;
+  font-size:10px !important;
+  letter-spacing:0.08em !important;
+}
+
+/* Carrier section headers */
+[style*="text-transform:uppercase"][style*="letter-spacing"]{
+  color:rgba(0,245,255,0.7) !important;
+  font-family:'Share Tech Mono',monospace !important;
+}
 </style>
 <body>
 <canvas id="tron-bg" style="position:fixed;inset:0;z-index:0;opacity:0.45;"></canvas>
