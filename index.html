@@ -552,6 +552,91 @@ span[style*="border-radius"]{
   color:rgba(0,245,255,0.7) !important;
   font-family:'Share Tech Mono',monospace !important;
 }
+
+/* ═══ GLOBAL TRON FONT + GLOW OVERRIDE ═══ */
+* { box-sizing:border-box; }
+
+/* All buttons get Orbitron */
+button, .btn, [role="button"] {
+  font-family:'Orbitron',monospace !important;
+  letter-spacing:0.08em !important;
+  text-transform:uppercase !important;
+  font-size:11px !important;
+}
+
+/* All headings get Orbitron */
+h1,h2,h3,h4,h5,h6 {
+  font-family:'Orbitron',monospace !important;
+  letter-spacing:0.04em !important;
+}
+
+/* Body text gets Share Tech Mono */
+p, label, span, small, td, th, li {
+  font-family:'Share Tech Mono',monospace !important;
+  letter-spacing:0.03em !important;
+}
+
+/* Inputs and selects */
+input, select, textarea {
+  font-family:'Share Tech Mono',monospace !important;
+  background:rgba(0,245,255,0.04) !important;
+  border:1px solid rgba(0,245,255,0.2) !important;
+  color:#d0f4ff !important;
+}
+input::placeholder, textarea::placeholder {
+  color:rgba(0,245,255,0.25) !important;
+  font-family:'Share Tech Mono',monospace !important;
+}
+
+/* Nav links */
+nav button, nav a {
+  font-family:'Orbitron',monospace !important;
+  font-size:10px !important;
+  letter-spacing:0.12em !important;
+  text-transform:uppercase !important;
+  color:rgba(0,245,255,0.8) !important;
+  border:1px solid rgba(0,245,255,0.25) !important;
+  background:transparent !important;
+}
+nav button:hover {
+  color:#00f5ff !important;
+  border-color:rgba(0,245,255,0.6) !important;
+  box-shadow:0 0 12px rgba(0,245,255,0.2) !important;
+}
+
+/* Primary action button glow */
+.btn, button[style*="background:var(--grad)"], button[style*="blue"] {
+  box-shadow:0 0 15px rgba(0,245,255,0.2),0 0 30px rgba(0,245,255,0.08) !important;
+}
+
+/* Card glow */
+.card, .card-sm {
+  box-shadow:0 0 20px rgba(0,245,255,0.06),inset 0 0 20px rgba(0,245,255,0.02) !important;
+}
+
+/* Div labels and eyebrows */
+div[style*="text-transform:uppercase"], div[style*="letter-spacing"] {
+  font-family:'Share Tech Mono',monospace !important;
+  color:rgba(0,245,255,0.6) !important;
+}
+
+/* Payment method names */
+div[style*="font-weight:700"][style*="font-size:14"] {
+  font-family:'Orbitron',monospace !important;
+  font-size:11px !important;
+  letter-spacing:0.06em !important;
+}
+
+/* Overlay/modal titles */
+.overlay h2, .overlay h3, [id*="step"] h2, [id*="step"] h3 {
+  font-family:'Orbitron',monospace !important;
+}
+
+/* Price numbers glow */
+[style*="font-size:24px"], [style*="font-size:20px"], [style*="font-size:18px"] {
+  font-family:'Orbitron',monospace !important;
+  text-shadow:0 0 14px rgba(0,245,255,0.4) !important;
+}
 </style>
 <body>
 <canvas id="tron-bg" style="position:fixed;inset:0;z-index:0;opacity:0.45;"></canvas>
