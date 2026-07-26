@@ -189,26 +189,45 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Rotten Apple GSM"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
+/* ═══ TRON THEME ═══ */
+#tron-bg{position:fixed;inset:0;z-index:0;opacity:0.5;}
+.tron-overlay{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at center,rgba(0,0,8,0.4) 0%,rgba(0,0,8,0.65) 60%,rgba(0,0,8,0.88) 100%);pointer-events:none;}
+body{font-family:'Inter',sans-serif;background:#000008 !important;}
+.page{position:relative;z-index:1;}
+nav{position:relative;z-index:10;background:rgba(0,0,8,0.94) !important;border-bottom:1px solid rgba(0,245,255,0.18) !important;backdrop-filter:blur(24px);}
+.nav-brand span,.logo-text{font-family:'Orbitron',monospace !important;color:#00f5ff !important;text-shadow:0 0 10px #00f5ff;}
+.btn,.btn-primary{clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%) !important;font-family:'Orbitron',monospace !important;letter-spacing:0.1em !important;}
+.card,.card-sm{border:1px solid rgba(0,245,255,0.18) !important;background:rgba(0,4,16,0.85) !important;backdrop-filter:blur(8px) !important;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));}
+.inp,.sel{background:rgba(0,245,255,0.04) !important;border:1px solid rgba(0,245,255,0.18) !important;color:#d0f4ff !important;font-family:'Share Tech Mono',monospace !important;}
+.inp:focus,.sel:focus{border-color:#00f5ff !important;box-shadow:0 0 0 1px rgba(0,245,255,0.2) !important;}
+.method-btn{background:rgba(0,4,16,0.85) !important;border:1px solid rgba(0,245,255,0.18) !important;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px)) !important;}
+.method-btn:hover{border-color:#00f5ff !important;background:rgba(0,245,255,0.05) !important;}
+.overlay{background:rgba(0,0,8,0.97) !important;}
+h1,h2,h3{font-family:'Orbitron',monospace !important;letter-spacing:0.04em;}
+/* Tron scanlines */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.04) 3px,rgba(0,0,0,0.04) 4px);pointer-events:none;z-index:9998;}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 
 /* ── Design tokens ── */
 :root{
-  --purple:#1d4ed8;
-  --purpleL:#2563eb;
-  --pink:#3b82f6;
-  --accent:#60a5fa;
-  --cyan:#38bdf8;
-  --green:#22c55e;
-  --orange:#f97316;
-  --red:#ef4444;
-  --surface:rgba(255,255,255,.05);
-  --surface2:rgba(255,255,255,.08);
-  --surface3:rgba(255,255,255,.12);
-  --muted:rgba(219,234,254,.5);
-  --border:rgba(255,255,255,.12);
-  --grad:linear-gradient(135deg,#1e3a8a,#1d4ed8,#2563eb);
+  --purple:#00f5ff;
+  --purpleL:#00f5ff;
+  --pink:#00ccdd;
+  --accent:#00f5ff;
+  --cyan:#00f5ff;
+  --green:#00ff64;
+  --orange:#ff8800;
+  --red:#ff3333;
+  --surface:rgba(0,245,255,.04);
+  --surface2:rgba(0,245,255,.07);
+  --surface3:rgba(0,245,255,.11);
+  --muted:rgba(0,245,255,.45);
+  --border:rgba(0,245,255,.18);
+  --grad:linear-gradient(135deg,#000820,#001440,#002060);
 }
 
 /* ── Body with visible gradient background ── */
@@ -229,7 +248,7 @@ a{text-decoration:none}
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:#07050f}
+::-webkit-scrollbar-track{background:#000008}
 ::-webkit-scrollbar-thumb{background:#1d4ed8;border-radius:3px}
 
 /* ── Page sections ── */
@@ -1170,7 +1189,7 @@ select option{background:#0f172a!important;color:#f0eeff!important}
      AUTH PAGE
 ═══════════════════════════════════════════════════════════════ -->
 <div id="page-auth" class="page">
-  <div style="background:#07050f;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;position:relative">
+  <div style="background:#000008;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;position:relative">
     <div style="position:fixed;width:500px;height:500px;border-radius:50%;background:#1d4ed8;filter:blur(120px);opacity:.13;top:-150px;left:-150px;pointer-events:none"></div>
     <button onclick="showPage('home')" style="position:fixed;top:20px;left:20px;background:transparent;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;font-size:13px">← Back</button>
     <div style="width:100%;max-width:420px;position:relative;z-index:1">
@@ -4261,6 +4280,72 @@ async function loadServicesFromSupabase(){
   }catch(e){console.log('payconfig load error:',e);}
   const orders=await supaGet('orders','order=created_at.desc');
   if(orders&&orders.length){allOrders=orders.map(o=>({id:o.id,orderNumber:o.order_number,name:o.customer_name,email:o.email,desc:o.description,imei:o.imei,amount:parseFloat(o.amount)||0,cost:parseFloat(o.cost)||0,paymentMethod:o.payment_method,status:o.status,placed:o.placed,completed:o.completed,accountId:o.account_id,notes:o.notes||''}));saveOrders();}
+})();
+</script>
+
+<script>
+(function(){
+  var canvas=document.getElementById('tron-bg');
+  if(!canvas)return;
+  var ctx=canvas.getContext('2d');
+  var W,H,CELL=35,COLS,ROWS,bikes=[],frameCount=0;
+  function hexRgba(h,a){var r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return 'rgba('+r+','+g+','+b+','+a+')';}
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;COLS=Math.floor(W/CELL);ROWS=Math.floor(H/CELL);reset();}
+  function isBlocked(c,r,id){if(c<0||c>=COLS||r<0||r>=ROWS)return true;for(var i=0;i<bikes.length;i++){if(bikes[i].id===id)continue;if(bikes[i].trail.some(function(t){return t.c===c&&t.r===r;}))return true;}return false;}
+  function reset(){bikes=[{col:Math.floor(COLS*0.25),row:Math.floor(ROWS*0.3),dir:{dc:1,dr:0},color:'#00f5ff',trail:[],timer:0,interval:10,id:1},{col:Math.floor(COLS*0.75),row:Math.floor(ROWS*0.7),dir:{dc:-1,dr:0},color:'#ff8800',trail:[],timer:0,interval:12,id:2}];}
+  function moveBike(b){
+    var nc=b.col+b.dir.dc,nr=b.row+b.dir.dr;
+    if(isBlocked(nc,nr,b.id)){
+      var turns=[{dc:-b.dir.dr,dr:b.dir.dc},{dc:b.dir.dr,dr:-b.dir.dc}];
+      var valid=turns.filter(function(t){return !isBlocked(b.col+t.dc,b.row+t.dr,b.id);});
+      if(valid.length>0){b.dir=valid[Math.floor(Math.random()*valid.length)];b.col+=b.dir.dc;b.row+=b.dir.dr;}
+      else{b.col=Math.floor(Math.random()*COLS);b.row=Math.floor(Math.random()*ROWS);b.trail=[];return;}
+    } else {b.col=nc;b.row=nr;}
+    b.trail.push({c:b.col,r:b.row});
+    if(b.trail.length>400)b.trail.shift();
+    b.timer++;
+    if(b.timer>=b.interval){
+      var turns2=[{dc:-b.dir.dr,dr:b.dir.dc},{dc:b.dir.dr,dr:-b.dir.dc}];
+      var valid2=turns2.filter(function(t){return !isBlocked(b.col+t.dc,b.row+t.dr,b.id);});
+      if(valid2.length>0&&Math.random()>0.5)b.dir=valid2[Math.floor(Math.random()*valid2.length)];
+      b.timer=0;b.interval=8+Math.floor(Math.random()*14);
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // Grid
+    ctx.strokeStyle='rgba(0,245,255,0.1)';ctx.lineWidth=0.5;
+    for(var cc=0;cc<=COLS;cc++){ctx.beginPath();ctx.moveTo(cc*CELL,0);ctx.lineTo(cc*CELL,H);ctx.stroke();}
+    for(var rr=0;rr<=ROWS;rr++){ctx.beginPath();ctx.moveTo(0,rr*CELL);ctx.lineTo(W,rr*CELL);ctx.stroke();}
+    // Move bikes every 2 frames
+    if(frameCount%2===0)bikes.forEach(moveBike);
+    frameCount++;
+    // Draw trails and heads
+    bikes.forEach(function(b){
+      var n=b.trail.length;
+      b.trail.forEach(function(seg,idx){
+        var a=(idx/n)*0.45;
+        ctx.fillStyle=hexRgba(b.color,a*0.2);
+        ctx.fillRect(seg.c*CELL+1,seg.r*CELL+1,CELL-2,CELL-2);
+        if(idx>0){
+          var prev=b.trail[idx-1];
+          ctx.beginPath();ctx.moveTo(prev.c*CELL+CELL/2,prev.r*CELL+CELL/2);ctx.lineTo(seg.c*CELL+CELL/2,seg.r*CELL+CELL/2);
+          ctx.strokeStyle=hexRgba(b.color,a);ctx.lineWidth=2;ctx.stroke();
+          ctx.strokeStyle=hexRgba(b.color,a*0.3);ctx.lineWidth=6;ctx.stroke();
+        }
+      });
+      // Head
+      var hx=b.col*CELL,hy=b.row*CELL;
+      var g=ctx.createRadialGradient(hx+CELL/2,hy+CELL/2,0,hx+CELL/2,hy+CELL/2,CELL*1.8);
+      g.addColorStop(0,hexRgba(b.color,0.7));g.addColorStop(1,'transparent');
+      ctx.fillStyle=g;ctx.fillRect(hx-CELL,hy-CELL,CELL*3,CELL*3);
+      ctx.fillStyle=b.color;ctx.fillRect(hx+2,hy+2,CELL-4,CELL-4);
+      ctx.fillStyle='#fff';ctx.fillRect(hx+CELL/2-3,hy+CELL/2-3,6,6);
+    });
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize);
+  resize();draw();
 })();
 </script>
 </body>
