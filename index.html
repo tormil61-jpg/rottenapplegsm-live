@@ -1060,7 +1060,7 @@ body { font-family:'Share Tech Mono',monospace !important; }
     </div>
     <h1 style="font-size:clamp(2rem,5vw,3.6rem);font-weight:800;line-height:1.1;max-width:720px;margin-bottom:16px">
       Unlock Your Phone.<br/>
-      <span style="background:linear-gradient(90deg,#00f5ff,#00ddff);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Any Carrier. Anywhere.</span>
+      <span style="background:linear-gradient(90deg,#00f5ff,#00aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px rgba(0,245,255,0.6))">Any Carrier. Anywhere.</span>
     </h1>
     <p style="color:var(--muted);font-size:15px;max-width:520px;line-height:1.7;margin-bottom:28px">
       Permanent carrier unlock, blacklist removal, iCloud bypass and FRP removal for iPhone, Samsung, Motorola and more. T-Mobile, AT&T, Cricket, Verizon, Boost — fast 24–72hr delivery, open 24/7, serving Los Angeles and worldwide.
@@ -1922,6 +1922,25 @@ window.addEventListener("beforeunload",(e)=>{
 // ═══════════════════════════════════════════════════════════════════
 // HOME RENDER
 // ═══════════════════════════════════════════════════════════════════
+function getCarrierColor(carrier){
+  var c=carrier.toLowerCase();
+  if(c.includes('t-mobile')||c.includes('tmobile'))return '#e20074';
+  if(c.includes('metropcs')||c.includes('metro pcs'))return '#7b2fbe';
+  if(c.includes('sprint'))return '#ffe600';
+  if(c.includes('at&t')||c.includes('att'))return '#00a8e0';
+  if(c.includes('verizon'))return '#cd040b';
+  if(c.includes('cricket'))return '#4caf50';
+  if(c.includes('boost'))return '#ff6600';
+  if(c.includes('xfinity'))return '#00819a';
+  if(c.includes('spectrum'))return '#9b59b6';
+  if(c.includes('samsung'))return '#1428a0';
+  if(c.includes('us reseller')||c.includes('reseller'))return '#ff8800';
+  if(c.includes('claro'))return '#e60026';
+  if(c.includes('globe')||c.includes('philippines'))return '#0056a2';
+  if(c.includes('xiaomi'))return '#ff6900';
+  if(c.includes('tecno')||c.includes('infinix'))return '#00bcd4';
+  return '#00f5ff';
+}
 function renderHome(){
   const bal=getUserBalance();
   // Nav
@@ -2004,7 +2023,7 @@ function renderAllServices(query){
   });
   el.innerHTML=Object.entries(groups).map(([carrier,svcs])=>`
     <div style="margin-bottom:28px">
-      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)">${carrier}</div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);color:${getCarrierColor(carrier)};text-shadow:0 0 8px ${getCarrierColor(carrier)}88">${carrier}</div>
       <div style="display:flex;flex-direction:column;gap:8px">
         ${svcs.map(s=>{
           const sp=savePct(s);
