@@ -184,7 +184,7 @@
 <link rel="preconnect" href="https://js.stripe.com"/>
 <link rel="dns-prefetch" href="https://sickw.com"/>
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net"/>
-<meta name="theme-color" content="#1d4ed8"/>
+<meta name="theme-color" content="#00ccee"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -231,7 +231,7 @@ a{text-decoration:none}
 /* ── Scrollbar ── */
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:#000008}
-::-webkit-scrollbar-thumb{background:#1d4ed8;border-radius:3px}
+::-webkit-scrollbar-thumb{background:#00ccee;border-radius:3px}
 
 /* ── Page sections ── */
 .page{display:none}
@@ -259,11 +259,11 @@ nav{
 /* ── Buttons ── */
 .btn{
   padding:11px 24px;
-  background:linear-gradient(135deg,#1d4ed8,#2563eb,#3b82f6);
+  background:linear-gradient(135deg,#00ccee,#00f5ff,#00ddff);
   border:1px solid rgba(37,99,235,.35);
   border-radius:12px;color:#fff;font-weight:700;font-size:14px;cursor:pointer;
   transition:all .2s;position:relative;overflow:hidden;
-  box-shadow:0 4px 20px rgba(29,78,216,.4), inset 0 1px 0 rgba(255,255,255,.2);
+  box-shadow:0 4px 20px rgba(0,245,255,.25), inset 0 1px 0 rgba(255,255,255,.2);
 }
 .btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 60%);pointer-events:none}
 .btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(29,78,216,.45), inset 0 1px 0 rgba(255,255,255,.25)}
@@ -317,7 +317,7 @@ nav{
 .blob{display:none !important;position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
 .blob-purple{width:900px;height:900px;background:radial-gradient(circle,rgba(29,78,216,.9),transparent 70%);opacity:.30;top:-300px;left:-300px;animation:blobFloat1 14s ease-in-out infinite}
 .blob-pink{width:700px;height:700px;background:radial-gradient(circle,rgba(37,99,235,.9),transparent 70%);opacity:.25;bottom:-200px;right:-200px;animation:blobFloat2 17s ease-in-out infinite}
-.blob-rainbow{width:400px;height:400px;background:conic-gradient(from 0deg,#22c55e,#facc15,#f97316,#ef4444,#a855f7,#3b82f6,#22c55e);opacity:.07;top:40%;left:50%;transform:translate(-50%,-50%);animation:blobSpin 25s linear infinite}
+.blob-rainbow{width:400px;height:400px;background:conic-gradient(from 0deg,#22c55e,#facc15,#f97316,#ef4444,#a855f7,#00ddff,#22c55e);opacity:.07;top:40%;left:50%;transform:translate(-50%,-50%);animation:blobSpin 25s linear infinite}
 @keyframes blobFloat1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(50px,40px) scale(1.05)}}
 @keyframes blobFloat2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,-30px) scale(1.05)}}
 @keyframes blobSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
@@ -325,15 +325,15 @@ nav{
 /* ── Badges ── */
 .badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;display:inline-block}
 .badge-hot{background:rgba(249,115,22,.2);color:#fb923c;border:1px solid rgba(249,115,22,.2)}
-.stype-unlock{background:rgba(29,78,216,.2);color:#60a5fa;border:1px solid rgba(29,78,216,.2)}
+.stype-unlock{background:rgba(0,245,255,.1);color:#00f5ff;border:1px solid rgba(0,245,255,.1)}
 .stype-blacklist{background:rgba(239,68,68,.18);color:#f87171;border:1px solid rgba(239,68,68,.18)}
 .stype-frp{background:rgba(34,211,238,.15);color:#67e8f9;border:1px solid rgba(34,211,238,.15)}
 .stype-mi{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.15)}
 .stype-mdm{background:rgba(37,99,235,.15);color:#c084fc;border:1px solid rgba(37,99,235,.15)}
-.status-pending-crypto{background:rgba(59,130,246,.15);color:#60a5fa;animation:pulse 2s ease infinite}
+.status-pending-crypto{background:rgba(59,130,246,.15);color:#00f5ff;animation:pulse 2s ease infinite}
 .status-processing{background:rgba(249,115,22,.15);color:#fb923c}
 .status-submitted{background:rgba(34,211,238,.13);color:#67e8f9}
-.status-progress{background:rgba(29,78,216,.18);color:#60a5fa}
+.status-progress{background:rgba(29,78,216,.18);color:#00f5ff}
 .status-completed{background:rgba(34,197,94,.15);color:#4ade80}
 .status-refunded{background:rgba(251,191,36,.13);color:#fde047}
 .status-cancelled{background:rgba(239,68,68,.13);color:#f87171}
@@ -366,7 +366,7 @@ nav{
   border:1px solid rgba(255,255,255,.18);
   border-radius:26px;width:100%;max-width:500px;
   margin-top:20px;overflow:hidden;
-  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), 0 40px 100px rgba(0,0,0,.6), 0 0 60px rgba(29,78,216,.2);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), 0 40px 100px rgba(0,0,0,.6), 0 0 60px rgba(0,245,255,.1);
 }
 .modal-header{
   background:rgba(255,255,255,.07);
@@ -378,7 +378,7 @@ nav{
 .close-btn:hover{background:rgba(255,255,255,.16);color:#f0eeff}
 
 /* ── Toast ── */
-#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(29,78,216,.85);backdrop-filter:blur(20px);border:1px solid rgba(37,99,235,.4);color:#fff;padding:11px 26px;border-radius:100px;font-size:14px;font-weight:600;z-index:9999;white-space:nowrap;box-shadow:0 8px 32px rgba(29,78,216,.4);opacity:0;transition:opacity .3s;pointer-events:none}
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(29,78,216,.85);backdrop-filter:blur(20px);border:1px solid rgba(37,99,235,.4);color:#fff;padding:11px 26px;border-radius:100px;font-size:14px;font-weight:600;z-index:9999;white-space:nowrap;box-shadow:0 8px 32px rgba(0,245,255,.25);opacity:0;transition:opacity .3s;pointer-events:none}
 #toast.show{opacity:1}
 
 /* ── WhatsApp FAB ── */
@@ -387,29 +387,29 @@ nav{
 
 /* ── Toggle ── */
 .toggle{width:36px;height:20px;border-radius:100px;border:1px solid rgba(255,255,255,.14);position:relative;cursor:pointer;flex-shrink:0;background:rgba(255,255,255,.08);backdrop-filter:blur(8px);transition:all .2s}
-.toggle.on{background:rgba(29,78,216,.4);border-color:rgba(37,99,235,.5)}
+.toggle.on{background:rgba(0,245,255,.25);border-color:rgba(37,99,235,.5)}
 .toggle .dot{position:absolute;width:14px;height:14px;border-radius:50%;background:rgba(240,238,255,.6);top:2px;left:2px;transition:left .2s,background .2s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
-.toggle.on .dot{left:18px;background:#60a5fa}
+.toggle.on .dot{left:18px;background:#00f5ff}
 
 /* ── Tabs ── */
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:14px}
 .tab{padding:8px 16px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);backdrop-filter:blur(10px);color:rgba(240,238,255,.5);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500}
 .tab:hover{background:rgba(255,255,255,.09);color:rgba(240,238,255,.8)}
-.tab.active{background:rgba(29,78,216,.3);border-color:rgba(37,99,235,.4);color:#f0eeff;font-weight:700;box-shadow:0 2px 12px rgba(29,78,216,.3)}
+.tab.active{background:rgba(0,245,255,.18);border-color:rgba(37,99,235,.4);color:#f0eeff;font-weight:700;box-shadow:0 2px 12px rgba(0,245,255,.18)}
 
 /* ── Stat card ── */
 .stat-card{background:rgba(255,255,255,.07);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:20px;transition:all .2s;box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 4px 20px rgba(0,0,0,.3)}
 .stat-card.clickable{cursor:pointer}
-.stat-card.clickable:hover{border-color:rgba(37,99,235,.4);transform:translateY(-3px);box-shadow:0 12px 40px rgba(29,78,216,.2)}
+.stat-card.clickable:hover{border-color:rgba(37,99,235,.4);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,245,255,.1)}
 
 /* ── Section headers ── */
-.section-label{font-size:11px;color:#60a5fa;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+.section-label{font-size:11px;color:#00f5ff;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
 .section-title{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;margin-bottom:36px}
 
 /* ── HIW cards ── */
 .hiw-card{background:rgba(255,255,255,.07);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:28px;transition:all .25s cubic-bezier(.34,1.56,.64,1);text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 4px 24px rgba(0,0,0,.3)}
-.hiw-card:hover{border-color:rgba(37,99,235,.45);transform:translateY(-6px);background:rgba(29,78,216,.1)}
-.hiw-icon{width:52px;height:52px;background:rgba(29,78,216,.2);backdrop-filter:blur(10px);border:1px solid rgba(29,78,216,.3);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 16px;box-shadow:0 4px 16px rgba(29,78,216,.3)}
+.hiw-card:hover{border-color:rgba(37,99,235,.45);transform:translateY(-6px);background:rgba(0,245,255,.06)}
+.hiw-icon{width:52px;height:52px;background:rgba(0,245,255,.1);backdrop-filter:blur(10px);border:1px solid rgba(0,245,255,.18);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 16px;box-shadow:0 4px 16px rgba(0,245,255,.18)}
 
 /* ── Error box ── */
 .err-box{background:rgba(239,68,68,.1);backdrop-filter:blur(10px);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:10px 14px;color:#f87171;font-size:13px;margin-bottom:16px}
@@ -775,7 +775,7 @@ body { font-family:'Share Tech Mono',monospace !important; }
         </div>
         <!-- Logged-in user: wallet only -->
         <div id="checkout-user-methods" style="display:none">
-          <div style="background:rgba(29,78,216,.08);border:1px solid rgba(29,78,216,.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--purpleL)">
+          <div style="background:rgba(29,78,216,.08);border:1px solid rgba(0,245,255,.1);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--purpleL)">
             💼 Registered accounts pay using account balance only.
           </div>
           <button class="method-btn" onclick="payWallet()">
@@ -937,11 +937,11 @@ body { font-family:'Share Tech Mono',monospace !important; }
           <div style="font-weight:700;font-size:13px;color:#f0eeff;margin-bottom:12px">What happens next</div>
           <div style="display:flex;flex-direction:column;gap:10px">
             <div style="display:flex;align-items:flex-start;gap:10px">
-              <div style="width:24px;height:24px;border-radius:50%;background:rgba(29,78,216,.2);color:var(--purpleL);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+              <div style="width:24px;height:24px;border-radius:50%;background:rgba(0,245,255,.1);color:var(--purpleL);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
               <div style="font-size:13px;color:var(--muted)">We receive your order and submit it to our supplier within minutes.</div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:10px">
-              <div style="width:24px;height:24px;border-radius:50%;background:rgba(29,78,216,.2);color:var(--purpleL);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+              <div style="width:24px;height:24px;border-radius:50%;background:rgba(0,245,255,.1);color:var(--purpleL);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
               <div style="font-size:13px;color:var(--muted)">You will receive an email update when your unlock is complete — usually within 24–72 hours.</div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:10px">
@@ -1060,7 +1060,7 @@ body { font-family:'Share Tech Mono',monospace !important; }
     </div>
     <h1 style="font-size:clamp(2rem,5vw,3.6rem);font-weight:800;line-height:1.1;max-width:720px;margin-bottom:16px">
       Unlock Your Phone.<br/>
-      <span style="background:linear-gradient(90deg,#2563eb,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Any Carrier. Anywhere.</span>
+      <span style="background:linear-gradient(90deg,#00f5ff,#00ddff);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Any Carrier. Anywhere.</span>
     </h1>
     <p style="color:var(--muted);font-size:15px;max-width:520px;line-height:1.7;margin-bottom:28px">
       Permanent carrier unlock, blacklist removal, iCloud bypass and FRP removal for iPhone, Samsung, Motorola and more. T-Mobile, AT&T, Cricket, Verizon, Boost — fast 24–72hr delivery, open 24/7, serving Los Angeles and worldwide.
@@ -1074,7 +1074,7 @@ body { font-family:'Share Tech Mono',monospace !important; }
         <button class="btn" style="padding:12px 28px;font-size:15px" onclick="scrollToSection('selector')">Place New Order</button>
         <button style="padding:12px 28px;background:transparent;border:1px solid var(--border);border-radius:10px;color:#f0eeff;cursor:pointer;font-weight:600;font-size:15px" onclick="showPage('account')">My Orders</button>
       </div>
-      <div style="display:inline-flex;align-items:center;gap:12px;background:rgba(29,78,216,.1);border:1px solid var(--border);border-radius:12px;padding:12px 24px">
+      <div style="display:inline-flex;align-items:center;gap:12px;background:rgba(0,245,255,.06);border:1px solid var(--border);border-radius:12px;padding:12px 24px">
         <span style="font-size:20px">💼</span>
         <span style="color:var(--muted);font-size:14px">Balance:</span>
         <span id="hero-balance" style="font-weight:800;font-size:20px;color:var(--purpleL)">$0.00</span>
@@ -1431,7 +1431,7 @@ body { font-family:'Share Tech Mono',monospace !important; }
 ═══════════════════════════════════════════════════════════════ -->
 <div id="page-auth" class="page">
   <div style="background:#000008;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;position:relative">
-    <div style="position:fixed;width:500px;height:500px;border-radius:50%;background:#1d4ed8;filter:blur(120px);opacity:.13;top:-150px;left:-150px;pointer-events:none"></div>
+    <div style="position:fixed;width:500px;height:500px;border-radius:50%;background:#00ccee;filter:blur(120px);opacity:.13;top:-150px;left:-150px;pointer-events:none"></div>
     <button onclick="showPage('home')" style="position:fixed;top:20px;left:20px;background:transparent;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;font-size:13px">← Back</button>
     <div style="width:100%;max-width:420px;position:relative;z-index:1">
       <div style="text-align:center;margin-bottom:32px">
@@ -1462,7 +1462,7 @@ body { font-family:'Share Tech Mono',monospace !important; }
         </div>
         <div id="auth-error" class="err-box" style="display:none"></div>
         <div id="totp-login-wrap" style="display:block;margin-bottom:12px">
-          <div style="font-size:12px;color:#60a5fa;font-weight:600;margin-bottom:6px">🔐 Google Authenticator Code</div>
+          <div style="font-size:12px;color:#00f5ff;font-weight:600;margin-bottom:6px">🔐 Google Authenticator Code</div>
           <input class="inp" type="number" id="auth-totp-input" placeholder="000000" style="letter-spacing:8px;text-align:center;font-size:22px;font-weight:700" maxlength="6" onkeydown="if(event.key==='Enter')authSubmit()"/>
         </div>
         <button class="btn" id="auth-submit-btn" onclick="authSubmit()" style="width:100%;font-size:15px;padding:14px">Sign In</button>
@@ -1861,7 +1861,7 @@ async function handleRegister(){
     window._pendingAcc={newAcc:newAcc,secret:newSecret2};
     var modal=document.getElementById('setup-2fa-modal');
     if(!modal){modal=document.createElement('div');modal.id='setup-2fa-modal';modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';document.body.appendChild(modal);}
-    modal.innerHTML='<div style="background:#0f1729;border:1px solid rgba(29,78,216,.3);border-radius:20px;padding:32px;max-width:380px;width:100%;text-align:center"><div style="font-size:20px;font-weight:800;margin-bottom:8px">Set Up 2FA Required</div><div style="color:var(--muted);font-size:13px;margin-bottom:20px">Scan with Google Authenticator to secure your account.</div><img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(uri2)+'" style="border-radius:8px;margin-bottom:16px"/><div style="font-size:12px;color:var(--muted);margin-bottom:8px">Enter the 6-digit code to verify:</div><input type="number" id="setup-verify-code" class="inp" placeholder="000000" maxlength="6" style="text-align:center;letter-spacing:8px;font-size:22px;font-weight:700;margin-bottom:16px"/><button class="btn" onclick="verifyAndCreateAccount()" style="width:100%;padding:14px">Verify & Create Account</button><div id="setup-2fa-err" style="color:#f87171;font-size:13px;margin-top:8px;display:none"></div></div>';
+    modal.innerHTML='<div style="background:#000814;border:1px solid rgba(0,245,255,.18);border-radius:20px;padding:32px;max-width:380px;width:100%;text-align:center"><div style="font-size:20px;font-weight:800;margin-bottom:8px">Set Up 2FA Required</div><div style="color:var(--muted);font-size:13px;margin-bottom:20px">Scan with Google Authenticator to secure your account.</div><img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(uri2)+'" style="border-radius:8px;margin-bottom:16px"/><div style="font-size:12px;color:var(--muted);margin-bottom:8px">Enter the 6-digit code to verify:</div><input type="number" id="setup-verify-code" class="inp" placeholder="000000" maxlength="6" style="text-align:center;letter-spacing:8px;font-size:22px;font-weight:700;margin-bottom:16px"/><button class="btn" onclick="verifyAndCreateAccount()" style="width:100%;padding:14px">Verify & Create Account</button><div id="setup-2fa-err" style="color:#f87171;font-size:13px;margin-top:8px;display:none"></div></div>';
     modal.style.display='flex';
   }).catch(function(){
     showPage("home");showToast("Account created! Welcome, "+newAcc.name.split(" ")[0]+"!");
@@ -1949,7 +1949,7 @@ function renderHome(){
       <div style="font-weight:700;font-size:14px;margin-bottom:4px">${s.brand} · ${s.series}</div>
       <!-- View description link -->
       <button onclick="event.stopPropagation();openSvcPopup()"
-        style="background:none;border:none;color:#60a5fa;font-size:12px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px">View description</button>
+        style="background:none;border:none;color:#00f5ff;font-size:12px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px">View description</button>
       <div id="desc-pop-${s.id}" style="display:none;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.25);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:13px;color:var(--text);line-height:1.6">${s.description||'No description yet. Add one in Admin → Services.'}</div>
       <div id="\${popId}" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px;font-size:13px;color:var(--text);line-height:1.6">\${s.description||'No description available.'}</div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
@@ -2028,7 +2028,7 @@ function renderAllServices(query){
               </div>
               <!-- View description link -->
               <button onclick="event.stopPropagation();openSvcPopup('${descId}')"
-                style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;background:none;border:none;color:#60a5fa;font-size:12px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px">View description</button>
+                style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;background:none;border:none;color:#00f5ff;font-size:12px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px">View description</button>
             </div>
 
             <!-- Right: price + order button -->
@@ -2159,7 +2159,7 @@ function updateSvcDetail(){
         </div>
         <!-- View description link -->
         ${matchedSvc.description||true?`<button onclick="toggleInlineDesc()" id="inline-desc-btn"
-          style="display:inline-flex;align-items:center;gap:4px;background:none;border:none;color:#60a5fa;font-size:12px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px">View description</button>`:""}
+          style="display:inline-flex;align-items:center;gap:4px;background:none;border:none;color:#00f5ff;font-size:12px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px">View description</button>`:""}
       </div>
       <div style="text-align:right">
         ${hasDiscount?`<div style="font-size:12px;text-decoration:line-through;color:var(--muted)">$${matchedSvc.price.toFixed(2)}</div>`:""}
@@ -2876,7 +2876,7 @@ function openDeposit(){
 function closeDeposit(){document.getElementById("deposit-overlay").classList.remove("open")}
 function renderDepositQuickBtns(){
   document.getElementById("deposit-quick-btns").innerHTML=DEP_AMOUNTS.map(a=>`
-    <button onclick="setDepositAmt(${a})" id="dep-btn-${a}" style="flex:1 1 60px;padding:10px 4px;border-radius:10px;border:1.5px solid ${depositAmt===a&&!depositCustom?"var(--purple)":"var(--border)"};background:${depositAmt===a&&!depositCustom?"rgba(29,78,216,.2)":"var(--surface2)"};color:${depositAmt===a&&!depositCustom?"var(--purpleL)":"var(--muted)"};font-weight:700;font-size:14px;cursor:pointer">$${a}</button>`).join("")
+    <button onclick="setDepositAmt(${a})" id="dep-btn-${a}" style="flex:1 1 60px;padding:10px 4px;border-radius:10px;border:1.5px solid ${depositAmt===a&&!depositCustom?"var(--purple)":"var(--border)"};background:${depositAmt===a&&!depositCustom?"rgba(0,245,255,.1)":"var(--surface2)"};color:${depositAmt===a&&!depositCustom?"var(--purpleL)":"var(--muted)"};font-weight:700;font-size:14px;cursor:pointer">$${a}</button>`).join("")
 }
 function setDepositAmt(a){depositAmt=a;depositCustom="";document.getElementById("deposit-custom").value="";document.getElementById("deposit-over-limit").style.display="none";renderDepositQuickBtns();updateDepositDisplay()}
 function depositCustomChange(v){depositCustom=v;depositAmt=0;renderDepositQuickBtns();const over=parseFloat(v)>MAX_DEP;document.getElementById("deposit-over-limit").style.display=over?"block":"none";updateDepositDisplay()}
@@ -3095,7 +3095,7 @@ function renderAccountPage(){
               <div style="font-size:12px;color:var(--muted);margin-bottom:10px">${t.date}</div>
               <div style="background:var(--surface2);border-radius:8px;padding:12px;font-size:13px;color:#f0eeff;line-height:1.6">${sanitize(t.message)}</div>
               ${t.reply?`
-              <div style="margin-top:10px;background:rgba(29,78,216,.08);border:1px solid rgba(29,78,216,.2);border-radius:8px;padding:12px">
+              <div style="margin-top:10px;background:rgba(29,78,216,.08);border:1px solid rgba(0,245,255,.1);border-radius:8px;padding:12px">
                 <div style="font-size:11px;font-weight:700;color:var(--purpleL);margin-bottom:4px">Rotten Apple GSM replied:</div>
                 <div style="font-size:13px;color:#f0eeff;line-height:1.6">${sanitize(t.reply)}</div>
               </div>`:""}
@@ -3253,7 +3253,7 @@ function renderAdminPage(){
       <div style="color:var(--muted);font-size:13px;margin-bottom:22px">Strong password required.</div>
       <input class="inp" type="password" id="admin-pw-input" placeholder="Admin password" style="margin-bottom:12px" onkeydown="if(event.key==='Enter')adminLogin()" ${adminLockout?"disabled":""}/>
       <div style="margin-bottom:12px">
-        <div style="font-size:12px;color:#60a5fa;font-weight:600;margin-bottom:6px;text-align:left">🔐 Google Authenticator Code</div>
+        <div style="font-size:12px;color:#00f5ff;font-weight:600;margin-bottom:6px;text-align:left">🔐 Google Authenticator Code</div>
         <input class="inp" type="number" id="admin-totp-input" placeholder="000000" style="letter-spacing:8px;text-align:center;font-size:22px;font-weight:700" maxlength="6" onkeydown="if(event.key==='Enter')adminLogin()" ${adminLockout?"disabled":""}/>
       </div>
       <button class="btn" onclick="adminLogin()" style="width:100%" ${adminLockout?"disabled":""}>
@@ -3434,7 +3434,7 @@ function renderAdminPage(){
           </div>
         </div>
         <div style="background:var(--surface2);border-radius:8px;padding:12px;font-size:13px;color:#f0eeff;line-height:1.6;margin-bottom:12px">${sanitize(t.message)}</div>
-        ${t.reply?`<div style="background:rgba(29,78,216,.08);border:1px solid rgba(29,78,216,.2);border-radius:8px;padding:12px;font-size:13px;color:var(--purpleL);line-height:1.6;margin-bottom:10px"><span style="font-weight:700">Your Reply:</span> ${sanitize(t.reply)}</div>`:""}
+        ${t.reply?`<div style="background:rgba(29,78,216,.08);border:1px solid rgba(0,245,255,.1);border-radius:8px;padding:12px;font-size:13px;color:var(--purpleL);line-height:1.6;margin-bottom:10px"><span style="font-weight:700">Your Reply:</span> ${sanitize(t.reply)}</div>`:""}
         <div style="display:flex;gap:8px">
           <input class="inp" style="flex:1;font-size:13px;padding:8px 12px" placeholder="Type a reply…" id="ticket-reply-${i}"/>
           <button class="btn" style="padding:8px 16px;font-size:13px" onclick="replyTicket(${i})">Reply</button>
@@ -3642,8 +3642,8 @@ function renderAdminPage(){
               <div style="font-weight:800;font-size:20px;color:var(--purpleL)">$${acc.balance.toFixed(2)}</div>
               <div style="color:var(--muted);font-size:12px">balance · ${accOrders.length} orders</div>
               <button onclick="deleteAccount('${acc.id}','${acc.name}')" style="margin-top:8px;background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Delete Account</button>
-              <button onclick="adminReset2FA('${acc.id}','${acc.name}')" style="margin-top:4px;background:rgba(29,78,216,.15);color:#60a5fa;border:1px solid rgba(29,78,216,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Reset 2FA</button>
-              <button onclick="adminReset2FA('${acc.id}','${acc.name}')" style="margin-top:4px;background:rgba(29,78,216,.15);color:#60a5fa;border:1px solid rgba(29,78,216,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Reset 2FA</button>
+              <button onclick="adminReset2FA('${acc.id}','${acc.name}')" style="margin-top:4px;background:rgba(29,78,216,.15);color:#00f5ff;border:1px solid rgba(0,245,255,.18);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Reset 2FA</button>
+              <button onclick="adminReset2FA('${acc.id}','${acc.name}')" style="margin-top:4px;background:rgba(29,78,216,.15);color:#00f5ff;border:1px solid rgba(0,245,255,.18);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Reset 2FA</button>
             </div>
           </div>
           
@@ -3694,7 +3694,7 @@ function renderAdminPage(){
     const brands=["Apple iPhone","Samsung","Any Device","Xiaomi","Tecno/Infinix"];
     content=`<div style="display:flex;gap:12px;margin-bottom:14px;align-items:center;flex-wrap:wrap">
       <span style="color:var(--muted);font-size:13px">${services.length} services</span>
-        <button onclick="deployToGitHub()" style="padding:6px 14px;border-radius:8px;border:none;background:#1d4ed8;color:#fff;font-size:12px;font-weight:700;cursor:pointer;margin-left:8px">🚀 Deploy Changes</button> <button onclick="saveServicesToStorage();showToast('Prices saved ✓');" style="padding:6px 14px;border-radius:8px;border:none;background:var(--purpleL);color:#fff;font-size:12px;font-weight:700;cursor:pointer">💾 Save All</button>
+        <button onclick="deployToGitHub()" style="padding:6px 14px;border-radius:8px;border:none;background:#00ccee;color:#fff;font-size:12px;font-weight:700;cursor:pointer;margin-left:8px">🚀 Deploy Changes</button> <button onclick="saveServicesToStorage();showToast('Prices saved ✓');" style="padding:6px 14px;border-radius:8px;border:none;background:var(--purpleL);color:#fff;font-size:12px;font-weight:700;cursor:pointer">💾 Save All</button>
       <input class="inp" style="width:240px;padding:8px 12px" placeholder="Search…" id="svc-search" oninput="renderAdminServices(this.value)"/>
     </div>
     <div id="admin-svc-list"></div>
@@ -3720,7 +3720,7 @@ function renderAdminPage(){
       </div>
     </div>`;
   } else if(adminTab==="payments"){
-    content=`<div class="card-sm" style="margin-bottom:20px;border:1px solid rgba(29,78,216,.4)">
+    content=`<div class="card-sm" style="margin-bottom:20px;border:1px solid rgba(0,245,255,.25)">
           <div style="font-weight:700;font-size:16px;margin-bottom:4px">🚀 GitHub Deploy Token</div>
           <div style="font-size:13px;color:var(--muted);margin-bottom:10px">Enter once. Use to sync all price and service changes to every device instantly.</div>
           <input class="inp" placeholder="ghp_..." value="${sanitize(payConfig.githubToken||"")}" onblur="payConfig.githubToken=this.value;savePayConfig();showToast('Token saved.');" style="font-family:monospace;font-size:13px;width:100%"/>
