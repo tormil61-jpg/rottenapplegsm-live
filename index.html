@@ -216,7 +216,7 @@ html{scroll-behavior:smooth}
 body{
   background:#000008;
   background-image:
-    radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(29,78,216,.45) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(0,245,255,.45) 0%, transparent 60%),
     radial-gradient(ellipse 65% 55% at 90% 100%,  rgba(30,58,138,.40) 0%, transparent 60%),
     radial-gradient(ellipse 50% 40% at 50% 45%,  rgba(37,99,235,.20) 0%, transparent 60%);
   color:#f0eeff;
@@ -266,10 +266,10 @@ nav{
   box-shadow:0 4px 20px rgba(0,245,255,.25), inset 0 1px 0 rgba(255,255,255,.2);
 }
 .btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 60%);pointer-events:none}
-.btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(29,78,216,.45), inset 0 1px 0 rgba(255,255,255,.25)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,245,255,.45), inset 0 1px 0 rgba(255,255,255,.25)}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .btn-ghost{padding:9px 20px;background:rgba(255,255,255,.06);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);border-radius:10px;color:rgba(240,238,255,.7);font-size:13px;cursor:pointer;transition:all .2s}
-.btn-ghost:hover{color:#f0eeff;border-color:rgba(37,99,235,.5);background:rgba(29,78,216,.12)}
+.btn-ghost:hover{color:#f0eeff;border-color:rgba(37,99,235,.5);background:rgba(0,245,255,.12)}
 .btn-sm{padding:7px 14px;font-size:13px}
 
 /* ── Inputs ── */
@@ -285,8 +285,8 @@ nav{
 }
 .inp:focus,.sel:focus{
   border-color:rgba(37,99,235,.7);
-  background:rgba(29,78,216,.12);
-  box-shadow:0 0 0 3px rgba(29,78,216,.20), inset 0 2px 0 rgba(255,255,255,.1);
+  background:rgba(0,245,255,.12);
+  box-shadow:0 0 0 3px rgba(0,245,255,.20), inset 0 2px 0 rgba(255,255,255,.1);
 }
 .sel{appearance:none;cursor:pointer}
 .lbl{font-size:12px;color:rgba(240,238,255,.55);font-weight:600;margin-bottom:5px;display:block;letter-spacing:.02em}
@@ -298,7 +298,7 @@ nav{
   -webkit-backdrop-filter:blur(40px) saturate(200%);
   border:1px solid rgba(255,255,255,.22);
   border-radius:24px;padding:32px;
-  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), 0 20px 60px rgba(0,0,0,.55), 0 4px 20px rgba(29,78,216,.18);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), 0 20px 60px rgba(0,0,0,.55), 0 4px 20px rgba(0,245,255,.18);
   position:relative;overflow:hidden;
 }
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);pointer-events:none}
@@ -315,7 +315,7 @@ nav{
 
 /* ── Glow blobs ── */
 .blob{display:none !important;position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
-.blob-purple{width:900px;height:900px;background:radial-gradient(circle,rgba(29,78,216,.9),transparent 70%);opacity:.30;top:-300px;left:-300px;animation:blobFloat1 14s ease-in-out infinite}
+.blob-purple{width:900px;height:900px;background:radial-gradient(circle,rgba(0,245,255,.9),transparent 70%);opacity:.30;top:-300px;left:-300px;animation:blobFloat1 14s ease-in-out infinite}
 .blob-pink{width:700px;height:700px;background:radial-gradient(circle,rgba(37,99,235,.9),transparent 70%);opacity:.25;bottom:-200px;right:-200px;animation:blobFloat2 17s ease-in-out infinite}
 .blob-rainbow{width:400px;height:400px;background:conic-gradient(from 0deg,#22c55e,#facc15,#f97316,#ef4444,#a855f7,#00ddff,#22c55e);opacity:.07;top:40%;left:50%;transform:translate(-50%,-50%);animation:blobSpin 25s linear infinite}
 @keyframes blobFloat1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(50px,40px) scale(1.05)}}
@@ -333,7 +333,7 @@ nav{
 .status-pending-crypto{background:rgba(59,130,246,.15);color:#00f5ff;animation:pulse 2s ease infinite}
 .status-processing{background:rgba(249,115,22,.15);color:#fb923c}
 .status-submitted{background:rgba(34,211,238,.13);color:#67e8f9}
-.status-progress{background:rgba(29,78,216,.18);color:#00f5ff}
+.status-progress{background:rgba(0,245,255,.18);color:#00f5ff}
 .status-completed{background:rgba(34,197,94,.15);color:#4ade80}
 .status-refunded{background:rgba(251,191,36,.13);color:#fde047}
 .status-cancelled{background:rgba(239,68,68,.13);color:#f87171}
@@ -354,7 +354,7 @@ nav{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 6px 28px rgba(0,0,0,.35);
 }
 .svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent)}
-.svc-card:hover{border-color:rgba(37,99,235,.55);transform:translateY(-7px) scale(1.01);background:rgba(29,78,216,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 24px 64px rgba(29,78,216,.32)}
+.svc-card:hover{border-color:rgba(37,99,235,.55);transform:translateY(-7px) scale(1.01);background:rgba(0,245,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 24px 64px rgba(0,245,255,.32)}
 
 /* ── Overlay / Modal ── */
 .overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.65);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 16px 48px}
@@ -378,7 +378,7 @@ nav{
 .close-btn:hover{background:rgba(255,255,255,.16);color:#f0eeff}
 
 /* ── Toast ── */
-#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(29,78,216,.85);backdrop-filter:blur(20px);border:1px solid rgba(37,99,235,.4);color:#fff;padding:11px 26px;border-radius:100px;font-size:14px;font-weight:600;z-index:9999;white-space:nowrap;box-shadow:0 8px 32px rgba(0,245,255,.25);opacity:0;transition:opacity .3s;pointer-events:none}
+#toast{background:rgba(0,245,255,0.9) !important;color:#000 !important;font-family:'Orbitron',monospace !important;position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(0,245,255,.85);backdrop-filter:blur(20px);border:1px solid rgba(37,99,235,.4);color:#fff;padding:11px 26px;border-radius:100px;font-size:14px;font-weight:600;z-index:9999;white-space:nowrap;box-shadow:0 8px 32px rgba(0,245,255,.25);opacity:0;transition:opacity .3s;pointer-events:none}
 #toast.show{opacity:1}
 
 /* ── WhatsApp FAB ── */
@@ -416,7 +416,7 @@ nav{
 
 /* ── Method buttons ── */
 .method-btn{padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);backdrop-filter:blur(12px);cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;width:100%;color:#f0eeff;transition:all .2s;margin-bottom:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
-.method-btn:hover{border-color:rgba(37,99,235,.45);background:rgba(29,78,216,.12);transform:translateX(4px)}
+.method-btn:hover{border-color:rgba(37,99,235,.45);background:rgba(0,245,255,.12);transform:translateX(4px)}
 
 /* ── Responsive ── */
 @media(max-width:600px){
@@ -775,7 +775,7 @@ body { font-family:'Share Tech Mono',monospace !important; }
         </div>
         <!-- Logged-in user: wallet only -->
         <div id="checkout-user-methods" style="display:none">
-          <div style="background:rgba(29,78,216,.08);border:1px solid rgba(0,245,255,.1);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--purpleL)">
+          <div style="background:rgba(0,245,255,.05);border:1px solid rgba(0,245,255,.1);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--purpleL)">
             💼 Registered accounts pay using account balance only.
           </div>
           <button class="method-btn" onclick="payWallet()">
@@ -872,7 +872,7 @@ body { font-family:'Share Tech Mono',monospace !important; }
       </div>
       <div id="step-crypto" style="display:none">
         <div id="crypto-title" style="font-weight:700;font-size:16px;margin-bottom:4px"></div>
-        <div id="crypto-network-badge" style="display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(29,78,216,.15);color:var(--purpleL);margin-bottom:16px"></div>
+        <div id="crypto-network-badge" style="display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(0,245,255,.1);color:var(--purpleL);margin-bottom:16px"></div>
 
         <!-- Amount box -->
         <div style="background:var(--surface2);border-radius:12px;padding:18px;margin-bottom:12px;text-align:center">
@@ -882,7 +882,7 @@ body { font-family:'Share Tech Mono',monospace !important; }
 
           <!-- Address copy box -->
           <div style="font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px">To This Address</div>
-          <div id="crypto-address" onclick="copyCryptoAddr()" style="background:var(--surface3);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:12px;word-break:break-all;border:1.5px dashed var(--border);cursor:pointer;transition:all .2s;margin-bottom:6px" onmouseover="this.style.borderColor='var(--purpleL)';this.style.background='rgba(29,78,216,.08)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface3)'"></div>
+          <div id="crypto-address" onclick="copyCryptoAddr()" style="background:var(--surface3);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:12px;word-break:break-all;border:1.5px dashed var(--border);cursor:pointer;transition:all .2s;margin-bottom:6px" onmouseover="this.style.borderColor='var(--purpleL)';this.style.background='rgba(0,245,255,.05)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface3)'"></div>
           <div style="display:flex;flex-direction:column;align-items:center;margin-top:14px">
             <div id="crypto-qr-container" style="background:#fff;padding:10px;border-radius:12px;display:inline-block"></div>
             <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:8px">Scan with your crypto wallet</div>
@@ -956,7 +956,7 @@ body { font-family:'Share Tech Mono',monospace !important; }
           <button id="view-orders-btn" onclick="closeCheckout();showPage('account');setAccountTab('orders')" class="btn" style="width:100%;padding:13px;display:none">📦 View My Orders</button>
 
           <!-- Guest: create account prompt -->
-          <div id="done-create-account" style="display:none;background:rgba(29,78,216,.08);border:1px solid rgba(29,78,216,.20);border-radius:12px;padding:16px;text-align:left">
+          <div id="done-create-account" style="display:none;background:rgba(0,245,255,.05);border:1px solid rgba(0,245,255,.20);border-radius:12px;padding:16px;text-align:left">
             <div style="font-weight:700;font-size:14px;margin-bottom:6px;color:#f0eeff">📋 Track your order anytime</div>
             <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Create a free account to view your order status, save your history, and use balance for faster checkout next time.</div>
             <button class="btn" onclick="closeCheckout();showPage('auth')" style="width:100%;padding:11px">Create Free Account →</button>
@@ -1047,7 +1047,7 @@ body { font-family:'Share Tech Mono',monospace !important; }
         <button class="btn-ghost btn-sm" onclick="showPage('auth')">Sign In</button>
       </div>
       <div id="nav-user" style="display:none;align-items:center;gap:8px">
-        <button onclick="openDeposit()" style="background:rgba(29,78,216,.15);border:1px solid var(--border);color:var(--purpleL);padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600">💼 <span id="nav-balance">$0.00</span></button>
+        <button onclick="openDeposit()" style="background:rgba(0,245,255,.1);border:1px solid var(--border);color:var(--purpleL);padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600">💼 <span id="nav-balance">$0.00</span></button>
         <button class="btn btn-sm" onclick="showPage('account')">My Account</button>
       </div>
     </div>
@@ -1055,7 +1055,7 @@ body { font-family:'Share Tech Mono',monospace !important; }
 
   <!-- Hero -->
   <div style="position:relative;z-index:1;text-align:center;padding:76px 24px 52px;display:flex;flex-direction:column;align-items:center">
-    <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(29,78,216,.13);border:1px solid var(--border);border-radius:100px;padding:5px 16px;font-size:12px;color:var(--accent);margin-bottom:22px">
+    <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(0,245,255,.13);border:1px solid var(--border);border-radius:100px;padding:5px 16px;font-size:12px;color:var(--accent);margin-bottom:22px">
       <span style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block"></span> Live &amp; Processing Orders 24/7
     </div>
     <h1 style="font-size:clamp(2rem,5vw,3.6rem);font-weight:800;line-height:1.1;max-width:720px;margin-bottom:16px">
@@ -1180,7 +1180,7 @@ body { font-family:'Share Tech Mono',monospace !important; }
             <label class="lbl">Your Name (optional)</label>
             <input class="inp" id="order-name" placeholder="Full name" maxlength="80"/>
           </div>
-          <div style="background:rgba(29,78,216,.08);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px">
+          <div style="background:rgba(0,245,255,.05);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px">
             <span style="font-size:16px">💼</span>
             <div style="flex:1">
               <span style="font-size:13px;color:var(--muted)">Sign in to pay with balance and track orders. </span>
@@ -1496,7 +1496,7 @@ body { font-family:'Share Tech Mono',monospace !important; }
       <span class="brand-name">Rotten Apple GSM</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div style="background:rgba(29,78,216,.15);border:1px solid var(--border);border-radius:10px;padding:7px 14px;font-size:13px">
+      <div style="background:rgba(0,245,255,.1);border:1px solid var(--border);border-radius:10px;padding:7px 14px;font-size:13px">
         <span style="color:var(--muted)">Balance: </span><span id="acc-nav-balance" style="color:var(--purpleL);font-weight:700">$0.00</span>
       </div>
       <button class="btn-ghost btn-sm" onclick="showPage('home')">Home</button>
@@ -2787,7 +2787,7 @@ function toggleCryptoCheck(){
   const btn=document.getElementById("crypto-submit-btn");
   if(cryptoChecked){
     box.textContent="✓";box.style.background="var(--purpleL)";box.style.borderColor="var(--purpleL)";box.style.color="#fff";
-    label.style.borderColor="var(--purpleL)";label.style.background="rgba(29,78,216,.08)";
+    label.style.borderColor="var(--purpleL)";label.style.background="rgba(0,245,255,.05)";
     btn.disabled=false;btn.style.background="var(--purpleL)";btn.style.color="#fff";btn.style.cursor="pointer";
     btn.textContent="✅ Submit Order — Pending Verification";
   } else {
@@ -3095,7 +3095,7 @@ function renderAccountPage(){
               <div style="font-size:12px;color:var(--muted);margin-bottom:10px">${t.date}</div>
               <div style="background:var(--surface2);border-radius:8px;padding:12px;font-size:13px;color:#f0eeff;line-height:1.6">${sanitize(t.message)}</div>
               ${t.reply?`
-              <div style="margin-top:10px;background:rgba(29,78,216,.08);border:1px solid rgba(0,245,255,.1);border-radius:8px;padding:12px">
+              <div style="margin-top:10px;background:rgba(0,245,255,.05);border:1px solid rgba(0,245,255,.1);border-radius:8px;padding:12px">
                 <div style="font-size:11px;font-weight:700;color:var(--purpleL);margin-bottom:4px">Rotten Apple GSM replied:</div>
                 <div style="font-size:13px;color:#f0eeff;line-height:1.6">${sanitize(t.reply)}</div>
               </div>`:""}
@@ -3434,7 +3434,7 @@ function renderAdminPage(){
           </div>
         </div>
         <div style="background:var(--surface2);border-radius:8px;padding:12px;font-size:13px;color:#f0eeff;line-height:1.6;margin-bottom:12px">${sanitize(t.message)}</div>
-        ${t.reply?`<div style="background:rgba(29,78,216,.08);border:1px solid rgba(0,245,255,.1);border-radius:8px;padding:12px;font-size:13px;color:var(--purpleL);line-height:1.6;margin-bottom:10px"><span style="font-weight:700">Your Reply:</span> ${sanitize(t.reply)}</div>`:""}
+        ${t.reply?`<div style="background:rgba(0,245,255,.05);border:1px solid rgba(0,245,255,.1);border-radius:8px;padding:12px;font-size:13px;color:var(--purpleL);line-height:1.6;margin-bottom:10px"><span style="font-weight:700">Your Reply:</span> ${sanitize(t.reply)}</div>`:""}
         <div style="display:flex;gap:8px">
           <input class="inp" style="flex:1;font-size:13px;padding:8px 12px" placeholder="Type a reply…" id="ticket-reply-${i}"/>
           <button class="btn" style="padding:8px 16px;font-size:13px" onclick="replyTicket(${i})">Reply</button>
@@ -3642,8 +3642,8 @@ function renderAdminPage(){
               <div style="font-weight:800;font-size:20px;color:var(--purpleL)">$${acc.balance.toFixed(2)}</div>
               <div style="color:var(--muted);font-size:12px">balance · ${accOrders.length} orders</div>
               <button onclick="deleteAccount('${acc.id}','${acc.name}')" style="margin-top:8px;background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Delete Account</button>
-              <button onclick="adminReset2FA('${acc.id}','${acc.name}')" style="margin-top:4px;background:rgba(29,78,216,.15);color:#00f5ff;border:1px solid rgba(0,245,255,.18);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Reset 2FA</button>
-              <button onclick="adminReset2FA('${acc.id}','${acc.name}')" style="margin-top:4px;background:rgba(29,78,216,.15);color:#00f5ff;border:1px solid rgba(0,245,255,.18);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Reset 2FA</button>
+              <button onclick="adminReset2FA('${acc.id}','${acc.name}')" style="margin-top:4px;background:rgba(0,245,255,.1);color:#00f5ff;border:1px solid rgba(0,245,255,.18);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Reset 2FA</button>
+              <button onclick="adminReset2FA('${acc.id}','${acc.name}')" style="margin-top:4px;background:rgba(0,245,255,.1);color:#00f5ff;border:1px solid rgba(0,245,255,.18);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Reset 2FA</button>
             </div>
           </div>
           
