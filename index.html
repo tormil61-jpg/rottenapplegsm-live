@@ -736,24 +736,15 @@ select option:hover, select option:checked {
 }
 
 
-/* CRITICAL: Let inline color win on service card carrier names */
-.svc-card > div:first-of-type,
-.svc-card div:nth-child(2) {
-  color:unset !important;
-}
-div.svc-card div[style*="text-shadow"] {
-  color:unset !important;
-}
+
+
+/* svc-card carrier name: force inline color to win over body color cascade */
+.svc-card div:not([class]) { color:inherit; }
 </style>
 <body>
 <canvas id="tron-bg" style="position:fixed;inset:0;z-index:0;opacity:0.45;"></canvas>
 <div 
-/* CARRIER COLOR FIX - inline styles must win */
-.svc-card div[style*="color:#"],
-.svc-card div[style*="color: #"],
-[style*="text-shadow"][style*="color:#"] {
-  color:unset !important;
-}
+
 style="position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at center,rgba(0,0,8,0.35) 0%,rgba(0,0,8,0.6) 65%,rgba(0,0,8,0.85) 100%);pointer-events:none;"></div>
 
 <!-- Glow blobs -->
