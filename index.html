@@ -686,6 +686,10 @@ div[style*="background:#0"], div[style*="background: #0"] {
 /* All remaining inline font families that are system fonts */
 * { font-family:inherit; }
 body { font-family:'Share Tech Mono',monospace !important; }
+
+/* Fix page visibility - override inline display:none */
+.page { display:none !important; }
+.page.active { display:block !important; }
 </style>
 <body>
 <canvas id="tron-bg" style="position:fixed;inset:0;z-index:0;opacity:0.45;"></canvas>
