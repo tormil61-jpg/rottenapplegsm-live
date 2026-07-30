@@ -3758,7 +3758,7 @@ function renderAdminPage(){
     const brands=["Apple iPhone","Samsung","Any Device","Xiaomi","Tecno/Infinix"];
     content=`<div style="display:flex;gap:12px;margin-bottom:14px;align-items:center;flex-wrap:wrap">
       <span style="color:var(--muted);font-size:13px">${services.length} services</span>
-        <button onclick="deployToGitHub()" style="padding:6px 14px;border-radius:8px;border:none;background:#00ccee;color:#fff;font-size:12px;font-weight:700;cursor:pointer;margin-left:8px">🚀 Deploy Changes</button> <button onclick="saveServicesToStorage();showToast('Prices saved ✓');" style="padding:6px 14px;border-radius:8px;border:none;background:var(--purpleL);color:#fff;font-size:12px;font-weight:700;cursor:pointer">💾 Save All</button>
+        <button onclick="deployToGitHub()" style="padding:6px 14px;border-radius:8px;border:none;background:#00ccee;color:#fff;font-size:12px;font-weight:700;cursor:pointer;margin-left:8px">🚀 Deploy Changes</button> <button onclick="saveServicesToStorage();showToast('Prices saved ✓');" style="padding:6px 14px;border-radius:8px;border:none;background:#00f5ff;color:#000000;font-size:12px;font-weight:700;cursor:pointer;border:1px solid #00f5ff">💾 Save All</button>
       <input class="inp" style="width:240px;padding:8px 12px" placeholder="Search…" id="svc-search" oninput="renderAdminServices(this.value)"/>
     </div>
     <div id="admin-svc-list"></div>
