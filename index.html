@@ -1923,10 +1923,8 @@ window.addEventListener("beforeunload",(e)=>{
 // HOME RENDER
 // ═══════════════════════════════════════════════════════════════════
 function getCarrierColor(carrier){
-  var c=carrier.toLowerCase();
-  if(c.includes('t-mobile')||c.includes('tmobile'))return '#e20074';
-  if(c.includes('metropcs')||c.includes('metro pcs'))return '#7b2fbe';
-  if(c.includes('sprint'))return '#ffe600';
+  var c=(carrier||'').toLowerCase();
+  if(c.includes('t-mobile')||c.includes('tmobile')||c.includes('metropcs')||c.includes('sprint'))return '#e20074';
   if(c.includes('at&t')||c.includes('att'))return '#00a8e0';
   if(c.includes('verizon'))return '#cd040b';
   if(c.includes('cricket'))return '#4caf50';
@@ -1937,8 +1935,6 @@ function getCarrierColor(carrier){
   if(c.includes('us reseller')||c.includes('reseller'))return '#ff8800';
   if(c.includes('claro'))return '#e60026';
   if(c.includes('globe')||c.includes('philippines'))return '#0056a2';
-  if(c.includes('xiaomi'))return '#ff6900';
-  if(c.includes('tecno')||c.includes('infinix'))return '#00bcd4';
   return '#00f5ff';
 }
 function renderHome(){
@@ -4543,6 +4539,48 @@ async function loadServicesFromSupabase(){
 })();
 </script>
 
+
+<!-- Privacy Policy Page -->
+<div id="page-privacy" class="page" style="display:none;min-height:100vh;padding:80px 24px 60px;max-width:800px;margin:0 auto;position:relative;z-index:1">
+  <button onclick="history.back()||showPage('home')" style="margin-bottom:24px;background:none;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:0.1em">← BACK</button>
+  <h1 style="font-family:'Orbitron',monospace;font-size:28px;color:#fff;margin-bottom:8px">Privacy Policy</h1>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:32px;font-family:'Share Tech Mono',monospace">Last updated: July 2026</p>
+  <div style="font-family:'Share Tech Mono',monospace;font-size:14px;line-height:1.8;color:var(--text)">
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Information We Collect</h2>
+    <p>We collect your name, email address, IMEI number, and payment information when you place an order or create an account. We do not sell your personal data to third parties.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">How We Use Your Information</h2>
+    <p>We use your information to process unlock orders, send order status updates, and provide customer support. Your IMEI is only used to process your specific unlock request.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Data Security</h2>
+    <p>We use industry-standard encryption and secure payment processors (Stripe, PayPal) to protect your data. We never store full credit card numbers.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Cookies</h2>
+    <p>We use essential cookies to keep you logged in and remember your session. We do not use tracking or advertising cookies.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Contact</h2>
+    <p>For privacy questions: rottenapplegsm@gmail.com | WhatsApp: (323) 829-1991</p>
+  </div>
+</div>
+
+<!-- Terms of Service Page -->
+<div id="page-terms" class="page" style="display:none;min-height:100vh;padding:80px 24px 60px;max-width:800px;margin:0 auto;position:relative;z-index:1">
+  <button onclick="history.back()||showPage('home')" style="margin-bottom:24px;background:none;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:0.1em">← BACK</button>
+  <h1 style="font-family:'Orbitron',monospace;font-size:28px;color:#fff;margin-bottom:8px">Terms of Service</h1>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:32px;font-family:'Share Tech Mono',monospace">Last updated: July 2026</p>
+  <div style="font-family:'Share Tech Mono',monospace;font-size:14px;line-height:1.8;color:var(--text)">
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Service Agreement</h2>
+    <p>By placing an order with Rotten Apple GSM, you agree that the device you are unlocking is legally yours or you have authorization to unlock it. Carrier unlocking is legal under US law.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Refund Policy</h2>
+    <p>We offer a full refund if we are unable to complete your unlock. No refunds are issued for completed unlocks. Orders that fail due to incorrect IMEI or device information provided by the customer are not eligible for refunds.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Processing Time</h2>
+    <p>Standard processing is 24–72 hours. We are not responsible for delays caused by carrier systems. Rush orders are not guaranteed.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Blacklisted Devices</h2>
+    <p>We offer blacklist removal services. Success rates vary by carrier. A device removed from the blacklist may be re-blacklisted if the original reason (e.g. unpaid balance) is not resolved.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Contact</h2>
+    <p>rottenapplegsm@gmail.com | WhatsApp: (323) 829-1991 | Los Angeles, CA</p>
+  
+      <div style="margin-top:16px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap">
+        <button onclick="showPage('privacy')" style="background:none;border:none;color:var(--muted);font-size:11px;font-family:'Share Tech Mono',monospace;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase">Privacy Policy</button>
+        <button onclick="showPage('terms')" style="background:none;border:none;color:var(--muted);font-size:11px;font-family:'Share Tech Mono',monospace;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase">Terms of Service</button>
+      </div></div>
+</div>
 <script>
 (function(){
   var cv=document.getElementById('tron-bg');if(!cv)return;
@@ -4563,7 +4601,7 @@ async function loadServicesFromSupabase(){
     if(b.tmr>=b.iv){
       var t2=[{dc:-b.dir.dr,dr:b.dir.dc},{dc:b.dir.dr,dr:-b.dir.dc}].filter(function(t){return !blocked(b.col+t.dc,b.row+t.dr,b.id);});
       if(t2.length&&Math.random()>.5)b.dir=t2[Math.floor(Math.random()*t2.length)];
-      b.tmr=0;b.iv=8+Math.floor(Math.random()*14);
+      b.tmr=0;b.iv=20+Math.floor(Math.random()*25);
     }
   }
   function draw(){
@@ -4571,7 +4609,7 @@ async function loadServicesFromSupabase(){
     cx.strokeStyle='rgba(0,245,255,0.1)';cx.lineWidth=0.5;
     for(var cc=0;cc<=COLS;cc++){cx.beginPath();cx.moveTo(cc*CELL,0);cx.lineTo(cc*CELL,H);cx.stroke();}
     for(var rr=0;rr<=ROWS;rr++){cx.beginPath();cx.moveTo(0,rr*CELL);cx.lineTo(W,rr*CELL);cx.stroke();}
-    if(fc%2===0)bikes.forEach(move);fc++;
+    if(fc%4===0)bikes.forEach(move);fc++;
     bikes.forEach(function(b){
       var n=b.trail.length;
       b.trail.forEach(function(s,i){
