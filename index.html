@@ -4566,13 +4566,15 @@ if(typeof updateOrderUI==='function')updateOrderUI();
   try{
     var acctData=await supaGet('accounts','order=created_at.desc');
     if(acctData&&acctData.length){
-      acctData.forEach(function(row){
-        var existing=accounts.find(function(a){return a.id===row.id;});
-        if(!existing){
-          accounts.push({id:row.id,name:row.name,email:row.email,passwordHash:row.password_hash||'',balance:parseFloat(row.balance)||0,spend:parseFloat(row.spend)||0,createdAt:row.created_at,loginCount:row.login_count||1});
-        }
+      // Always replace accounts with Supabase data - don't merge with localStorage
+      accounts=acctData.map(function(row){
+        return {id:row.id,name:row.name,email:row.email,passwordHash:row.password_hash||'',balance:parseFloat(row.balance)||0,spend:parseFloat(row.spend)||0,createdAt:row.created_at,loginCount:row.login_count||1,totpSecret:row.totp_secret||''};
       });
-      saveAccounts();
+      try{localStorage.setItem('ra_accounts',JSON.stringify(accounts));}catch(e){}
+    } else {
+      // No accounts in Supabase - clear localStorage too
+      accounts=[];
+      try{localStorage.removeItem('ra_accounts');}catch(e){}
     }
   }catch(e){console.log('Accounts load error:',e);}
   // Load payConfig from Supabase
