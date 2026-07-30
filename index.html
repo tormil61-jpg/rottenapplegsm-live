@@ -4154,13 +4154,17 @@ function deleteAccount(id, name){
   var SURL='https://fkiajefrdcgiobrzftjx.supabase.co';
   var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk';
   fetch(SURL+'/rest/v1/accounts?id=eq.'+id,{method:'DELETE',headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY}})
-    .then(function(){
-      accounts=accounts.filter(function(a){return a.id!==id;});
-      try{localStorage.removeItem('ra_accounts');}catch(e){}
-      saveAccounts();
-      renderAdminPage();
-      showToast('Account deleted.');
-    }).catch(function(){showToast('Delete failed.');});
+    .then(function(r){
+      if(r.ok){
+        accounts=accounts.filter(function(a){return a.id!==id;});
+        try{localStorage.removeItem('ra_accounts');}catch(e){}
+        try{localStorage.setItem('ra_accounts',JSON.stringify(accounts));}catch(e){}
+        renderAdminPage();
+        showToast('Account deleted permanently.');
+      } else {
+        showToast('Delete failed. Try again.');
+      }
+    }).catch(function(){showToast('Delete failed. Check connection.');});
 }
 function adminAdjustBalance(uid,delta,name){showToast("Balance adjustments disabled for security.");}
 function saveAccounts(){
