@@ -3676,8 +3676,8 @@ function renderAdminPage(){
             <input class="inp" style="flex:1;min-width:160px;padding:8px 12px;font-size:13px" placeholder="Admin notes…" value="${sanitize(o.notes||"")}" onchange="updateOrderField('${o.id}','notes',this.value)"/>
             ${o.supplierOrderId?`<button class="btn-ghost" style="padding:8px 14px;font-size:12px" onclick="refreshOrderFromSupplier('${o.id}')">🔄 Check Supplier</button>`:""}
             ${o.status==="Pending Verification"?`<button class="btn" style="padding:8px 16px;font-size:13px;background:rgba(59,130,246,.8)" onclick="confirmCryptoPayment('${o.id}')">✅ Confirm Payment</button>`:""}
-            <button class="btn" style="padding:8px 16px;font-size:13px" onclick="showToast('Order #${o.orderNumber||o.id} saved.')">Save</button>
-            <button class="btn" style="padding:8px 16px;font-size:13px;background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.5);color:#f87171" onclick="deleteOrder('${o.id}','${o.orderNumber||o.id}')">🗑 Delete</button>
+            <button class="btn" style="padding:8px 16px;font-size:13px;background:rgba(0,245,255,.15);border:1px solid rgba(0,245,255,.5);color:#00f5ff;font-weight:700" onclick="showToast('Order #${o.orderNumber||o.id} saved.')">💾 Save</button>
+            <button class="btn" style="padding:8px 16px;font-size:13px;background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.5);color:#f87171;font-weight:700" onclick="deleteOrder('${o.id}','${o.orderNumber||o.id}')">🗑 Delete</button>
           </div>
         </div>`}).join("")
   } else if(adminTab==="accounts"){
