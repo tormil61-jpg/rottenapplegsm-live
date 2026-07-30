@@ -2009,7 +2009,7 @@ function renderHome(){
     const popId=`hot-pop-${s.id}`;
     return`<div class="svc-card" style="position:relative" onclick="selectService(${s.id})">
       <div style="position:absolute;top:12px;right:12px" class="badge badge-hot">🔥 Hot</div>
-      <div style="font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;padding-right:60px" class="carrier-name-label" data-color="${getCarrierColor(s.carrier)}">${s.carrier}</div>
+      <div style="font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;padding-right:60px;color:${getCarrierColor(s.carrier)};text-shadow:0 0 12px ${getCarrierColor(s.carrier)},0 0 24px ${getCarrierColor(s.carrier)}88,0 0 40px ${getCarrierColor(s.carrier)}44">${s.carrier}</div>
       <span class="badge ${STYPE_CLASS[s.stype]||'stype-unlock'}" style="margin-bottom:8px;display:inline-block">${s.stype}</span>
       <div style="font-weight:700;font-size:14px;margin-bottom:4px">${s.brand} · ${s.series}</div>
       <!-- View description link -->
@@ -2069,7 +2069,7 @@ function renderAllServices(query){
   });
   el.innerHTML=Object.entries(groups).map(([carrier,svcs])=>`
     <div style="margin-bottom:28px">
-      <div style="font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;padding-bottom:8px" class="carrier-name-label" data-color="${getCarrierColor(carrier)}">${carrier}</div>
+      <div style="font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid ${getCarrierColor(carrier)}44;color:${getCarrierColor(carrier)};text-shadow:0 0 12px ${getCarrierColor(carrier)},0 0 28px ${getCarrierColor(carrier)}88">${carrier}</div>
       <div style="display:flex;flex-direction:column;gap:8px">
         ${svcs.map(s=>{
           const sp=savePct(s);
@@ -3598,7 +3598,7 @@ function renderAdminPage(){
                 return`<tr style="border-bottom:1px solid var(--border)">
                   <td style="padding:8px 10px;font-weight:700;color:var(--purpleL)">#${o.orderNumber||"—"}</td>
                   <td style="padding:8px 10px;font-family:monospace;font-size:11px;color:var(--muted)">${o.id}</td>
-                  <td style="padding:8px 10px;white-space:nowrap">${o.carrier} · ${o.stype}</td>
+                  <td style="padding:8px 10px;white-space:nowrap;color:${getCarrierColor(o.carrier)};text-shadow:0 0 8px ${getCarrierColor(o.carrier)}">${o.carrier} · ${o.stype}</td>
                   <td style="padding:8px 10px;color:var(--muted)">${o.name||"Guest"}</td>
                   <td style="padding:8px 10px;font-weight:700;color:var(--green)">$${o.amount.toFixed(2)}</td>
                   <td style="padding:8px 10px;color:var(--orange)">$${cost.toFixed(2)}</td>
@@ -3642,7 +3642,7 @@ function renderAdminPage(){
           <!-- Service info -->
           <div style="background:var(--surface2);border-radius:10px;padding:12px 14px;margin-bottom:12px">
             <div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Service</div>
-            <div style="font-weight:700;font-size:14px;margin-bottom:2px">${o.carrier} — ${o.stype}</div>
+            <div style="font-weight:700;font-size:14px;margin-bottom:2px;color:${getCarrierColor(o.carrier)};text-shadow:0 0 8px ${getCarrierColor(o.carrier)}">${o.carrier} — ${o.stype}</div>
             <div style="font-size:13px;color:var(--muted)">${o.brand?o.brand+" · ":""}${o.series||""}</div>
           </div>
 
@@ -3888,7 +3888,7 @@ function renderAdminServices(search=""){
             <span class="badge ${sc}">${s.stype}</span>
             ${apiOk?`<span class="badge" style="background:rgba(34,197,94,.12);color:var(--green)">✓ API Connected</span>`:""}
           </div>
-          <div style="font-weight:700;font-size:14px">${s.carrier}</div>
+          <div style="font-weight:700;font-size:14px;color:${getCarrierColor(s.carrier)};text-shadow:0 0 8px ${getCarrierColor(s.carrier)}">${s.carrier}</div>
           <div style="font-size:12px;color:var(--muted)">${s.brand} · ${s.series}</div>
         </div>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
@@ -4539,17 +4539,7 @@ async function loadServicesFromSupabase(){
     });
     renderHome();
     
-  // Apply carrier colors via data attributes (bypasses CSS specificity issues)
-  setTimeout(function(){
-    document.querySelectorAll('.carrier-name-label').forEach(function(el){
-      var col = el.getAttribute('data-color');
-      if(col){
-        el.style.setProperty('color', col, 'important');
-        el.style.setProperty('text-shadow', '0 0 12px '+col+', 0 0 24px '+col+'88, 0 0 40px '+col+'44', 'important');
-      }
-    });
-  }, 100);
-  if(typeof updateOrderUI==='function')updateOrderUI();
+if(typeof updateOrderUI==='function')updateOrderUI();
     if(typeof renderCarrierOptions==='function')renderCarrierOptions();
     if(typeof renderCarrierDropdown==='function')renderCarrierDropdown();
     if(typeof populateCarrierSelect==='function')populateCarrierSelect();
