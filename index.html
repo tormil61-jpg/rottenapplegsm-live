@@ -3677,6 +3677,7 @@ function renderAdminPage(){
             ${o.supplierOrderId?`<button class="btn-ghost" style="padding:8px 14px;font-size:12px" onclick="refreshOrderFromSupplier('${o.id}')">🔄 Check Supplier</button>`:""}
             ${o.status==="Pending Verification"?`<button class="btn" style="padding:8px 16px;font-size:13px;background:rgba(59,130,246,.8)" onclick="confirmCryptoPayment('${o.id}')">✅ Confirm Payment</button>`:""}
             <button class="btn" style="padding:8px 16px;font-size:13px" onclick="showToast('Order #${o.orderNumber||o.id} saved.')">Save</button>
+            <button class="btn" style="padding:8px 16px;font-size:13px;background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.5);color:#f87171" onclick="deleteOrder('${o.id}','${o.orderNumber||o.id}')">🗑 Delete</button>
           </div>
         </div>`}).join("")
   } else if(adminTab==="accounts"){
@@ -4148,6 +4149,22 @@ function adminReset2FA(id, name){
       showToast('2FA reset for '+name+'. They can set up again on next login.');
       renderAdminPage();
     }).catch(function(){showToast('Reset failed.');});
+}
+function deleteOrder(id, num){
+  if(!confirm('Delete order #'+num+'? This cannot be undone.'))return;
+  var SURL='https://fkiajefrdcgiobrzftjx.supabase.co';
+  var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk';
+  fetch(SURL+'/rest/v1/orders?id=eq.'+id,{method:'DELETE',headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY}})
+    .then(function(r){
+      if(r.ok){
+        allOrders=allOrders.filter(function(o){return o.id!==id;});
+        try{localStorage.removeItem('ra_orders');}catch(e){}
+        renderAdminPage();
+        showToast('Order #'+num+' deleted.');
+      } else {
+        showToast('Delete failed. Try again.');
+      }
+    }).catch(function(){showToast('Delete failed.');});
 }
 function deleteAccount(id, name){
   if(!confirm('Delete account for '+name+'? This cannot be undone.'))return;
