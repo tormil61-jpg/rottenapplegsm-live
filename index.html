@@ -690,6 +690,44 @@ body { font-family:'Share Tech Mono',monospace !important; }
 /* Fix page visibility - override inline display:none */
 .page { display:none !important; }
 .page.active { display:block !important; }
+
+/* ═══ TRON DROPDOWN STYLES ═══ */
+select, select.sel, .sel {
+  background:#000814 !important;
+  color:#00f5ff !important;
+  border:1px solid rgba(0,245,255,0.35) !important;
+  font-family:'Share Tech Mono',monospace !important;
+  letter-spacing:0.05em !important;
+  padding:10px 14px !important;
+  appearance:none !important;
+  -webkit-appearance:none !important;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300f5ff' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+  background-repeat:no-repeat !important;
+  background-position:right 12px center !important;
+  background-size:12px !important;
+  cursor:pointer !important;
+  box-shadow:0 0 0 1px rgba(0,245,255,0.1) !important;
+}
+select:focus, select.sel:focus {
+  border-color:#00f5ff !important;
+  box-shadow:0 0 12px rgba(0,245,255,0.2),0 0 0 1px rgba(0,245,255,0.3) !important;
+  outline:none !important;
+}
+select option {
+  background:#000814 !important;
+  color:#00f5ff !important;
+  font-family:'Share Tech Mono',monospace !important;
+  padding:8px !important;
+}
+select option:hover, select option:checked {
+  background:rgba(0,245,255,0.15) !important;
+  color:#ffffff !important;
+}
+/* Style the carrier dropdown specifically */
+#sel-carrier option, #sel-stype option, #sel-series option {
+  background:#000814 !important;
+  color:#d0f4ff !important;
+}
 </style>
 <body>
 <canvas id="tron-bg" style="position:fixed;inset:0;z-index:0;opacity:0.45;"></canvas>
