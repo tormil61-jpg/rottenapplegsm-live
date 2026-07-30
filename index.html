@@ -735,6 +735,15 @@ select option:hover, select option:checked {
   color:inherit !important;
 }
 
+
+/* CRITICAL: Let inline color win on service card carrier names */
+.svc-card > div:first-of-type,
+.svc-card div:nth-child(2) {
+  color:unset !important;
+}
+div.svc-card div[style*="text-shadow"] {
+  color:unset !important;
+}
 </style>
 <body>
 <canvas id="tron-bg" style="position:fixed;inset:0;z-index:0;opacity:0.45;"></canvas>
