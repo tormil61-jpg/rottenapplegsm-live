@@ -728,6 +728,14 @@ select option:hover, select option:checked {
   background:#000814 !important;
   color:#d0f4ff !important;
 }
+
+/* Force carrier name colors to show - override global span color */
+.svc-card div[style*="getCarrierColor"],
+.svc-card div[style*="text-shadow"] {
+  color:inherit !important;
+}
+/* Remove the cyan override from spans inside service cards */
+.svc-card span { color:inherit !important; }
 </style>
 <body>
 <canvas id="tron-bg" style="position:fixed;inset:0;z-index:0;opacity:0.45;"></canvas>
