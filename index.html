@@ -470,7 +470,7 @@ h1 span[style*="grad"],h1 span[style*="blue"],.accent-text{
 .btn{
   border:1px solid rgba(0,245,255,0.45) !important;
   background:rgba(0,245,255,0.1) !important;
-  color:#00f5ff !important;
+  color:#00f5ff ;
   font-family:'Orbitron',monospace !important;
   font-size:11px !important;
   letter-spacing:0.1em !important;
@@ -562,6 +562,10 @@ button, .btn, [role="button"] {
   letter-spacing:0.08em !important;
   text-transform:uppercase !important;
   font-size:11px !important;
+}
+/* Only apply cyan color to buttons WITHOUT inline color style */
+button:not([style*="color"]), .btn:not([style*="color"]) {
+  color:#00f5ff !important;
 }
 
 /* All headings get Orbitron */
