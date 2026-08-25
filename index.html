@@ -4586,7 +4586,7 @@ async function loadServicesFromSupabase(){
     if(!data||!data.length)return;
     services.length = 0;
     data.forEach(function(row){
-      if(row.active!==false){
+      {
         services.push({
           id:row.id,
           carrier:(row.carrier||'').trim(),
@@ -4603,7 +4603,7 @@ async function loadServicesFromSupabase(){
           supplier:row.supplier||'',
           hot:!!row.hot,
           recent:!!row.recent,
-          active:true,
+          active:row.active!==false,
           sickwServiceId:row.sickw_service_id||'',
           sickwAutoSubmit:!!row.sickw_auto_submit
         });
