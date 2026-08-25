@@ -4467,7 +4467,8 @@ function addService(){
     hot:false,recent:false,active:document.getElementById("ns-active")?.checked!==false,
     apiUrl:"",apiKey:"",apiServiceId:""
   })
-  saveServicesToStorage();;
+  saveServicesToStorage();
+  setTimeout(function(){loadServicesFromSupabase().then(function(){renderAdminServices("");renderHome();});},1000);
   document.getElementById("ns-series").value="";
   document.getElementById("ns-price").value="";
   document.getElementById("ns-orig").value="";
