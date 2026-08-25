@@ -2677,7 +2677,17 @@ function launchStripeCheckout(){
       currency:"USD",
       description:desc,
       orderId,
-      customerEmail:checkoutPending.email||""
+      customerEmail:checkoutPending.email||"",
+      metadata:{
+        orderId:orderId,
+        orderNumber:String(orderCounter||0),
+        customerName:checkoutPending.name||"Guest",
+        email:checkoutPending.email||"",
+        description:desc,
+        imei:checkoutPending.imei||"",
+        cost:String(checkoutPending.svc?checkoutPending.svc.cost||0:0),
+        accountId:currentUser?currentUser.id:""
+      }
     })
   })
   .then(r=>r.json())
