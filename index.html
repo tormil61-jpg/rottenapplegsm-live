@@ -4341,7 +4341,28 @@ function savePayConfig(){
   }
 }
 function loadPayConfig(){try{var s=localStorage.getItem("ra_payconfig");if(!s)return;var p=JSON.parse(s);if(p&&typeof p==="object")Object.assign(payConfig,p);}catch(e){}}
-function saveOrders(){try{localStorage.setItem("ra_orders",JSON.stringify(orders||[]));}catch(e){}}
+function saveOrders(){
+  try{localStorage.setItem("ra_orders",JSON.stringify(allOrders||[]));}catch(e){}
+  if(typeof supaUpsert!=="undefined"&&allOrders&&allOrders.length){
+    var rows=allOrders.map(function(o){return {
+      id:o.id,
+      order_number:o.orderNumber||0,
+      customer_name:o.name||o.customer_name||"Guest",
+      email:o.email||"",
+      description:o.desc||o.description||"",
+      imei:o.imei||"",
+      amount:parseFloat(o.amount)||0,
+      cost:parseFloat(o.cost)||0,
+      payment_method:o.paymentMethod||o.payment_method||"",
+      status:o.status||"Pending Verification",
+      placed:o.placed||new Date().toISOString().split("T")[0],
+      completed:o.completed||null,
+      account_id:o.accountId||o.account_id||null,
+      notes:o.notes||""
+    };});
+    supaUpsert("orders",rows).catch(function(e){console.log("orders save error:",e);});
+  }
+}
 function loadOrders(){try{var s=localStorage.getItem("ra_orders");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p)&&p.length)orders=p;}catch(e){}}
 function updateOrderStatus(id,status){
   if(!ORDER_STATUSES.includes(status))return;
