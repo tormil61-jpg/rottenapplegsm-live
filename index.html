@@ -2909,6 +2909,7 @@ function checkStripeReturn(){
   sessionStorage.removeItem("pendingOrder");
   // Check if it was an IMEI check payment
   const savedImei = sessionStorage.getItem("pendingImeiCheck");
+  console.log("pendingImeiCheck from sessionStorage:", savedImei);
   sessionStorage.removeItem("pendingImeiCheck");
   if(savedImei){
     try{
