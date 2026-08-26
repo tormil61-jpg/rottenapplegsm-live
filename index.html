@@ -2836,16 +2836,27 @@ async function mountPayPal(){
         loadEl.style.display="block";
         loadEl.textContent="Confirming payment…";
         try{
+          const finalPP=checkoutPending?.discPrice||matchedSvc?.price||0;
           const res=await fetch("/.netlify/functions/paypal-capture-order",{
             method:"POST",
             headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({orderID:data.orderID})
+            body:JSON.stringify({
+              orderID:data.orderID,
+              orderId:"RA-"+secureId(8),
+              orderNumber:String(orderCounter||0),
+              customerName:checkoutPending?.name||"Guest",
+              email:checkoutPending?.email||"",
+              description:matchedSvc?matchedSvc.carrier+" – "+matchedSvc.stype+" – "+matchedSvc.series:"",
+              imei:checkoutPending?.imeiMasked||"",
+              cost:String(matchedSvc?.cost||0),
+              accountId:currentUser?currentUser.id:""
+            })
           });
           if(!res.ok) throw new Error("Payment capture failed. Please contact support.");
           const capture=await res.json();
-          if(capture.status==="COMPLETED"){
+          if(capture.success){
             recordOrder("paypal");
-            setCheckoutStep("done");
+            if(!checkoutPending?.isImeiCheck) setCheckoutStep("done");
           } else {
             throw new Error("Payment not completed. Status: "+capture.status);
           }
