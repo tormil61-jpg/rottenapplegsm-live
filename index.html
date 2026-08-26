@@ -2422,7 +2422,8 @@ async function runImeiLookup(){
       if(data&&data.result){resultData=data.result;isLive=true;}
       else throw new Error(data?.result||"No result from sickw.com");
     }catch(e){
-      resultData="API error: "+e.message+". Please contact support.";
+      resultData="Check failed: "+e.message+". Please contact us at rottenapplegsm@gmail.com or WhatsApp (323) 829-1991.";
+      isLive=false;
     }
   } else {
     // Demo result
@@ -2912,7 +2913,15 @@ function checkStripeReturn(){
       const imeiData = JSON.parse(savedImei);
       pendingImeiCheck = imeiData;
       showToast("Payment confirmed! Running IMEI check...");
-      setTimeout(function(){ runImeiLookup(); }, 1500);
+      // Wait for Supabase/payConfig to load before running check
+      var imeiWait = 0;
+      var imeiInterval = setInterval(function(){
+        imeiWait++;
+        if(typeof supaGet !== "undefined" || imeiWait > 10){
+          clearInterval(imeiInterval);
+          runImeiLookup();
+        }
+      }, 500);
       return;
     }catch(e){}
   }
