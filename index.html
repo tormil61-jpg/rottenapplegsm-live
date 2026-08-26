@@ -2365,6 +2365,7 @@ async function submitImeiCheck(){
 
   // Open payment modal for IMEI check
   checkoutPending={
+    imei,
     imeiMasked:imei.slice(0,3)+"*****"+imei.slice(-4),
     email,name:currentUser?.name||"",
     svc:{price:selectedImeiCheckType.price,label:selectedImeiCheckType.label,carrier:"IMEI Check",stype:selectedImeiCheckType.label,series:"",brand:"",sickwServiceId:selectedImeiCheckType.sickwServiceId||"",id:selectedImeiCheckType.id||""},
