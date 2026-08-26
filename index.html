@@ -2441,6 +2441,26 @@ async function runImeiLookup(){
   };
   imeiHistory.unshift(historyEntry);
 
+  // Save IMEI check as order to Supabase
+  var imeiOrder = {
+    id: historyEntry.id,
+    order_number: 0,
+    customer_name: currentUser ? currentUser.name : 'Guest',
+    email: email || '',
+    description: type.label + ' — IMEI Check',
+    imei: imeiMasked || '',
+    amount: type.price || 0,
+    cost: 0,
+    payment_method: 'IMEI Check',
+    status: isLive ? 'Completed' : 'Processing',
+    placed: new Date().toISOString().split('T')[0],
+    completed: isLive ? new Date().toISOString().split('T')[0] : null,
+    account_id: accountId || null,
+    notes: 'Sickw service ID: ' + (type.sickwServiceId || '')
+  };
+  allOrders.unshift(imeiOrder);
+  saveOrders();
+
   // Send results email to customer
   if(email && typeof sendEmail!=="undefined" && payConfig.emailjsServiceId && payConfig.emailjsTemplateNew) {
     sendEmail(payConfig, payConfig.emailjsTemplateNew, {
