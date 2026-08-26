@@ -4396,7 +4396,7 @@ function confirmCryptoPayment(id){
   const _svc = services.find(x=>x.id===matchedSvc?.id);
   if(_svc&&_svc.sickwAutoSubmit&&_svc.sickwServiceId&&o.imeiMasked){
     const _imei = o.imeiMasked.replace(/[^0-9]/g,'').padStart(15,'0');
-    fetch("/.netlify/functions/imei-check",{
+    fetch("/.netlify/functions/sickw-check",{
       method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({imei:_imei,serviceId:_svc.sickwServiceId})
     }).then(r=>r.json()).then(d=>{
