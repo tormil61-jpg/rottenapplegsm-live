@@ -2710,13 +2710,24 @@ function launchStripeCheckout(){
   const desc=`${matchedSvc.carrier} – ${matchedSvc.stype} – ${matchedSvc.series}`;
 
   // Save pending order to sessionStorage so we can record it on return
-  sessionStorage.setItem("pendingStripeOrder",JSON.stringify({
-    orderId, carrier:matchedSvc.carrier, stype:matchedSvc.stype,
-    series:matchedSvc.series, brand:matchedSvc.brand||"",
-    price:finalPrice, imeiMasked:checkoutPending.imeiMasked,
-    email:checkoutPending.email, name:checkoutPending.name,
-    paymentMethod:"stripe"
-  }));
+  // Save IMEI check or regular order to sessionStorage before Stripe redirect
+  if(checkoutPending.isImeiCheck){
+    sessionStorage.setItem("pendingImeiCheck", JSON.stringify({
+      type: checkoutPending.svc,
+      imei: checkoutPending.imei||checkoutPending.imeiMasked,
+      imeiMasked: checkoutPending.imeiMasked,
+      email: checkoutPending.email,
+      accountId: currentUser?currentUser.id:null
+    }));
+  } else {
+    sessionStorage.setItem("pendingStripeOrder",JSON.stringify({
+      orderId, carrier:matchedSvc.carrier, stype:matchedSvc.stype,
+      series:matchedSvc.series, brand:matchedSvc.brand||"",
+      price:finalPrice, imeiMasked:checkoutPending.imeiMasked,
+      email:checkoutPending.email, name:checkoutPending.name,
+      paymentMethod:"stripe"
+    }));
+  }
 
   fetch("/.netlify/functions/stripe-create-session",{
     method:"POST",
