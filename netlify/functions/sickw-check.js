@@ -1,17 +1,22 @@
 const https = require('https');
 
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Content-Type': 'application/json'
+};
+
 exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
-  }
+  if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers: CORS, body: '' };
+  if (event.httpMethod !== 'POST') return { statusCode: 405, headers: CORS, body: 'Method Not Allowed' };
 
   try {
     const { imei, serviceId } = JSON.parse(event.body);
     const key = process.env.SICKW_API_KEY;
-    const user = process.env.SICKW_API_USER || 'tormil61@gmail.com';
     
-    if (!key) return { statusCode: 500, body: JSON.stringify({ error: 'API key not configured' }) };
-    if (!imei || !serviceId) return { statusCode: 400, body: JSON.stringify({ error: 'Missing imei or serviceId' }) };
+    if (!key) return { statusCode: 500, headers: CORS, body: JSON.stringify({ error: 'API key not configured' }) };
+    if (!imei || !serviceId) return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Missing imei or serviceId' }) };
 
     const url = `https://sickw.com/api.php?format=JSON&key=${key}&imei=${imei}&service=${serviceId}`;
     
@@ -29,10 +34,10 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      headers: CORS,
       body: JSON.stringify(data)
     };
   } catch (e) {
-    return { statusCode: 500, body: JSON.stringify({ error: e.message }) };
+    return { statusCode: 500, headers: CORS, body: JSON.stringify({ error: e.message }) };
   }
 };
