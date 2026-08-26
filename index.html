@@ -3208,7 +3208,7 @@ function renderAccountPage(){
           </div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;border-top:1px solid var(--border);padding-top:14px">
-          ${[["IMEI",o.imeiMasked],["Email",o.email],["Placed",o.placed],["Supplier ID",o.supplierOrderId||"Processing"]].map(([l,v])=>`<div><div style="color:var(--muted);font-size:11px;margin-bottom:2px">${l}</div><div style="font-size:13px;font-weight:500;word-break:break-all">${v}</div></div>`).join("")}
+          ${[["IMEI",o.imeiMasked||o.imei||"—"],["Email",o.email],["Placed",o.placed],["Supplier ID",o.supplierOrderId||"Processing"]].map(([l,v])=>`<div><div style="color:var(--muted);font-size:11px;margin-bottom:2px">${l}</div><div style="font-size:13px;font-weight:500;word-break:break-all">${v}</div></div>`).join("")}
         </div>
       </div>`).join("")
     }
@@ -3747,7 +3747,7 @@ function renderAdminPage(){
           <!-- Service info -->
           <div style="background:var(--surface2);border-radius:10px;padding:12px 14px;margin-bottom:12px">
             <div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Service</div>
-            <div style="font-weight:700;font-size:14px;margin-bottom:2px;color:${getCarrierColor(o.carrier)};text-shadow:0 0 8px ${getCarrierColor(o.carrier)}">${o.carrier} — ${o.stype}</div>
+            <div style="font-weight:700;font-size:14px;margin-bottom:2px;color:${getCarrierColor(o.carrier||o.description)};text-shadow:0 0 8px ${getCarrierColor(o.carrier||o.description)}">${o.carrier&&o.stype?o.carrier+" — "+o.stype:o.description||o.desc||"Service"}</div>
             <div style="font-size:13px;color:var(--muted)">${o.brand?o.brand+" · ":""}${o.series||""}</div>
           </div>
 
