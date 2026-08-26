@@ -2636,24 +2636,25 @@ function recordOrder(method, initialStatus){
     return;
   }
   const finalPrice=checkoutPending.discPrice||matchedSvc.price;
+  var orderDesc = matchedSvc.carrier+' – '+matchedSvc.stype+' – '+matchedSvc.series;
   const o={
     id:"RA-"+secureId(8),
     orderNumber:++orderCounter,
     accountId:currentUser?currentUser.id:null,
-    desc:`${matchedSvc.carrier} – ${matchedSvc.stype} – ${matchedSvc.series}`,
+    desc:orderDesc,
     carrier:matchedSvc.carrier,stype:matchedSvc.stype,series:matchedSvc.series,
     brand:matchedSvc.brand||"",
-    name:checkoutPending.name||"",
+    name:checkoutPending.name||"Guest",
     imeiMasked:checkoutPending.imeiMasked,
     email:checkoutPending.email,
     amount:finalPrice,
     originalPrice:matchedSvc.price,
     tierDiscount:checkoutPending.tier?.discount||0,
     cost:parseFloat((matchedSvc.cost||0).toFixed(2)),
-    placed:new Date().toLocaleString(),
+    placed:new Date().toISOString().split('T')[0],
     status:initialStatus||"Processing",paymentMethod:method,
     supplierOrderId:"",notes:"",
-    supplier: o.desc && o.desc.includes('IMEI') ? 'Sickw' : (matchedSvc ? (matchedSvc.supplier || '') : '')
+    supplier:matchedSvc.supplier||""
   };
   allOrders.unshift(o);
   // Auto-submit to supplier API if service has apiServiceId configured
