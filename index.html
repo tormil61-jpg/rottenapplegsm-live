@@ -2632,7 +2632,8 @@ function recordOrder(method, initialStatus){
     cost:parseFloat((matchedSvc.cost||0).toFixed(2)),
     placed:new Date().toLocaleString(),
     status:initialStatus||"Processing",paymentMethod:method,
-    supplierOrderId:"",notes:""
+    supplierOrderId:"",notes:"",
+    supplier: o.desc && o.desc.includes('IMEI') ? 'Sickw' : (matchedSvc ? (matchedSvc.supplier || '') : '')
   };
   allOrders.unshift(o);
   // Auto-submit to supplier API if service has apiServiceId configured
