@@ -2491,7 +2491,7 @@ async function runImeiLookup(){
             ${isLive?"✓ Live Result":"Demo Result"}
           </span>
         </div>
-        <div style="background:var(--surface2);border-radius:10px;padding:16px;font-size:13px;line-height:1.9;white-space:pre-wrap;word-break:break-word;color:#f0eeff;font-family:inherit">${sanitize(resultData)}</div>
+        <div style="background:var(--surface2);border-radius:10px;padding:16px;font-size:13px;line-height:1.9;word-break:break-word;color:#f0eeff">${formatImeiResult(resultData)}</div>
         ${accountId?`<div style="margin-top:12px;font-size:12px;color:var(--green)">✓ Saved to your account · View in My Account → IMEI Checks</div>`:`<div style="margin-top:12px;font-size:12px;color:var(--muted)">Sign in to save and view past checks in your account</div>`}
       </div>
       ${suggestions.length>0?`
@@ -2523,10 +2523,41 @@ async function runImeiLookup(){
   if(currentUser&&accountTab==="imei")renderAccountPage();
 }
 
+function formatImeiResult(raw){
+  if(!raw) return 'No result.';
+  var clean=String(raw).replace(/<br\s*\/?>/gi,'\n').replace(/<font[^>]*>/gi,'').replace(/<\/font>/gi,'').replace(/<[^>]+>/g,'');
+  return clean.split('\n').filter(function(l){return l.trim();}).map(function(line){
+    var idx=line.indexOf(':');
+    if(idx>0){var k=line.slice(0,idx).trim();var v=line.slice(idx+1).trim();
+      return '<div style="display:flex;gap:12px;padding:5px 0;border-bottom:1px solid rgba(0,245,255,0.08)"><span style="color:rgba(0,245,255,0.6);min-width:180px;font-size:12px;flex-shrink:0">'+k+'</span><span style="color:#ffffff;font-weight:600">'+v+'</span></div>';}
+    return '<div style="padding:5px 0;color:#f0eeff">'+line+'</div>';
+  }).join('');
+}
 function suggestServices(resultText,typeId){
-  const txt=(resultText||"").toLowerCase();
+  var cleanTxt=String(resultText||'').replace(/<[^>]+>/g,'').toLowerCase();
+  const txt=cleanTxt;
+  var isATT=txt.includes('at&t')||txt.includes('att');
+  var isTMobile=txt.includes('t-mobile')||txt.includes('tmobile');
+  var isVerizon=txt.includes('verizon');
+  var isCricket=txt.includes('cricket');
+  var isBoost=txt.includes('boost')||txt.includes('dish');
+  var isSpectrum=txt.includes('spectrum');
+  var isXfinity=txt.includes('xfinity');
+  var simLocked=txt.includes('locked');
+  var icloudOn=txt.includes('icloud')&&txt.includes(' on');
   const active=activeServices();
   let suggestions=[];
+
+  // Smart suggestions based on carrier detected in result
+  if(suggestions.length===0){
+    var matchCarrier = isATT?"AT&T":isTMobile?"T-Mobile":isVerizon?"Verizon":isCricket?"Cricket":isBoost?"Boost":isSpectrum?"Spectrum":isXfinity?"Xfinity Mobile":"";
+    if(matchCarrier){
+      suggestions=active.filter(function(s){return s.carrier.toLowerCase().includes(matchCarrier.toLowerCase());});
+    }
+    if(suggestions.length===0&&simLocked){
+      suggestions=active.filter(function(s){return s.stype.includes("Carrier Unlock");}).slice(0,3);
+    }
+  }
 
   // Blacklist check → suggest unbarring services for that carrier
   if(typeId==="blacklist_att")       suggestions=active.filter(s=>s.carrier.includes("AT&T")&&s.stype.includes("Blacklist"));
