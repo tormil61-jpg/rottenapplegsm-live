@@ -2652,7 +2652,7 @@ function recordOrder(method, initialStatus){
     tierDiscount:checkoutPending.tier?.discount||0,
     cost:parseFloat((matchedSvc.cost||0).toFixed(2)),
     placed:new Date().toISOString().split('T')[0],
-    status:initialStatus||"Processing",paymentMethod:method,
+    status:initialStatus||"Pending Verification",paymentMethod:method,
     supplierOrderId:"",notes:"",
     supplier:matchedSvc.supplier||""
   };
