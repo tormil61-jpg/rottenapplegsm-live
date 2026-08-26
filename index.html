@@ -2630,9 +2630,22 @@ function recordOrder(method, initialStatus){
   if(!checkoutPending)return;
   // IMEI check payment — close modal and run the lookup
   if(checkoutPending.isImeiCheck){
-    if(method==="wallet"&&currentUser)updateBalance(currentUser.id,-checkoutPending.svc.price);
-    closeCheckout();
-    runImeiLookup();
+    if(method==="wallet"&&currentUser){
+      updateBalance(currentUser.id,-checkoutPending.svc.price);
+      closeCheckout();
+      runImeiLookup();
+      return;
+    }
+    // For Stripe/PayPal - save IMEI check to sessionStorage before redirect
+    try{
+      sessionStorage.setItem("pendingImeiCheck", JSON.stringify({
+        type: checkoutPending.svc,
+        imei: checkoutPending.imei||checkoutPending.imeiMasked,
+        imeiMasked: checkoutPending.imeiMasked,
+        email: checkoutPending.email,
+        accountId: currentUser?currentUser.id:null
+      }));
+    }catch(e){}
     return;
   }
   const finalPrice=checkoutPending.discPrice||matchedSvc.price;
@@ -2869,6 +2882,18 @@ function checkStripeReturn(){
   const saved=sessionStorage.getItem("pendingStripeOrder")||sessionStorage.getItem("pendingOrder");
   sessionStorage.removeItem("pendingStripeOrder");
   sessionStorage.removeItem("pendingOrder");
+  // Check if it was an IMEI check payment
+  const savedImei = sessionStorage.getItem("pendingImeiCheck");
+  sessionStorage.removeItem("pendingImeiCheck");
+  if(savedImei){
+    try{
+      const imeiData = JSON.parse(savedImei);
+      pendingImeiCheck = imeiData;
+      showToast("Payment confirmed! Running IMEI check...");
+      setTimeout(function(){ runImeiLookup(); }, 1500);
+      return;
+    }catch(e){}
+  }
   if(!saved){showToast("Payment received! Contact us with your order details.");return}
   try{
     const o=JSON.parse(saved);
