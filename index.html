@@ -2441,6 +2441,20 @@ async function runImeiLookup(){
   };
   imeiHistory.unshift(historyEntry);
 
+  // Send results email to customer
+  if(email && typeof sendEmail!=="undefined" && payConfig.emailjsServiceId && payConfig.emailjsTemplateNew) {
+    sendEmail(payConfig, payConfig.emailjsTemplateNew, {
+      order_id: historyEntry.id,
+      customer_name: currentUser ? currentUser.name : 'Customer',
+      customer_email: email,
+      service: type.label + ' — IMEI Check Results',
+      imei_masked: imeiMasked,
+      amount: '$' + type.price.toFixed(2),
+      payment_method: 'IMEI Check',
+      placed: new Date().toLocaleDateString()
+    });
+  }
+
   // Suggest matching services based on result
   const suggestions=suggestServices(resultData,type.id);
 
@@ -3720,8 +3734,9 @@ function renderAdminPage(){
               <div style="font-weight:800;font-size:20px;color:var(--purpleL)">$${acc.balance.toFixed(2)}</div>
               <div style="color:var(--muted);font-size:12px">balance · ${accOrders.length} orders</div>
               <button onclick="deleteAccount('${acc.id}','${acc.name}')" style="margin-top:8px;background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Delete Account</button>
+              <button onclick="adminSendEmail('${acc.email}','${acc.name}')" style="margin-top:4px;background:rgba(0,245,255,.1);color:#00f5ff;border:1px solid rgba(0,245,255,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">✉ Send Email</button>
               <button onclick="adminReset2FA('${acc.id}','${acc.name}')" style="margin-top:4px;background:rgba(0,245,255,.1);color:#ffffff;border:1px solid rgba(0,245,255,.18);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Reset 2FA</button>
-              <button onclick="adminReset2FA('${acc.id}','${acc.name}')" style="margin-top:4px;background:rgba(0,245,255,.1);color:#ffffff;border:1px solid rgba(0,245,255,.18);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Reset 2FA</button>
+              
             </div>
           </div>
           
@@ -4140,17 +4155,24 @@ async function refreshOrderFromSupplier(orderId){
   if(result){showToast("Status updated: "+o.status);renderAdminPage();}
   else{showToast("Could not reach supplier API.");}
 }
-function adminReset2FA(id, name){
-  if(!confirm('Reset 2FA for '+name+'? They will need to set up Google Authenticator again on next login.'))return;
-  var SURL='https://fkiajefrdcgiobrzftjx.supabase.co';
-  var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk';
-  fetch(SURL+'/rest/v1/accounts?id=eq.'+id,{method:'PATCH',headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({totp_secret:''})})
-    .then(function(){
-      var acc=accounts.find(function(a){return a.id===id;});
-      if(acc)acc.totpSecret='';
-      showToast('2FA reset for '+name+'. They can set up again on next login.');
-      renderAdminPage();
-    }).catch(function(){showToast('Reset failed.');});
+function adminSendEmail(email, name){
+  var subject = prompt('Email subject:', 'Message from Rotten Apple GSM');
+  if(!subject)return;
+  var message = prompt('Email message:', 'Hi '+name+', ');
+  if(!message)return;
+  if(typeof sendEmail!=="undefined"&&payConfig.emailjsServiceId){
+    sendEmail(payConfig, payConfig.emailjsTemplateStatus, {
+      order_id: 'ADMIN',
+      customer_name: name,
+      customer_email: email,
+      service: subject,
+      amount: '',
+      new_status: message
+    });
+    showToast('Email sent to '+email);
+  } else {
+    showToast('EmailJS not configured.');
+  }
 }
 function adminReset2FA(id, name){
   if(!confirm('Reset 2FA for '+name+'? They will need to set up Google Authenticator again on next login.'))return;
@@ -4164,6 +4186,7 @@ function adminReset2FA(id, name){
       renderAdminPage();
     }).catch(function(){showToast('Reset failed.');});
 }
+
 function deleteOrder(id, num){
   if(!confirm('Delete order #'+num+'? This cannot be undone.'))return;
   var SURL='https://fkiajefrdcgiobrzftjx.supabase.co';
@@ -4414,7 +4437,21 @@ function confirmCryptoPayment(id){
 function updateOrderField(id,field,val){const o=allOrders.find(x=>x.id===id);if(o)o[field]=sanitize(val)
   saveOrders();
 }
-function saveImeiCheckTypes(){try{localStorage.setItem("ra_imei_checks",JSON.stringify(imeiCheckTypes));}catch(e){}}
+function saveImeiCheckTypes(){
+  try{localStorage.setItem("ra_imei_checks",JSON.stringify(imeiCheckTypes));}catch(e){}
+  if(typeof supaUpsert!=="undefined"&&imeiCheckTypes&&imeiCheckTypes.length){
+    var rows=imeiCheckTypes.map(function(t){return {
+      id:t.id,
+      label:t.label||"",
+      icon:t.icon||"🔍",
+      description:t.description||t.desc||"",
+      price:parseFloat(t.price)||0,
+      active:t.active!==false,
+      sickw_service_id:t.sickwServiceId||""
+    };});
+    supaUpsert("imei_checks",rows).catch(function(e){console.log("IMEI save error:",e);});
+  }
+}
 function loadImeiCheckTypes(){try{var s=localStorage.getItem("ra_imei_checks");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p))p.forEach(function(sv){var x=imeiCheckTypes.find(function(t){return t.id===sv.id});if(x&&sv.price!==undefined)x.price=sv.price;});}catch(e){}}
 function saveServicesToStorage(){
   try{localStorage.setItem("ra_services",JSON.stringify(services));}catch(e){}
