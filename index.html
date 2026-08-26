@@ -2360,6 +2360,7 @@ async function submitImeiCheck(){
 
   // Build a checkout for the IMEI check — reuse checkout modal
   // Store context so recordImeiOrder knows what to run after payment
+  sessionStorage.removeItem("pendingImeiCheck");
   pendingImeiCheck={type:selectedImeiCheckType,imei,imeiMasked:imei.slice(0,3)+"*****"+imei.slice(-4),email,accountId:currentUser?.id||null};
 
   // Open payment modal for IMEI check
