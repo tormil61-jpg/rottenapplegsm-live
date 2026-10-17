@@ -3922,7 +3922,18 @@ function renderAdminPage(){
         <div><label class="lbl">Series</label><input class="inp" id="ns-series" placeholder="Series"/></div>
         <div><label class="lbl">Price $</label><input class="inp" type="number" id="ns-price" placeholder="Price"/></div>
         <div><label class="lbl">Was $</label><input class="inp" type="number" id="ns-orig" placeholder="Orig"/></div>
-        <div><label class="lbl">Cost $</label><input class="inp" type="number" id="ns-cost" placeholder="0"/></div>
+        <div><label class="lbl">Cost $</label><input class="inp" type="number" id="ns-cost" placeholder="0" oninput="calcServicePrice()"/></div>
+        <div id="ns-price-preview" style="display:none;grid-column:1/-1;background:rgba(0,245,255,.07);border:1px solid rgba(0,245,255,.3);border-radius:10px;padding:12px 16px;font-size:13px">
+          <div style="font-weight:700;color:var(--cyan);margin-bottom:8px;font-size:12px;letter-spacing:.06em;text-transform:uppercase">⚡ Auto-Pricing (avg Stripe + PayPal fees)</div>
+          <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+            <div><span style="color:var(--muted)">Your cost:</span> <span id="pp-cost" style="font-weight:700">$0.00</span></div>
+            <div><span style="color:var(--muted)">Min profit:</span> <span style="font-weight:700;color:var(--green)">+$25.00</span></div>
+            <div><span style="color:var(--muted)">Processing fees:</span> <span id="pp-fees" style="font-weight:700;color:#ff9f43)">~$0.00</span></div>
+            <div style="border-left:1px solid var(--border);padding-left:16px"><span style="color:var(--muted)">Suggested price:</span> <span id="pp-price" style="font-weight:800;font-size:18px;color:var(--cyan)">$0.99</span></div>
+            <button type="button" onclick="applyAutoPrice()" style="background:var(--cyan);color:#000;border:none;border-radius:7px;padding:7px 16px;font-weight:700;font-size:13px;cursor:pointer">Use This Price</button>
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:var(--muted)">You keep <span id="pp-profit" style="color:var(--green);font-weight:700">$25.00</span> after fees · Margin: <span id="pp-margin" style="color:var(--green);font-weight:700">0%</span></div>
+        </div>
         <div><label class="lbl">Turnaround</label><input class="inp" id="ns-time" placeholder="24 hrs"/></div>
         <div><label class="lbl">Success %</label><input class="inp" id="ns-rate" placeholder="100%"/></div>
       <div style="grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--border)"><input type="checkbox" id="ns-active" checked style="accent-color:var(--purpleL);width:16px;height:16px;cursor:pointer"/><span style="font-size:13px;font-weight:600;color:var(--text)">Publish immediately (visible to customers)</span></div>
@@ -4054,7 +4065,7 @@ function renderAdminServices(search=""){
         </div>
         <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Price $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" value="${s.price}" onblur="updateSvcField(${s.id},'price',this.value)"/></div>
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Was $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" value="${s.orig||""}" onblur="updateSvcField(${s.id},'orig',this.value)"/></div>
-          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Cost $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" placeholder="0" value="${s.cost||""}" onblur="updateSvcField(${s.id},'cost',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Cost $</div><div style="display:flex;gap:5px;align-items:center"><input class="inp" id="svc-cost-${s.id}" style="width:72px;padding:5px 8px;font-size:12px" type="number" placeholder="0" value="${s.cost||""}" onblur="updateSvcField(${s.id},'cost',this.value)"/><button type="button" title="Auto-price from cost" onclick="(function(){var c=parseFloat(document.getElementById('svc-cost-${s.id}').value)||0;if(!c){showToast('Enter cost first.');return;}var r=(0.029+0.0349)/2;var f=(0.30+0.49)/2;var raw=(c+25+f)/(1-r);var p=Math.ceil(raw)-0.01;if(p<raw)p+=1;var fees=parseFloat((p*r+f).toFixed(2));var profit=parseFloat((p-c-fees).toFixed(2));if(confirm('Cost: \$'+c.toFixed(2)+' → Suggested price: \$'+p.toFixed(2)+'\nYou keep \$'+profit.toFixed(2)+' after fees.\n\nApply this price?')){updateSvcField(${s.id},'price',p.toFixed(2));showToast('Price updated to \$'+p.toFixed(2));renderAdminServices('');}})();" style="background:var(--cyan);color:#000;border:none;border-radius:5px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">⚡ Reprice</button></div></div>
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Time</div><input class="inp" style="width:88px;padding:5px 8px;font-size:12px" value="${s.time}" onblur="updateSvcField(${s.id},'time',this.value)"/></div>
           <div style="margin-bottom:10px">
           <div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">Description</div>
@@ -4615,6 +4626,35 @@ function updateSvcField(id,field,val){
 }
 function toggleSvc(id,field){const s=services.find(x=>x.id===id);if(s){s[field]=!s[field];saveServicesToStorage();renderAdminServices(document.getElementById("svc-search")?.value||"")}}
 function deleteSvc(id){services=services.filter(s=>s.id!==id);saveServicesToStorage();renderAdminServices(document.getElementById("svc-search")?.value||"");showToast("Removed.")}
+function calcServicePrice(){
+  var cost=parseFloat(document.getElementById("ns-cost").value)||0;
+  var preview=document.getElementById("ns-price-preview");
+  if(!cost||cost<=0){preview.style.display="none";return;}
+  // Average of Stripe (2.9% + $0.30) and PayPal (3.49% + $0.49)
+  var feeRate=(0.029+0.0349)/2;   // 3.195%
+  var feeFlat=(0.30+0.49)/2;      // $0.395
+  var minProfit=25;
+  // Gross up so after fees you keep cost + minProfit
+  var rawPrice=(cost+minProfit+feeFlat)/(1-feeRate);
+  // Round up to nearest $X.99
+  var rounded=Math.ceil(rawPrice)-0.01;
+  if(rounded<rawPrice)rounded+=1;
+  var fees=parseFloat((rounded*feeRate+feeFlat).toFixed(2));
+  var actualProfit=parseFloat((rounded-cost-fees).toFixed(2));
+  var margin=parseFloat(((actualProfit/rounded)*100).toFixed(1));
+  document.getElementById("pp-cost").textContent="$"+cost.toFixed(2);
+  document.getElementById("pp-fees").textContent="~$"+fees.toFixed(2);
+  document.getElementById("pp-price").textContent="$"+rounded.toFixed(2);
+  document.getElementById("pp-profit").textContent="$"+actualProfit.toFixed(2);
+  document.getElementById("pp-margin").textContent=margin+"%";
+  preview.style.display="block";
+}
+function applyAutoPrice(){
+  var priceText=document.getElementById("pp-price").textContent.replace("$","");
+  var priceInput=document.getElementById("ns-price");
+  if(priceInput&&priceText)priceInput.value=parseFloat(priceText).toFixed(2);
+  showToast("Price applied — review and add service when ready.");
+}
 function addService(){
   const series=document.getElementById("ns-series").value.trim();
   const price=parseFloat(document.getElementById("ns-price").value);
