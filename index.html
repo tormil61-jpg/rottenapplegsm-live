@@ -184,40 +184,41 @@
 <link rel="preconnect" href="https://js.stripe.com"/>
 <link rel="dns-prefetch" href="https://sickw.com"/>
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net"/>
-<meta name="theme-color" content="#7c3aed"/>
+<meta name="theme-color" content="#00ccee"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Rotten Apple GSM"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 
 /* ── Design tokens ── */
 :root{
-  --purple:#7c3aed;
-  --purpleL:#9d5ffe;
-  --pink:#d946ef;
-  --accent:#a78bfa;
-  --cyan:#22d3ee;
-  --green:#22c55e;
-  --orange:#f97316;
-  --red:#ef4444;
-  --surface:rgba(255,255,255,.07);
-  --surface2:rgba(255,255,255,.10);
-  --surface3:rgba(255,255,255,.14);
-  --muted:rgba(240,238,255,.5);
-  --border:rgba(255,255,255,.14);
-  --grad:linear-gradient(135deg,#7c3aed,#9d5ffe,#d946ef);
+  --purple:#00ccee;
+  --purpleL:#00f5ff;
+  --pink:#00aacc;
+  --accent:#00f5ff;
+  --cyan:#00f5ff;
+  --green:#00ff64;
+  --orange:#ff8800;
+  --red:#ff3333;
+  --surface:rgba(0,245,255,.04);
+  --surface2:rgba(0,245,255,.07);
+  --surface3:rgba(0,245,255,.11);
+  --muted:rgba(0,245,255,.5);
+  --border:rgba(0,245,255,.18);
+  --grad:linear-gradient(135deg,#000c20,#001830,#002040);
 }
 
 /* ── Body with visible gradient background ── */
 body{
-  background:#07050f;
+  background:#000008;
   background-image:
-    radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(124,58,237,.55) 0%, transparent 60%),
-    radial-gradient(ellipse 65% 55% at 90% 100%,  rgba(217,70,239,.45) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 50% 45%,  rgba(59,130,246,.25) 0%, transparent 60%);
+    radial-gradient(ellipse 80% 60% at 10% 0%,   rgba(0,245,255,.45) 0%, transparent 60%),
+    radial-gradient(ellipse 65% 55% at 90% 100%,  rgba(30,58,138,.40) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 45%,  rgba(37,99,235,.20) 0%, transparent 60%);
   color:#f0eeff;
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
   min-height:100vh;
@@ -229,8 +230,8 @@ a{text-decoration:none}
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:#07050f}
-::-webkit-scrollbar-thumb{background:#7c3aed;border-radius:3px}
+::-webkit-scrollbar-track{background:#000008}
+::-webkit-scrollbar-thumb{background:#00ccee;border-radius:3px}
 
 /* ── Page sections ── */
 .page{display:none}
@@ -241,7 +242,7 @@ nav{
   position:sticky;top:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
   padding:12px 28px;
-  background:rgba(7,5,15,.45);
+  background:rgba(2,8,23,.85);
   backdrop-filter:blur(48px) saturate(200%);
   -webkit-backdrop-filter:blur(48px) saturate(200%);
   border-bottom:1px solid rgba(255,255,255,.12);
@@ -249,7 +250,7 @@ nav{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 4px 30px rgba(0,0,0,.3);
 }
 .nav-brand{display:flex;align-items:center;gap:10px;cursor:pointer}
-.brand-name{font-weight:800;font-size:17px;background:linear-gradient(90deg,#f0eeff,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.brand-name{font-weight:800;font-size:17px;color:#ffffff}
 .nav-links{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .nav-link{color:rgba(240,238,255,.6);font-size:13px;cursor:pointer;background:none;border:none;padding:7px 12px;border-radius:8px;transition:all .2s;font-weight:500}
 .nav-link:hover{color:#f0eeff;background:rgba(255,255,255,.08)}
@@ -258,17 +259,17 @@ nav{
 /* ── Buttons ── */
 .btn{
   padding:11px 24px;
-  background:linear-gradient(135deg,#7c3aed,#9d5ffe,#d946ef);
-  border:1px solid rgba(157,95,254,.35);
+  background:linear-gradient(135deg,#00ccee,#00f5ff,#00ddff);
+  border:1px solid rgba(37,99,235,.35);
   border-radius:12px;color:#fff;font-weight:700;font-size:14px;cursor:pointer;
   transition:all .2s;position:relative;overflow:hidden;
-  box-shadow:0 4px 20px rgba(124,58,237,.4), inset 0 1px 0 rgba(255,255,255,.2);
+  box-shadow:0 4px 20px rgba(0,245,255,.25), inset 0 1px 0 rgba(255,255,255,.2);
 }
 .btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 60%);pointer-events:none}
-.btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(124,58,237,.55), inset 0 1px 0 rgba(255,255,255,.25)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,245,255,.45), inset 0 1px 0 rgba(255,255,255,.25)}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .btn-ghost{padding:9px 20px;background:rgba(255,255,255,.06);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);border-radius:10px;color:rgba(240,238,255,.7);font-size:13px;cursor:pointer;transition:all .2s}
-.btn-ghost:hover{color:#f0eeff;border-color:rgba(157,95,254,.5);background:rgba(124,58,237,.12)}
+.btn-ghost:hover{color:#f0eeff;border-color:rgba(37,99,235,.5);background:rgba(0,245,255,.12)}
 .btn-sm{padding:7px 14px;font-size:13px}
 
 /* ── Inputs ── */
@@ -283,9 +284,9 @@ nav{
   box-shadow:inset 0 2px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(0,0,0,.2);
 }
 .inp:focus,.sel:focus{
-  border-color:rgba(157,95,254,.7);
-  background:rgba(124,58,237,.12);
-  box-shadow:0 0 0 3px rgba(124,58,237,.25), inset 0 2px 0 rgba(255,255,255,.1);
+  border-color:rgba(37,99,235,.7);
+  background:rgba(0,245,255,.12);
+  box-shadow:0 0 0 3px rgba(0,245,255,.20), inset 0 2px 0 rgba(255,255,255,.1);
 }
 .sel{appearance:none;cursor:pointer}
 .lbl{font-size:12px;color:rgba(240,238,255,.55);font-weight:600;margin-bottom:5px;display:block;letter-spacing:.02em}
@@ -297,7 +298,7 @@ nav{
   -webkit-backdrop-filter:blur(40px) saturate(200%);
   border:1px solid rgba(255,255,255,.22);
   border-radius:24px;padding:32px;
-  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), 0 20px 60px rgba(0,0,0,.55), 0 4px 20px rgba(124,58,237,.18);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), 0 20px 60px rgba(0,0,0,.55), 0 4px 20px rgba(0,245,255,.18);
   position:relative;overflow:hidden;
 }
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);pointer-events:none}
@@ -313,10 +314,10 @@ nav{
 .card-sm::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);pointer-events:none}
 
 /* ── Glow blobs ── */
-.blob{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
-.blob-purple{width:900px;height:900px;background:radial-gradient(circle,rgba(124,58,237,.9),transparent 70%);opacity:.30;top:-300px;left:-300px;animation:blobFloat1 14s ease-in-out infinite}
-.blob-pink{width:700px;height:700px;background:radial-gradient(circle,rgba(217,70,239,.9),transparent 70%);opacity:.25;bottom:-200px;right:-200px;animation:blobFloat2 17s ease-in-out infinite}
-.blob-rainbow{width:400px;height:400px;background:conic-gradient(from 0deg,#22c55e,#facc15,#f97316,#ef4444,#a855f7,#3b82f6,#22c55e);opacity:.07;top:40%;left:50%;transform:translate(-50%,-50%);animation:blobSpin 25s linear infinite}
+.blob{display:none !important;position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
+.blob-purple{width:900px;height:900px;background:radial-gradient(circle,rgba(0,245,255,.9),transparent 70%);opacity:.30;top:-300px;left:-300px;animation:blobFloat1 14s ease-in-out infinite}
+.blob-pink{width:700px;height:700px;background:radial-gradient(circle,rgba(37,99,235,.9),transparent 70%);opacity:.25;bottom:-200px;right:-200px;animation:blobFloat2 17s ease-in-out infinite}
+.blob-rainbow{width:400px;height:400px;background:conic-gradient(from 0deg,#22c55e,#facc15,#f97316,#ef4444,#a855f7,#00ddff,#22c55e);opacity:.07;top:40%;left:50%;transform:translate(-50%,-50%);animation:blobSpin 25s linear infinite}
 @keyframes blobFloat1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(50px,40px) scale(1.05)}}
 @keyframes blobFloat2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,-30px) scale(1.05)}}
 @keyframes blobSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
@@ -324,15 +325,15 @@ nav{
 /* ── Badges ── */
 .badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;display:inline-block}
 .badge-hot{background:rgba(249,115,22,.2);color:#fb923c;border:1px solid rgba(249,115,22,.2)}
-.stype-unlock{background:rgba(124,58,237,.2);color:#a78bfa;border:1px solid rgba(124,58,237,.2)}
+.stype-unlock{background:rgba(0,245,255,.1);color:#ffffff;border:1px solid rgba(0,245,255,.1)}
 .stype-blacklist{background:rgba(239,68,68,.18);color:#f87171;border:1px solid rgba(239,68,68,.18)}
 .stype-frp{background:rgba(34,211,238,.15);color:#67e8f9;border:1px solid rgba(34,211,238,.15)}
 .stype-mi{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.15)}
-.stype-mdm{background:rgba(168,85,247,.18);color:#c084fc;border:1px solid rgba(168,85,247,.18)}
-.status-pending-crypto{background:rgba(59,130,246,.15);color:#60a5fa;animation:pulse 2s ease infinite}
+.stype-mdm{background:rgba(37,99,235,.15);color:#c084fc;border:1px solid rgba(37,99,235,.15)}
+.status-pending-crypto{background:rgba(59,130,246,.15);color:#00f5ff;animation:pulse 2s ease infinite}
 .status-processing{background:rgba(249,115,22,.15);color:#fb923c}
 .status-submitted{background:rgba(34,211,238,.13);color:#67e8f9}
-.status-progress{background:rgba(124,58,237,.18);color:#a78bfa}
+.status-progress{background:rgba(0,245,255,.18);color:#ffffff}
 .status-completed{background:rgba(34,197,94,.15);color:#4ade80}
 .status-refunded{background:rgba(251,191,36,.13);color:#fde047}
 .status-cancelled{background:rgba(239,68,68,.13);color:#f87171}
@@ -353,7 +354,7 @@ nav{
   box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 6px 28px rgba(0,0,0,.35);
 }
 .svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent)}
-.svc-card:hover{border-color:rgba(157,95,254,.55);transform:translateY(-7px) scale(1.01);background:rgba(124,58,237,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 24px 64px rgba(124,58,237,.32)}
+.svc-card:hover{border-color:rgba(37,99,235,.55);transform:translateY(-7px) scale(1.01);background:rgba(0,245,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 24px 64px rgba(0,245,255,.32)}
 
 /* ── Overlay / Modal ── */
 .overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.65);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 16px 48px}
@@ -365,7 +366,7 @@ nav{
   border:1px solid rgba(255,255,255,.18);
   border-radius:26px;width:100%;max-width:500px;
   margin-top:20px;overflow:hidden;
-  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), 0 40px 100px rgba(0,0,0,.6), 0 0 60px rgba(124,58,237,.2);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.18), 0 40px 100px rgba(0,0,0,.6), 0 0 60px rgba(0,245,255,.1);
 }
 .modal-header{
   background:rgba(255,255,255,.07);
@@ -377,7 +378,7 @@ nav{
 .close-btn:hover{background:rgba(255,255,255,.16);color:#f0eeff}
 
 /* ── Toast ── */
-#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(124,58,237,.85);backdrop-filter:blur(20px);border:1px solid rgba(157,95,254,.4);color:#fff;padding:11px 26px;border-radius:100px;font-size:14px;font-weight:600;z-index:9999;white-space:nowrap;box-shadow:0 8px 32px rgba(124,58,237,.4);opacity:0;transition:opacity .3s;pointer-events:none}
+#toast{background:rgba(0,245,255,0.9) !important;color:#000 !important;font-family:'Orbitron',monospace !important;position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(0,245,255,.85);backdrop-filter:blur(20px);border:1px solid rgba(37,99,235,.4);color:#fff;padding:11px 26px;border-radius:100px;font-size:14px;font-weight:600;z-index:9999;white-space:nowrap;box-shadow:0 8px 32px rgba(0,245,255,.25);opacity:0;transition:opacity .3s;pointer-events:none}
 #toast.show{opacity:1}
 
 /* ── WhatsApp FAB ── */
@@ -386,36 +387,36 @@ nav{
 
 /* ── Toggle ── */
 .toggle{width:36px;height:20px;border-radius:100px;border:1px solid rgba(255,255,255,.14);position:relative;cursor:pointer;flex-shrink:0;background:rgba(255,255,255,.08);backdrop-filter:blur(8px);transition:all .2s}
-.toggle.on{background:rgba(124,58,237,.4);border-color:rgba(157,95,254,.5)}
+.toggle.on{background:rgba(0,245,255,.25);border-color:rgba(37,99,235,.5)}
 .toggle .dot{position:absolute;width:14px;height:14px;border-radius:50%;background:rgba(240,238,255,.6);top:2px;left:2px;transition:left .2s,background .2s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
-.toggle.on .dot{left:18px;background:#a78bfa}
+.toggle.on .dot{left:18px;background:#00f5ff}
 
 /* ── Tabs ── */
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:14px}
 .tab{padding:8px 16px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);backdrop-filter:blur(10px);color:rgba(240,238,255,.5);font-size:13px;cursor:pointer;transition:all .2s;font-weight:500}
 .tab:hover{background:rgba(255,255,255,.09);color:rgba(240,238,255,.8)}
-.tab.active{background:rgba(124,58,237,.3);border-color:rgba(157,95,254,.4);color:#f0eeff;font-weight:700;box-shadow:0 2px 12px rgba(124,58,237,.3)}
+.tab.active{background:rgba(0,245,255,.18);border-color:rgba(37,99,235,.4);color:#f0eeff;font-weight:700;box-shadow:0 2px 12px rgba(0,245,255,.18)}
 
 /* ── Stat card ── */
 .stat-card{background:rgba(255,255,255,.07);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:20px;transition:all .2s;box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 4px 20px rgba(0,0,0,.3)}
 .stat-card.clickable{cursor:pointer}
-.stat-card.clickable:hover{border-color:rgba(157,95,254,.4);transform:translateY(-3px);box-shadow:0 12px 40px rgba(124,58,237,.2)}
+.stat-card.clickable:hover{border-color:rgba(37,99,235,.4);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,245,255,.1)}
 
 /* ── Section headers ── */
-.section-label{font-size:11px;color:#a78bfa;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+.section-label{font-size:11px;color:#ffffff;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
 .section-title{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;margin-bottom:36px}
 
 /* ── HIW cards ── */
 .hiw-card{background:rgba(255,255,255,.07);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:28px;transition:all .25s cubic-bezier(.34,1.56,.64,1);text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 4px 24px rgba(0,0,0,.3)}
-.hiw-card:hover{border-color:rgba(157,95,254,.45);transform:translateY(-6px);background:rgba(124,58,237,.1)}
-.hiw-icon{width:52px;height:52px;background:rgba(124,58,237,.2);backdrop-filter:blur(10px);border:1px solid rgba(124,58,237,.3);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 16px;box-shadow:0 4px 16px rgba(124,58,237,.3)}
+.hiw-card:hover{border-color:rgba(37,99,235,.45);transform:translateY(-6px);background:rgba(0,245,255,.06)}
+.hiw-icon{width:52px;height:52px;background:rgba(0,245,255,.1);backdrop-filter:blur(10px);border:1px solid rgba(0,245,255,.18);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 16px;box-shadow:0 4px 16px rgba(0,245,255,.18)}
 
 /* ── Error box ── */
 .err-box{background:rgba(239,68,68,.1);backdrop-filter:blur(10px);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:10px 14px;color:#f87171;font-size:13px;margin-bottom:16px}
 
 /* ── Method buttons ── */
 .method-btn{padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);backdrop-filter:blur(12px);cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;width:100%;color:#f0eeff;transition:all .2s;margin-bottom:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
-.method-btn:hover{border-color:rgba(157,95,254,.45);background:rgba(124,58,237,.12);transform:translateX(4px)}
+.method-btn:hover{border-color:rgba(37,99,235,.45);background:rgba(0,245,255,.12);transform:translateX(4px)}
 
 /* ── Responsive ── */
 @media(max-width:600px){
@@ -425,8 +426,322 @@ nav{
   .grid-2{grid-template-columns:1fr}
 }
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 14px rgba(34,197,94,0)}}
+
+select{background:var(--surface2)!important;color:#f0eeff!important;border:1px solid var(--border)!important}
+select option{background:#000008!important;color:#f0eeff!important}
+
+/* ═══ TRON FONTS & BG ONLY ═══ */
+h1,h2,h3,.hero-title,.section-title{font-family:'Orbitron',monospace !important;letter-spacing:0.04em;}
+.nav-brand{font-family:'Orbitron',monospace !important;}
+.blob-rainbow{display:none;}
+/* Scanlines */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.04) 3px,rgba(0,0,0,0.04) 4px);pointer-events:none;z-index:9998;}
+/* Light cycle canvas */
+#tron-bg{position:fixed;inset:0;z-index:0;opacity:0.45;}
+.tron-overlay{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at center,rgba(0,0,8,0.35) 0%,rgba(0,0,8,0.6) 65%,rgba(0,0,8,0.85) 100%);pointer-events:none;}
+.page{position:relative;z-index:1;}
+nav{position:relative;z-index:10;}
+
+/* ═══ TRON VISUAL STYLES ═══ */
+/* Glowing cyan headings */
+h1,h2,.hero-title{color:#ffffff !important;text-shadow:0 0 30px rgba(0,245,255,0.15) !important;}
+h1 span[style*="grad"],h1 span[style*="blue"],.accent-text{
+  background:linear-gradient(135deg,#00f5ff,#0088ff) !important;
+  -webkit-background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  text-shadow:none !important;
+  filter:drop-shadow(0 0 12px rgba(0,245,255,0.4)) !important;
+}
+
+/* Cards with Tron borders */
+.card,.card-sm{
+  border:1px solid rgba(0,245,255,0.2) !important;
+  background:rgba(0,4,20,0.85) !important;
+  position:relative !important;
+}
+.card::before,.card-sm::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,245,255,0.5),transparent);
+  pointer-events:none;
+}
+
+/* Buttons - Tron style */
+.btn{
+  border:1px solid rgba(0,245,255,0.45) !important;
+  background:rgba(0,245,255,0.1) !important;
+  color:#00f5ff ;
+  font-family:'Orbitron',monospace !important;
+  font-size:11px !important;
+  letter-spacing:0.1em !important;
+  text-transform:uppercase !important;
+  text-shadow:0 0 8px rgba(0,245,255,0.4) !important;
+  box-shadow:0 0 12px rgba(0,245,255,0.15),inset 0 0 12px rgba(0,245,255,0.05) !important;
+}
+.btn:hover{
+  background:rgba(0,245,255,0.2) !important;
+  box-shadow:0 0 24px rgba(0,245,255,0.3) !important;
+}
+
+/* Inputs */
+input.inp,select.sel{
+  background:rgba(0,245,255,0.04) !important;
+  border:1px solid rgba(0,245,255,0.2) !important;
+  color:#d0f4ff !important;
+  font-family:'Share Tech Mono',monospace !important;
+}
+input.inp::placeholder{color:rgba(0,245,255,0.3) !important;}
+input.inp:focus,select.sel:focus{
+  border-color:#00f5ff !important;
+  box-shadow:0 0 0 2px rgba(0,245,255,0.12) !important;
+  outline:none !important;
+}
+
+/* Nav brand glow */
+.nav-brand,.nav-brand *{
+  font-family:'Orbitron',monospace !important;
+  color:#00f5ff !important;
+  text-shadow:0 0 10px rgba(0,245,255,0.5) !important;
+}
+
+/* Price display */
+[style*="--purpleL"],[style*="color:var(--purpleL)"]{
+  color:#00f5ff !important;
+  text-shadow:0 0 12px rgba(0,245,255,0.4) !important;
+}
+
+/* Section eyebrows */
+[style*="text-transform:uppercase"]{
+  font-family:'Share Tech Mono',monospace !important;
+  letter-spacing:0.2em !important;
+  color:rgba(0,245,255,0.6) !important;
+}
+
+/* Method buttons in checkout */
+.method-btn{
+  background:rgba(0,4,20,0.85) !important;
+  border:1px solid rgba(0,245,255,0.18) !important;
+}
+.method-btn:hover{
+  border-color:rgba(0,245,255,0.5) !important;
+  background:rgba(0,245,255,0.06) !important;
+  box-shadow:0 0 12px rgba(0,245,255,0.1) !important;
+}
+
+/* Status badges */
+span[style*="border-radius"]{
+  font-family:'Share Tech Mono',monospace !important;
+  letter-spacing:0.08em !important;
+}
+
+/* Service tags/pills */
+[style*="100% Success"],[style*="Success Rate"]{
+  color:#00ff64 !important;
+  border-color:rgba(0,255,100,0.3) !important;
+}
+
+/* Admin tabs */
+[onclick*="adminTab"]{
+  font-family:'Orbitron',monospace !important;
+  font-size:10px !important;
+  letter-spacing:0.08em !important;
+}
+
+/* Carrier section headers */
+[style*="text-transform:uppercase"][style*="letter-spacing"]{
+  color:rgba(0,245,255,0.7) !important;
+  font-family:'Share Tech Mono',monospace !important;
+}
+
+/* ═══ GLOBAL TRON FONT + GLOW OVERRIDE ═══ */
+* { box-sizing:border-box; }
+
+/* All buttons get Orbitron */
+button, .btn, [role="button"] {
+  font-family:'Orbitron',monospace !important;
+  letter-spacing:0.08em !important;
+  text-transform:uppercase !important;
+  font-size:11px !important;
+}
+/* Only apply cyan color to buttons WITHOUT inline color style */
+button:not([style*="color"]), .btn:not([style*="color"]) {
+  color:#00f5ff !important;
+}
+
+/* All headings get Orbitron */
+h1,h2,h3,h4,h5,h6 {
+  font-family:'Orbitron',monospace !important;
+  letter-spacing:0.04em !important;
+}
+
+/* Body text gets Share Tech Mono */
+p, label, span, small, td, th, li {
+  font-family:'Share Tech Mono',monospace !important;
+  letter-spacing:0.03em !important;
+}
+
+/* Inputs and selects */
+input, select, textarea {
+  font-family:'Share Tech Mono',monospace !important;
+  background:rgba(0,245,255,0.04) !important;
+  border:1px solid rgba(0,245,255,0.2) !important;
+  color:#d0f4ff !important;
+}
+input::placeholder, textarea::placeholder {
+  color:rgba(0,245,255,0.25) !important;
+  font-family:'Share Tech Mono',monospace !important;
+}
+
+/* Nav links */
+nav button, nav a {
+  font-family:'Orbitron',monospace !important;
+  font-size:10px !important;
+  letter-spacing:0.12em !important;
+  text-transform:uppercase !important;
+  color:rgba(0,245,255,0.8) !important;
+  border:1px solid rgba(0,245,255,0.25) !important;
+  background:transparent !important;
+}
+nav button:hover {
+  color:#00f5ff !important;
+  border-color:rgba(0,245,255,0.6) !important;
+  box-shadow:0 0 12px rgba(0,245,255,0.2) !important;
+}
+
+/* Primary action button glow */
+.btn, button[style*="background:var(--grad)"], button[style*="blue"] {
+  box-shadow:0 0 15px rgba(0,245,255,0.2),0 0 30px rgba(0,245,255,0.08) !important;
+}
+
+/* Card glow */
+.card, .card-sm {
+  box-shadow:0 0 20px rgba(0,245,255,0.06),inset 0 0 20px rgba(0,245,255,0.02) !important;
+}
+
+/* Div labels and eyebrows - font only, no color override */
+div[style*="text-transform:uppercase"] {
+  font-family:'Share Tech Mono',monospace !important;
+}
+
+/* Overlay/modal titles */
+.overlay h2, .overlay h3, [id*="step"] h2, [id*="step"] h3 {
+  font-family:'Orbitron',monospace !important;
+}
+
+/* Price numbers glow */
+[style*="font-size:24px"], [style*="font-size:20px"], [style*="font-size:18px"] {
+  font-family:'Orbitron',monospace !important;
+  text-shadow:0 0 14px rgba(0,245,255,0.4) !important;
+}
+
+/* ═══ HOW IT WORKS + CONTACT SECTION FIX ═══ */
+/* Force all section backgrounds to Tron black */
+section, .section, [class*="section"], [id*="how"], [id*="contact"], [id*="about"] {
+  background:transparent !important;
+  background-color:transparent !important;
+}
+
+/* How it works step cards */
+[class*="step"], [class*="how"], [style*="step"] {
+  font-family:'Orbitron',monospace !important;
+  background:rgba(0,4,20,0.85) !important;
+  border:1px solid rgba(0,245,255,0.18) !important;
+}
+
+/* All divs with white/light backgrounds that shouldn't be */
+div[style*="background:#0"], div[style*="background: #0"] {
+  background:#000008 !important;
+}
+
+/* Contact section */
+[id*="contact"] *, [class*="contact"] * {
+  font-family:'Share Tech Mono',monospace !important;
+}
+
+/* Pages must be transparent so canvas shows through */
+.page, [id^="page-"] {
+  background:transparent !important;
+  background-color:transparent !important;
+}
+
+/* Any remaining white or light colored card backgrounds */
+[style*="background:white"], [style*="background: white"],
+[style*="background:#fff"], [style*="background: #fff"] {
+  background:rgba(0,4,20,0.85) !important;
+}
+
+/* Step number circles */
+[style*="border-radius:50%"][style*="background"] {
+  background:rgba(0,245,255,0.15) !important;
+  border:1px solid rgba(0,245,255,0.4) !important;
+  color:#00f5ff !important;
+  font-family:'Orbitron',monospace !important;
+  box-shadow:0 0 12px rgba(0,245,255,0.2) !important;
+}
+
+/* All remaining inline font families that are system fonts */
+* { font-family:inherit; }
+body { font-family:'Share Tech Mono',monospace !important; }
+
+/* Fix page visibility - override inline display:none */
+.page { display:none !important; }
+.page.active { display:block !important; }
+
+/* ═══ TRON DROPDOWN STYLES ═══ */
+select, select.sel, .sel {
+  background:#000814 !important;
+  color:#00f5ff !important;
+  border:1px solid rgba(0,245,255,0.35) !important;
+  font-family:'Share Tech Mono',monospace !important;
+  letter-spacing:0.05em !important;
+  padding:10px 14px !important;
+  appearance:none !important;
+  -webkit-appearance:none !important;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300f5ff' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+  background-repeat:no-repeat !important;
+  background-position:right 12px center !important;
+  background-size:12px !important;
+  cursor:pointer !important;
+  box-shadow:0 0 0 1px rgba(0,245,255,0.1) !important;
+}
+select:focus, select.sel:focus {
+  border-color:#00f5ff !important;
+  box-shadow:0 0 12px rgba(0,245,255,0.2),0 0 0 1px rgba(0,245,255,0.3) !important;
+  outline:none !important;
+}
+select option {
+  background:#000814 !important;
+  color:#00f5ff !important;
+  font-family:'Share Tech Mono',monospace !important;
+  padding:8px !important;
+}
+select option:hover, select option:checked {
+  background:rgba(0,245,255,0.15) !important;
+  color:#ffffff !important;
+}
+/* Style the carrier dropdown specifically */
+#sel-carrier option, #sel-stype option, #sel-series option {
+  background:#000814 !important;
+  color:#d0f4ff !important;
+}
+
+/* Force carrier name colors to show - override global span color */
+.svc-card div[style*="getCarrierColor"],
+.svc-card div[style*="text-shadow"] {
+  color:inherit !important;
+}
+
+
+
+
+/* svc-card carrier name: force inline color to win over body color cascade */
+.svc-card div:not([class]) { color:inherit; }
 </style>
 <body>
+<canvas id="tron-bg" style="position:fixed;inset:0;z-index:0;opacity:0.45;"></canvas>
+<div 
+
+style="position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at center,rgba(0,0,8,0.35) 0%,rgba(0,0,8,0.6) 65%,rgba(0,0,8,0.85) 100%);pointer-events:none;"></div>
 
 <!-- Glow blobs -->
 <div class="blob blob-purple"></div>
@@ -493,6 +808,11 @@ nav{
             <div><div style="font-weight:700;font-size:14px">PayPal</div><div style="font-size:12px;color:var(--muted)">Pay without sharing card details</div></div>
             <span style="margin-left:auto;color:var(--muted);font-size:12px">→</span>
           </button>
+          <button class="method-btn" id="zelle-method-btn" style="display:none" onclick="setCheckoutStep_zelle()">
+            <span style="font-size:20px">💚</span>
+            <div><div style="font-weight:700;font-size:14px">Zelle</div><div style="font-size:12px;color:var(--muted)">Send to Tormil61@icloud.com · 5% fee applies</div></div>
+            <span style="margin-left:auto;color:var(--muted);font-size:12px">→</span>
+          </button>
           <button class="method-btn" onclick="setCheckoutStep('usdt')">
             <span style="font-size:20px">₮</span>
             <span style="font-weight:700;font-size:14px">USDT (TRC20 / ERC20)</span>
@@ -507,7 +827,7 @@ nav{
         </div>
         <!-- Logged-in user: wallet only -->
         <div id="checkout-user-methods" style="display:none">
-          <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--purpleL)">
+          <div style="background:rgba(0,245,255,.05);border:1px solid rgba(0,245,255,.1);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#ffffff">
             💼 Registered accounts pay using account balance only.
           </div>
           <button class="method-btn" onclick="payWallet()">
@@ -537,7 +857,7 @@ nav{
           </div>
         </div>
         <div id="stripe-error" class="err-box" style="display:none"></div>
-        <div id="stripe-key-warn" style="display:none;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.3);border-radius:8px;padding:12px 14px;color:var(--orange);font-size:13px;margin-bottom:16px;max-height:0;overflow:hidden">
+        <div id="stripe-key-warn" style="display:none;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.3);border-radius:8px;padding:12px 14px;color:var(--orange);font-size:13px;margin-bottom:16px">
           ⚠ Stripe not configured. Contact support at rottenapplegsm@gmail.com.
         </div>
         <button class="btn" id="stripe-pay-btn" onclick="launchStripeCheckout()" style="width:100%;font-size:15px;padding:14px">
@@ -549,7 +869,7 @@ nav{
       <!-- Step: paypal -->
       <div id="step-paypal" style="display:none">
         <div style="font-weight:700;font-size:15px;margin-bottom:6px">🅿️ Pay with PayPal</div>
-        <div style="color:var(--muted);font-size:13px;margin-bottom:20px">Click the PayPal button. You can pay with your PayPal balance or any card — no PayPal account required.</div>
+        <div style="color:var(--muted);font-size:13px;margin-bottom:20px">Tap the PayPal button. You can pay with your PayPal balance or any card — no PayPal account required.</div>
         <div style="background:var(--surface2);border-radius:10px;padding:12px 16px;margin-bottom:18px;display:flex;justify-content:space-between">
           <span style="color:var(--muted);font-size:14px">Total</span>
           <span id="paypal-total" style="font-weight:800;font-size:18px;color:var(--purpleL)"></span>
@@ -564,9 +884,47 @@ nav{
       </div>
 
       <!-- Step: crypto -->
+      <div id="step-zelle" style="display:none">
+        <h3 style="margin-bottom:16px;font-size:18px">&#x1F49A; Zelle Payment</h3>
+        <div class="card-sm" style="margin-bottom:16px;text-align:center">
+          <div style="font-size:13px;color:var(--muted);margin-bottom:8px">Send payment to</div>
+          <div style="font-weight:800;font-size:18px;color:#4ade80;margin-bottom:4px" id="zelle-address">Tormil61@icloud.com</div>
+          <div style="font-size:13px;color:var(--muted)" id="zelle-name">Milton Torres</div>
+        </div>
+        <div class="card-sm" style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <span style="color:var(--muted);font-size:13px">Service price</span>
+            <span id="zelle-base" style="font-weight:600">$0.00</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <span style="color:var(--muted);font-size:13px">Zelle fee (5%)</span>
+            <span id="zelle-fee" style="color:#f97316;font-weight:600">$0.00</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;border-top:1px solid var(--border);padding-top:8px">
+            <span style="font-weight:700">Total to send</span>
+            <span id="zelle-amount" style="font-weight:800;font-size:18px;color:#4ade80">$0.00</span>
+          </div>
+        </div>
+        <div class="card-sm" style="margin-bottom:16px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.3)">
+          <div style="font-size:13px;line-height:1.6">
+            1. Open your bank app and go to Zelle<br>
+            2. Send the exact amount to <strong>Tormil61@icloud.com</strong><br>
+            3. Take a screenshot of the confirmation<br>
+            4. Tap the checkbox below and submit your order
+          </div>
+        </div>
+        <label style="display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;cursor:pointer">
+          <input type="checkbox" id="zelle-check" style="margin-top:3px;accent-color:#4ade80" onchange="var b=document.getElementById('zelle-submit-btn');b.disabled=!this.checked;b.style.opacity=this.checked?'1':'.5'"/>
+          <span style="font-size:13px">I have sent the exact Zelle amount and have a screenshot ready.</span>
+        </label>
+        <button id="zelle-submit-btn" disabled onclick="confirmZelle()" style="width:100%;padding:14px;font-size:15px;font-weight:700;border-radius:12px;border:none;background:linear-gradient(135deg,#16a34a,#4ade80);color:#000;cursor:pointer;opacity:.5">
+          &#x2713; I Sent the Payment - Confirm Order
+        </button>
+        <button onclick="setCheckoutStep('method')" style="width:100%;padding:10px;margin-top:8px;background:none;border:1px solid var(--border);border-radius:10px;color:var(--muted);font-size:13px;cursor:pointer">&#8592; Back</button>
+      </div>
       <div id="step-crypto" style="display:none">
         <div id="crypto-title" style="font-weight:700;font-size:16px;margin-bottom:4px"></div>
-        <div id="crypto-network-badge" style="display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(124,58,237,.15);color:var(--purpleL);margin-bottom:16px"></div>
+        <div id="crypto-network-badge" style="display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(0,245,255,.1);color:#ffffff;margin-bottom:16px"></div>
 
         <!-- Amount box -->
         <div style="background:var(--surface2);border-radius:12px;padding:18px;margin-bottom:12px;text-align:center">
@@ -576,7 +934,11 @@ nav{
 
           <!-- Address copy box -->
           <div style="font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px">To This Address</div>
-          <div id="crypto-address" onclick="copyCryptoAddr()" style="background:var(--surface3);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:12px;word-break:break-all;border:1.5px dashed var(--border);cursor:pointer;transition:all .2s;margin-bottom:6px" onmouseover="this.style.borderColor='var(--purpleL)';this.style.background='rgba(124,58,237,.08)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface3)'"></div>
+          <div id="crypto-address" onclick="copyCryptoAddr()" style="background:var(--surface3);border-radius:8px;padding:12px 14px;font-family:monospace;font-size:12px;word-break:break-all;border:1.5px dashed var(--border);cursor:pointer;transition:all .2s;margin-bottom:6px" onmouseover="this.style.borderColor='var(--purpleL)';this.style.background='rgba(0,245,255,.05)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface3)'"></div>
+          <div style="display:flex;flex-direction:column;align-items:center;margin-top:14px">
+            <div id="crypto-qr-container" style="background:#fff;padding:10px;border-radius:12px;display:inline-block"></div>
+            <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:8px">Scan with your crypto wallet</div>
+          </div>
           <div style="font-size:11px;color:var(--muted)">👆 Tap address to copy</div>
         </div>
 
@@ -627,11 +989,11 @@ nav{
           <div style="font-weight:700;font-size:13px;color:#f0eeff;margin-bottom:12px">What happens next</div>
           <div style="display:flex;flex-direction:column;gap:10px">
             <div style="display:flex;align-items:flex-start;gap:10px">
-              <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,58,237,.2);color:var(--purpleL);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+              <div style="width:24px;height:24px;border-radius:50%;background:rgba(0,245,255,.1);color:#ffffff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
               <div style="font-size:13px;color:var(--muted)">We receive your order and submit it to our supplier within minutes.</div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:10px">
-              <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,58,237,.2);color:var(--purpleL);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+              <div style="width:24px;height:24px;border-radius:50%;background:rgba(0,245,255,.1);color:#ffffff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
               <div style="font-size:13px;color:var(--muted)">You will receive an email update when your unlock is complete — usually within 24–72 hours.</div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:10px">
@@ -646,7 +1008,7 @@ nav{
           <button id="view-orders-btn" onclick="closeCheckout();showPage('account');setAccountTab('orders')" class="btn" style="width:100%;padding:13px;display:none">📦 View My Orders</button>
 
           <!-- Guest: create account prompt -->
-          <div id="done-create-account" style="display:none;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.25);border-radius:12px;padding:16px;text-align:left">
+          <div id="done-create-account" style="display:none;background:rgba(0,245,255,.05);border:1px solid rgba(0,245,255,.20);border-radius:12px;padding:16px;text-align:left">
             <div style="font-weight:700;font-size:14px;margin-bottom:6px;color:#f0eeff">📋 Track your order anytime</div>
             <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Create a free account to view your order status, save your history, and use balance for faster checkout next time.</div>
             <button class="btn" onclick="closeCheckout();showPage('auth')" style="width:100%;padding:11px">Create Free Account →</button>
@@ -733,11 +1095,11 @@ nav{
     <div class="nav-links">
       <button class="nav-link" onclick="scrollToSection('imei-check')">IMEI Check</button>
       <div id="nav-guest">
-        <button class="btn-ghost btn-sm" onclick="showPage('auth')" style="margin-right:6px">Sign In</button>
-        <button class="btn btn-sm" onclick="scrollToSection('selector')">Get Unlock</button>
+        <button class="btn btn-sm" onclick="scrollToSection('selector')" style="margin-right:6px">Get Unlock</button>
+        <button class="btn-ghost btn-sm" onclick="showPage('auth')">Sign In</button>
       </div>
       <div id="nav-user" style="display:none;align-items:center;gap:8px">
-        <button onclick="openDeposit()" style="background:rgba(124,58,237,.15);border:1px solid var(--border);color:var(--purpleL);padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600">💼 <span id="nav-balance">$0.00</span></button>
+        <button onclick="openDeposit()" style="background:rgba(0,245,255,.1);border:1px solid var(--border);color:#ffffff;padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600">💼 <span id="nav-balance">$0.00</span></button>
         <button class="btn btn-sm" onclick="showPage('account')">My Account</button>
       </div>
     </div>
@@ -745,15 +1107,15 @@ nav{
 
   <!-- Hero -->
   <div style="position:relative;z-index:1;text-align:center;padding:76px 24px 52px;display:flex;flex-direction:column;align-items:center">
-    <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(124,58,237,.13);border:1px solid var(--border);border-radius:100px;padding:5px 16px;font-size:12px;color:var(--accent);margin-bottom:22px">
+    <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(0,245,255,.13);border:1px solid var(--border);border-radius:100px;padding:5px 16px;font-size:12px;color:var(--accent);margin-bottom:22px">
       <span style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block"></span> Live &amp; Processing Orders 24/7
     </div>
     <h1 style="font-size:clamp(2rem,5vw,3.6rem);font-weight:800;line-height:1.1;max-width:720px;margin-bottom:16px">
       Unlock Your Phone.<br/>
-      <span style="background:linear-gradient(90deg,#9d5ffe,#d946ef);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Any Carrier. Anywhere.</span>
+      <span style="background:linear-gradient(90deg,#00f5ff,#00aaff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px rgba(0,245,255,0.6))">Any Carrier. Anywhere.</span>
     </h1>
     <p style="color:var(--muted);font-size:15px;max-width:520px;line-height:1.7;margin-bottom:28px">
-      Permanent carrier unlock, blacklist removal, iCloud bypass and FRP removal for iPhone, Samsung, Motorola and more. T-Mobile, AT&T, Cricket, Verizon, Boost — fast 24–72hr delivery, open 24/7, serving Los Angeles and worldwide.
+      Permanent carrier unlock, blacklist removal, iCloud bypass and FRP removal for iPhone, Samsung, Motorola and more. <span style="color:#ffffff;font-weight:900;text-shadow:0 0 12px #e20074,0 0 24px #e2007488,0 0 40px #e2007444">T-Mobile</span>, <span style="color:#ffffff;font-weight:900;text-shadow:0 0 12px #00a8e0,0 0 24px #00a8e088,0 0 40px #00a8e044">AT&T</span>, <span style="color:#ffffff;font-weight:900;text-shadow:0 0 12px #4caf50,0 0 24px #4caf5088,0 0 40px #4caf5044">Cricket</span>, <span style="color:#ffffff;font-weight:900;text-shadow:0 0 12px #cd040b,0 0 24px #cd040b88,0 0 40px #cd040b44">Verizon</span>, <span style="color:#ffffff;font-weight:900;text-shadow:0 0 12px #ff6600,0 0 24px #ff660088,0 0 40px #ff660044">Boost</span> — fast 24–72hr delivery, open 24/7, serving Los Angeles and worldwide.
     </p>
     <div id="hero-guest" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:28px">
       <button class="btn" style="padding:12px 28px;font-size:15px" onclick="showPage('auth')">Create Free Account</button>
@@ -764,7 +1126,7 @@ nav{
         <button class="btn" style="padding:12px 28px;font-size:15px" onclick="scrollToSection('selector')">Place New Order</button>
         <button style="padding:12px 28px;background:transparent;border:1px solid var(--border);border-radius:10px;color:#f0eeff;cursor:pointer;font-weight:600;font-size:15px" onclick="showPage('account')">My Orders</button>
       </div>
-      <div style="display:inline-flex;align-items:center;gap:12px;background:rgba(124,58,237,.1);border:1px solid var(--border);border-radius:12px;padding:12px 24px">
+      <div style="display:inline-flex;align-items:center;gap:12px;background:rgba(0,245,255,.06);border:1px solid var(--border);border-radius:12px;padding:12px 24px">
         <span style="font-size:20px">💼</span>
         <span style="color:var(--muted);font-size:14px">Balance:</span>
         <span id="hero-balance" style="font-weight:800;font-size:20px;color:var(--purpleL)">$0.00</span>
@@ -870,7 +1232,7 @@ nav{
             <label class="lbl">Your Name (optional)</label>
             <input class="inp" id="order-name" placeholder="Full name" maxlength="80"/>
           </div>
-          <div style="background:rgba(124,58,237,.08);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px">
+          <div style="background:rgba(0,245,255,.05);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px">
             <span style="font-size:16px">💼</span>
             <div style="flex:1">
               <span style="font-size:13px;color:var(--muted)">Sign in to pay with balance and track orders. </span>
@@ -990,7 +1352,7 @@ nav{
       <!-- Brand -->
       <div>
         <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px">
-          <div class="logo-box" style="width:30px;height:30px;font-size:14px;border-radius:8px">🍎</div>
+          <div class="logo-box" style="width:30px;height:30px;font-size:14px;border-radius:8px"><svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="agl1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ff0000"/><stop offset="20%" stop-color="#ff8c00"/><stop offset="40%" stop-color="#ffd700"/><stop offset="60%" stop-color="#00c800"/><stop offset="80%" stop-color="#0000ff"/><stop offset="100%" stop-color="#8000ff"/></linearGradient></defs><path fill="url(#agl1)" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg></div>
           <span style="font-weight:800;font-size:16px;color:#f0eeff">Rotten Apple GSM</span>
         </div>
         <div style="color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:14px">Permanent carrier unlocks, blacklist removal, and FRP bypass for any device, any carrier, anywhere.</div>
@@ -1108,8 +1470,8 @@ nav{
         <div style="font-size:12px;color:var(--muted)">© 2025 Rotten Apple GSM · California, USA · All rights reserved</div>
         <div style="display:flex;gap:18px">
           <span onclick="showPage('auth')" style="font-size:12px;color:var(--muted);cursor:pointer" onmouseover="this.style.color='#f0eeff'" onmouseout="this.style.color='var(--muted)'">Sign In</span>
-          <span style="font-size:12px;color:var(--muted);cursor:pointer" onmouseover="this.style.color='#f0eeff'" onmouseout="this.style.color='var(--muted)'">Privacy Policy</span>
-          <span style="font-size:12px;color:var(--muted);cursor:pointer" onmouseover="this.style.color='#f0eeff'" onmouseout="this.style.color='var(--muted)'">Terms of Service</span>
+          <span style="font-size:12px;color:var(--muted);cursor:pointer" onmouseover="this.style.color='#00f5ff'" onmouseout="this.style.color='var(--muted)'" onclick="showPage('privacy')">Privacy Policy</span>
+          <span style="font-size:12px;color:var(--muted);cursor:pointer" onmouseover="this.style.color='#00f5ff'" onmouseout="this.style.color='var(--muted)'" onclick="showPage('terms')">Terms of Service</span>
         </div>
       </div>
     </div>
@@ -1120,12 +1482,12 @@ nav{
      AUTH PAGE
 ═══════════════════════════════════════════════════════════════ -->
 <div id="page-auth" class="page">
-  <div style="background:#07050f;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;position:relative">
-    <div style="position:fixed;width:500px;height:500px;border-radius:50%;background:#7c3aed;filter:blur(120px);opacity:.13;top:-150px;left:-150px;pointer-events:none"></div>
+  <div style="background:#000008;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;position:relative">
+    <div style="position:fixed;width:500px;height:500px;border-radius:50%;background:#00ccee;filter:blur(120px);opacity:.13;top:-150px;left:-150px;pointer-events:none"></div>
     <button onclick="showPage('home')" style="position:fixed;top:20px;left:20px;background:transparent;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;font-size:13px">← Back</button>
     <div style="width:100%;max-width:420px;position:relative;z-index:1">
       <div style="text-align:center;margin-bottom:32px">
-        <div class="logo-box" style="width:50px;height:50px;font-size:22px;border-radius:14px;margin:0 auto 14px">🍎</div>
+        <div class="logo-box" style="width:50px;height:50px;border-radius:14px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center"><svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="agl2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ff0000"/><stop offset="20%" stop-color="#ff8c00"/><stop offset="40%" stop-color="#ffd700"/><stop offset="60%" stop-color="#00c800"/><stop offset="80%" stop-color="#0000ff"/><stop offset="100%" stop-color="#8000ff"/></linearGradient></defs><path fill="url(#agl2)" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg></div>
         <div style="font-weight:800;font-size:22px;margin-bottom:4px">Rotten Apple GSM</div>
         <div id="auth-subtitle" style="color:var(--muted);font-size:14px">Sign in to your account</div>
       </div>
@@ -1151,6 +1513,10 @@ nav{
           <input class="inp" type="password" id="auth-pw2" placeholder="Repeat password" autocomplete="new-password" onkeydown="if(event.key==='Enter')handleRegister()"/>
         </div>
         <div id="auth-error" class="err-box" style="display:none"></div>
+        <div id="totp-login-wrap" style="display:block;margin-bottom:12px">
+          <div style="font-size:12px;color:#00f5ff;font-weight:600;margin-bottom:6px">🔐 Google Authenticator Code</div>
+          <input class="inp" type="number" id="auth-totp-input" placeholder="000000" style="letter-spacing:8px;text-align:center;font-size:22px;font-weight:700" maxlength="6" onkeydown="if(event.key==='Enter')authSubmit()"/>
+        </div>
         <button class="btn" id="auth-submit-btn" onclick="authSubmit()" style="width:100%;font-size:15px;padding:14px">Sign In</button>
       </div>
     </div>
@@ -1182,7 +1548,7 @@ nav{
       <span class="brand-name">Rotten Apple GSM</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <div style="background:rgba(124,58,237,.15);border:1px solid var(--border);border-radius:10px;padding:7px 14px;font-size:13px">
+      <div style="background:rgba(0,245,255,.1);border:1px solid var(--border);border-radius:10px;padding:7px 14px;font-size:13px">
         <span style="color:var(--muted)">Balance: </span><span id="acc-nav-balance" style="color:var(--purpleL);font-weight:700">$0.00</span>
       </div>
       <button class="btn-ghost btn-sm" onclick="showPage('home')">Home</button>
@@ -1207,7 +1573,7 @@ nav{
   <div style="max-width:1100px;margin:0 auto;padding:24px;position:relative;z-index:1">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px">
       <div style="display:flex;align-items:center;gap:10px">
-        <div class="logo-box" style="width:32px;height:32px">🍎</div>
+        <div class="logo-box" style="width:32px;height:32px"><svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="agl3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ff0000"/><stop offset="20%" stop-color="#ff8c00"/><stop offset="40%" stop-color="#ffd700"/><stop offset="60%" stop-color="#00c800"/><stop offset="80%" stop-color="#0000ff"/><stop offset="100%" stop-color="#8000ff"/></linearGradient></defs><path fill="url(#agl3)" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg></div>
         <span style="font-weight:800;font-size:18px">Admin Panel</span>
       </div>
       <button class="btn-ghost" onclick="adminAuth=false;renderAdminPage();showPage('home')">← Exit Admin</button>
@@ -1225,6 +1591,15 @@ const hashPassword=async pw=>{const e=new TextEncoder().encode(pw);const b=await
 const luhnValid=num=>{let s=0,a=false;for(let i=num.length-1;i>=0;i--){let d=parseInt(num[i],10);if(isNaN(d))return false;if(a){d*=2;if(d>9)d-=9}s+=d;a=!a}return s%10===0};
 const validEmail=e=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e.trim());
 const sanitize=str=>String(str).replace(/[<>"'`]/g,c=>({"<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;","`":"&#96;"}[c]));
+// sanitizeName: strips all code-looking chars from name/username fields (server + client)
+// Removes: { } [ ] ; < > " ' ` \ / * = $ | # @ ! ? % ^ & ~ + curly/square brackets
+const sanitizeName=str=>String(str)
+  .replace(/[\{\}\[\];:<>"'`\\/\\*=\$|#@!?%^&~+\(\)]/g,'')  // remove code chars
+  .replace(/--+/g,'-')         // collapse SQL comment sequences
+  .replace(/\/\*/g,'')        // remove /* block comment starts
+  .replace(/\s+/g,' ')         // collapse whitespace
+  .trim()
+  .slice(0,80);                // max 80 chars
 const _att={};
 const rateLimit=(key,max=5,ms=60000)=>{const n=Date.now();if(!_att[key]||n-_att[key].ts>ms){_att[key]={count:1,ts:n};return false}_att[key].count++;return _att[key].count>max};
 const SESSION_MS=30*60*1000,MAX_DEP=1000,MIN_DEP=5;
@@ -1236,44 +1611,17 @@ const ADMIN_EMAIL="rottenapplegsm@gmail.com",WA="13238291991",DOMAIN="https://ww
 const loadEJS=pk=>new Promise(r=>{if(window.emailjs){r();return}const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";s.onload=()=>{window.emailjs.init(pk);r()};document.head.appendChild(s)});
 const sendEmail=async(cfg,tid,params)=>{if(!cfg.emailjsPublicKey||!cfg.emailjsServiceId||!tid)return;try{await loadEJS(cfg.emailjsPublicKey);await window.emailjs.send(cfg.emailjsServiceId,tid,{to_email:ADMIN_EMAIL,...params})}catch(e){console.warn("Email fail",e)}};
 const notifyNew=(cfg,o)=>sendEmail(cfg,cfg.emailjsTemplateNew,{order_id:`#${o.orderNumber} (${o.id})`,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,imei_masked:o.imeiMasked,amount:`$${o.amount.toFixed(2)}`,payment_method:o.paymentMethod,placed:o.placed});
-const notifyStatus=(cfg,o,st)=>{if(!["Completed","Refunded"].includes(st))return;sendEmail(cfg,cfg.emailjsTemplateStatus,{order_id:o.id,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,amount:`$${o.amount.toFixed(2)}`,new_status:st})};
+const notifyStatus=(cfg,o,st)=>{if(!["Completed","Refunded","Cancelled"].includes(st))return;sendEmail(cfg,cfg.emailjsTemplateStatus,{order_id:o.id,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,amount:`$${o.amount.toFixed(2)}`,new_status:st})};
 
 // ═══════════════════════════════════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════════════════════════════════
-const SERVICES=[
-  {id:1,carrier:"T-Mobile / MetroPCS / Sprint",stype:"Carrier Unlock",brand:"Apple iPhone",series:"iPhone 11-14 Series",price:141.78,orig:142.80,cost:0,time:"24 hrs",rate:"100%",notes:"Premium – 100% Success Rate",description:"",stripeLink:"",hot:true,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:2,carrier:"T-Mobile / MetroPCS / Sprint",stype:"Carrier Unlock",brand:"Apple iPhone",series:"iPhone 15 Series",price:147.90,orig:160.14,cost:0,time:"24 hrs",rate:"100%",notes:"Premium – 100% Success Rate",description:"",stripeLink:"",hot:false,recent:true,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:3,carrier:"T-Mobile / MetroPCS / Sprint",stype:"Carrier Unlock",brand:"Apple iPhone",series:"iPhone 16 Series",price:150.96,orig:174.42,cost:0,time:"24 hrs",rate:"100%",notes:"Premium – 100% Success Rate",description:"",stripeLink:"",hot:true,recent:true,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:4,carrier:"T-Mobile / MetroPCS / Sprint",stype:"Carrier Unlock",brand:"Apple iPhone",series:"iPhone 17 Series",price:158.10,orig:178.50,cost:0,time:"24 hrs",rate:"100%",notes:"Premium – 100% Success Rate",description:"",stripeLink:"",hot:true,recent:true,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:23,carrier:"T-Mobile / MetroPCS / Sprint",stype:"Blacklist / Unbarring",brand:"Any Device",series:"Lost & Stolen",price:71.40,orig:86.70,cost:0,time:"3-5 days",rate:"100%",notes:"Removes lost/stolen bar",description:"",stripeLink:"",hot:true,recent:true,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:24,carrier:"T-Mobile / MetroPCS / Sprint",stype:"Blacklist / Unbarring",brand:"Any Device",series:"Non-Payment / EIP / Insurance",price:110.16,orig:117.30,cost:0,time:"3-5 days",rate:"100%",notes:"Blocked due to non-payment / EIP",description:"",stripeLink:"",hot:false,recent:true,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:5,carrier:"AT&T",stype:"Carrier Unlock",brand:"Apple iPhone",series:"iPhone 12-17 Series",price:81.60,orig:102.00,cost:0,time:"24-48 hrs",rate:"99%",notes:"Semi Premium – Past Due accounts supported",description:"",stripeLink:"",hot:true,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:26,carrier:"AT&T",stype:"Blacklist / Unbarring",brand:"Any Device",series:"Any Model",price:96.90,orig:null,cost:0,time:"5-7 days",rate:"60-70%",notes:"Refundable if unsuccessful",description:"",stripeLink:"",hot:false,recent:true,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:25,carrier:"Verizon",stype:"Blacklist / Unbarring",brand:"Any Device",series:"Any Model",price:114.24,orig:132.60,cost:0,time:"3-5 days",rate:"100%",notes:"Removes lost/stolen bar – not an unlock",description:"",stripeLink:"",hot:true,recent:true,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:6,carrier:"Cricket",stype:"Carrier Unlock",brand:"Apple iPhone",series:"iPhone 11-13 Series",price:178.50,orig:188.70,cost:0,time:"24-48 hrs",rate:"100%",notes:"Semi Premium",description:"",stripeLink:"",hot:false,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:7,carrier:"Cricket",stype:"Carrier Unlock",brand:"Apple iPhone",series:"iPhone 14 Series",price:183.60,orig:188.70,cost:0,time:"24-48 hrs",rate:"100%",notes:"Semi Premium",description:"",stripeLink:"",hot:false,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:8,carrier:"Cricket",stype:"Carrier Unlock",brand:"Apple iPhone",series:"iPhone 15 Series",price:188.70,orig:204.00,cost:0,time:"24-48 hrs",rate:"100%",notes:"Semi Premium",description:"",stripeLink:"",hot:true,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:9,carrier:"Cricket",stype:"Carrier Unlock",brand:"Apple iPhone",series:"iPhone 16 Series",price:193.80,orig:204.00,cost:0,time:"24-48 hrs",rate:"100%",notes:"Semi Premium",description:"",stripeLink:"",hot:false,recent:true,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:10,carrier:"Cricket",stype:"Carrier Unlock",brand:"Apple iPhone",series:"iPhone 17 Series",price:198.90,orig:249.90,cost:0,time:"24-48 hrs",rate:"100%",notes:"Semi Premium",description:"",stripeLink:"",hot:false,recent:true,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:27,carrier:"Cricket",stype:"Blacklist / Unbarring",brand:"Any Device",series:"Any Model",price:96.90,orig:122.40,cost:0,time:"3-5 days",rate:"100%",notes:"",description:"",stripeLink:"",hot:false,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:11,carrier:"Boost Mobile",stype:"Carrier Unlock",brand:"Apple iPhone",series:"All iPhone Models",price:153.00,orig:163.20,cost:0,time:"24-48 hrs",rate:"100%",notes:"US Dish Boost",description:"",stripeLink:"",hot:false,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:12,carrier:"Claro",stype:"Carrier Unlock",brand:"Apple iPhone",series:"iPhone 4–XS Max / SE / SE 2",price:52.02,orig:60.18,cost:0,time:"48-72 hrs",rate:"100%",notes:"All Claro countries",description:"",stripeLink:"",hot:false,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:19,carrier:"Philippines Globe",stype:"Carrier Unlock",brand:"Apple iPhone",series:"All iPhone Models",price:59.00,orig:null,cost:0,time:"3-5 days",rate:"100%",notes:"",description:"",stripeLink:"",hot:false,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:20,carrier:"Spectrum",stype:"Carrier Unlock",brand:"Apple iPhone",series:"All iPhone Models",price:89.00,orig:null,cost:0,time:"24-72 hrs",rate:"100%",notes:"",description:"",stripeLink:"",hot:false,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:21,carrier:"Xfinity Mobile",stype:"Carrier Unlock",brand:"Apple iPhone",series:"All iPhone Models",price:79.00,orig:null,cost:0,time:"24-72 hrs",rate:"100%",notes:"",description:"",stripeLink:"",hot:false,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:22,carrier:"US Reseller Flex",stype:"Carrier Unlock",brand:"Apple iPhone",series:"All iPhone Models",price:45.00,orig:null,cost:0,time:"24 hrs",rate:"100%",notes:"Flex Policy – wholesale",description:"",stripeLink:"",hot:false,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:28,carrier:"Samsung WorldWide",stype:"FRP Bypass",brand:"Samsung",series:"Android 14 Devices",price:58.14,orig:null,cost:0,time:"24-48 hrs",rate:"100%",notes:"Via IMEI/Serial – Premium",description:"",stripeLink:"",hot:false,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:29,carrier:"Samsung WorldWide",stype:"Carrier Unlock",brand:"Samsung",series:"S22/S23/S24 / Z Flip+Fold 3-6",price:75.48,orig:null,cost:0,time:"24-48 hrs",rate:"100%",notes:"",description:"",stripeLink:"",hot:false,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:30,carrier:"Xiaomi",stype:"Mi Account Remove",brand:"Xiaomi",series:"All Mi Models",price:49.00,orig:null,cost:0,time:"3-7 days",rate:"95%",notes:"",description:"",stripeLink:"",hot:false,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-  {id:31,carrier:"Tecno / Infinix",stype:"MDM Remove",brand:"Tecno/Infinix",series:"All Models",price:39.00,orig:null,cost:0,time:"24-72 hrs",rate:"100%",notes:"",description:"",stripeLink:"",hot:false,recent:false,active:true,apiUrl:"",apiKey:"",apiServiceId:""},
-];
+const SERVICES=[]
 const LOYALTY_TIERS=[
-  {id:"bronze", label:"Bronze",   icon:"🥉", minSpend:0,    discount:0,   color:"#cd7f32", bg:"rgba(205,127,50,.12)",  border:"rgba(205,127,50,.3)",  perks:"Standard service · Order tracking"},
-  {id:"silver", label:"Silver",   icon:"🥈", minSpend:200,  discount:3,   color:"#a8a9ad", bg:"rgba(168,169,173,.12)", border:"rgba(168,169,173,.3)",  perks:"3% discount on all services"},
-  {id:"gold",   label:"Gold",     icon:"🥇", minSpend:500,  discount:5,   color:"#ffd700", bg:"rgba(255,215,0,.12)",   border:"rgba(255,215,0,.3)",    perks:"5% discount · Priority processing"},
-  {id:"vip",    label:"VIP",      icon:"💎", minSpend:1000, discount:8,   color:"#a855f7", bg:"rgba(168,85,247,.15)",  border:"rgba(168,85,247,.4)",   perks:"8% discount · Priority processing · VIP support"},
-  {id:"elite",  label:"Elite",    icon:"👑", minSpend:2500, discount:12,  color:"#22d3ee", bg:"rgba(34,211,238,.12)",  border:"rgba(34,211,238,.4)",   perks:"12% discount · Highest priority · Dedicated support"},
+  {min:0,label:"Standard",icon:"",discount:0,color:"var(--muted)",bg:"rgba(255,255,255,.06)",border:"rgba(255,255,255,.12)"},
+  {min:200,label:"Silver",icon:"🥈",discount:3,color:"#94a3b8",bg:"rgba(148,163,184,.1)",border:"rgba(148,163,184,.3)"},
+  {min:500,label:"Gold",icon:"🥇",discount:5,color:"#f59e0b",bg:"rgba(245,158,11,.1)",border:"rgba(245,158,11,.3)"},
+  {min:1000,label:"Platinum",icon:"💎",discount:8,color:"#818cf8",bg:"rgba(129,140,248,.1)",border:"rgba(129,140,248,.3)"}
 ];
 function getTier(spent){
   let tier=LOYALTY_TIERS[0];
@@ -1322,52 +1670,28 @@ let suppliers=[
 
 // Support tickets
 let tickets=[]; // starts at #1001 for first order
-let payConfig={backendUrl:"",stripePublicKey:"pk_live_51RAdiy1im1pzQEDTBG0uDRJunjMRS084946lVYkl0i5irM9Fb787d6rH0vMOQ6JKGA6lsI6XizEzU9SO7Y9LJmp000SIAZMg1A",stripePaymentLink:"",paypalClientId:"AVNQLqpnuHw6iz1WhMle_P_GsQRaAvpE0zHHy82EOlf3tzPiUWbnPuP_CkvXJ_W6Ue4D6OlZSTINacqs",btcAddress:"3H1wo2u43uh7kwfZk3L5JD7pJpTz3JT768",usdtAddress:"0x5CDA5992AB8CFD42C135F12756809AFea7d746F8",sickwKey:"",emailjsPublicKey:"",emailjsServiceId:"",emailjsTemplateNew:"",emailjsTemplateStatus:""};
+let payConfig={backendUrl:"",stripePublicKey:"pk_live_51RAdiy1im1pzQEDTBG0uDRJunjMRS084946lVYkl0i5irM9Fb787d6rH0vMOQ6JKGA6lsI6XizEzU9SO7Y9LJmp000SIAZMg1A",stripePaymentLink_disabled:"",paypalClientId:"AVNQLqpnuHw6iz1WhMle_P_GsQRaAvpE0zHHy82EOlf3tzPiUWbnPuP_CkvXJ_W6Ue4D6OlZSTINacqs",btcAddress:"3H1wo2u43uh7kwfZk3L5JD7pJpTz3JT768",usdtAddress:"0x5CDA5992AB8CFD42C135F12756809AFea7d746F8",githubToken:"",adminTotpSecret:"",zelleEmail:"Tormil61@icloud.com",zelleName:"Milton Torres",emailjsPublicKey:"HVDMR09St7qz-fUxV",emailjsServiceId:"service_zfgxbhe",emailjsTemplateNew:"template_8hpp3n8",emailjsTemplateStatus:"template_ts2m4ye"};
 
 // Supplier API configs — DhruFusion standard format
 const SUPPLIER_APIS={
   ifoneunlock:{
     name:"iFoneUnlock",
-    url:"/.netlify/functions/supplier-order",
+    url:"https://ifoneunlock.com/api/",
     email:"tormil61@gmail.com",
-    key:"",
+    key:"L0B-AH3-7Z3-J2V-QWZ-KN3-Q3T-ABN",
     active:true
   },
   snfusions:{
     name:"SNFusions",
-    url:"/.netlify/functions/supplier-order",
+    url:"https://snfusions.com/api/",
     email:"tormil61@gmail.com",
-    key:"",
+    key:"IZF-CRT-LCM-AVC-EBM-Q9B-PB1-XSQ",
     active:true
   }
 };
 
 // ── IMEI Check Types (paid services, managed in Admin) ────────────────────────
-let imeiCheckTypes=[
-  // iPhone / Apple checks
-  {id:"iphone_carrier",    label:"iPhone Carrier Info",            icon:"📱", desc:"Carrier, SIM-lock status, warranty info for iPhones. Instant.",                                    price:4.99, sickwServiceId:"103", apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"iphone_carrier_fmi",label:"iPhone Carrier + FMI Check",    icon:"📱", desc:"Carrier, SIM-lock + Find My iPhone status. Instant.",                                               price:4.99, sickwServiceId:"78",  apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"iphone_full",       label:"iPhone Carrier + FMI + Blacklist",icon:"📱",desc:"Full iPhone check — carrier, FMI, and blacklist status. Instant.",                                  price:6.99, sickwServiceId:"61",  apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"icloud_status",     label:"iCloud Lock Status",             icon:"☁️", desc:"Check if iPhone/iPad is iCloud locked or activation locked. Instant.",                              price:3.99, sickwServiceId:"3",   apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"icloud_clean_lost", label:"iCloud Clean / Lost Status",    icon:"☁️", desc:"Check if device is reported lost or stolen in iCloud. Instant.",                                    price:4.99, sickwServiceId:"4",   apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"apple_mdm",         label:"Apple MDM Status",              icon:"🔒", desc:"Check if iPhone/iPad is enrolled in MDM (Mobile Device Management). Instant.",                      price:5.99, sickwServiceId:"81",  apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"apple_activation",  label:"Apple Activation Status Pro",   icon:"🍎", desc:"Full Apple activation lock and status check. Instant.",                                             price:3.99, sickwServiceId:"88",  apiUrl:"https://sickw.com/api.php", active:true},
-  // Carrier / Blacklist checks
-  {id:"blacklist_att",     label:"AT&T USA Status Check",         icon:"🔍", desc:"Check carrier status and blacklist on AT&T network. Instant.",                                      price:4.99, sickwServiceId:"",    apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"blacklist_tmobile", label:"T-Mobile USA Status Check",     icon:"🔍", desc:"Check if device is blacklisted on T-Mobile / MetroPCS / Sprint. Instant.",                         price:2.99, sickwServiceId:"16",  apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"blacklist_verizon", label:"Verizon USA Status Check",      icon:"🔍", desc:"Check if device is blacklisted on Verizon network. Instant.",                                       price:2.99, sickwServiceId:"9",   apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"blacklist_cricket", label:"Cricket USA Status Check",      icon:"🔍", desc:"Check if device is blacklisted on Cricket Wireless. Instant.",                                      price:3.99, sickwServiceId:"21",  apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"blacklist_xfinity", label:"Xfinity USA Status Check",     icon:"🔍", desc:"Check carrier status on Xfinity Mobile. Instant.",                                                  price:2.99, sickwServiceId:"230", apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"blacklist_ww",      label:"Worldwide Blacklist Check",     icon:"🌍", desc:"Check if device is blacklisted globally (GSMA). Instant.",                                          price:2.99, sickwServiceId:"54",  apiUrl:"https://sickw.com/api.php", active:true},
-  // Samsung checks
-  {id:"samsung_info",      label:"Samsung Info Check",            icon:"📱", desc:"Model, carrier, warranty info for Samsung devices. Instant.",                                       price:3.99, sickwServiceId:"80",  apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"samsung_pro",       label:"Samsung Info Pro",              icon:"📱", desc:"Full Samsung details including carrier, model, and more. Instant.",                                 price:4.99, sickwServiceId:"1",   apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"samsung_knox",      label:"Samsung Knox Guard Check",      icon:"🔒", desc:"Check if Samsung device is enrolled in Knox Guard MDM lock. Instant.",                             price:5.99, sickwServiceId:"82",  apiUrl:"https://sickw.com/api.php", active:true},
-  // Other brands
-  {id:"motorola_info",     label:"Motorola Info Check",           icon:"📱", desc:"Model, carrier, warranty info for Motorola devices. Instant.",                                      price:3.99, sickwServiceId:"13",  apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"xiaomi_info",       label:"Xiaomi / Redmi / Poco MI Lock", icon:"📱", desc:"Check MI account lock status for Xiaomi, Redmi, Poco devices. Instant.",                          price:3.99, sickwServiceId:"206", apiUrl:"https://sickw.com/api.php", active:true},
-  {id:"frp_status",        label:"FRP / Google Lock Check",       icon:"🔒", desc:"Check Factory Reset Protection (Google account lock) on Android. Instant.",                        price:3.99, sickwServiceId:"",    apiUrl:"https://sickw.com/api.php", active:true},
-];
+let imeiCheckTypes=[];
 let selectedImeiCheckType=null; // holds the full type object
 let imeiHistory=[]; // {id, typeLabel, imei, imeiMasked, result, date, accountId, email, paid}
 let lastActivity=Date.now();
@@ -1400,7 +1724,9 @@ function toggleFaq(btn){
 function showToast(msg){const t=document.getElementById("toast");t.textContent=sanitize(msg);t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),3600)}
 function scrollToSection(id){document.getElementById(id)?.scrollIntoView({behavior:"smooth"})}
 function getUserBalance(){if(!currentUser)return 0;const a=accounts.find(a=>a.id===currentUser.id);return a?a.balance:0}
-function updateBalance(uid,delta){const i=accounts.findIndex(a=>a.id===uid);if(i<0)return;accounts[i].balance=Math.max(0,parseFloat((accounts[i].balance+delta).toFixed(2)))}
+function updateBalance(uid,delta){const i=accounts.findIndex(a=>a.id===uid);if(i<0)return;accounts[i].balance=Math.max(0,parseFloat((accounts[i].balance+delta).toFixed(2)))
+  saveAccounts();
+}
 function savePct(s){return s.orig&&s.orig>s.price?Math.round((1-s.price/s.orig)*100):null}
 function activeServices(){return services.filter(s=>s.active)}
 function statusBadge(st){const cls=STATUS_CLASS[st]||"status-processing";return`<span class="badge ${cls}">${st}</span>`}
@@ -1469,6 +1795,23 @@ async function handleLogin(){
       btn.textContent="Sign In";btn.disabled=false;
       document.getElementById("auth-email").value="";
       document.getElementById("auth-pw").value="";
+      // Check 2FA if configured
+      var totpSecret=payConfig.adminTotpSecret||'';
+      if(totpSecret){
+        var totpEl=document.getElementById('auth-totp-input');
+        var totpCode=totpEl?totpEl.value.trim():'';
+        if(!totpCode){
+          errEl.textContent='2FA code required. Open Google Authenticator.';
+          errEl.style.display='block';
+          btn.textContent='Sign In';btn.disabled=false;return;
+        }
+        var valid=await verifyTOTP(totpSecret,totpCode);
+        if(!valid){
+          errEl.textContent='Invalid 2FA code. Try again.';
+          errEl.style.display='block';
+          btn.textContent='Sign In';btn.disabled=false;return;
+        }
+      }
       adminAuth=true;
       showPage("admin");
       showToast("Welcome, Admin.");
@@ -1487,12 +1830,13 @@ async function handleLogin(){
 async function handleRegister(){
   const errEl=document.getElementById("auth-error");
   errEl.style.display="none";
-  const name=document.getElementById("auth-name").value.trim();
+  const name=sanitizeName(document.getElementById("auth-name").value);
   const email=document.getElementById("auth-email").value.toLowerCase().trim();
   const pw=document.getElementById("auth-pw").value;
   const pw2=document.getElementById("auth-pw2").value;
   if(rateLimit("register:"+email,3,300000)){errEl.textContent="Too many registrations. Try again later.";errEl.style.display="block";return}
   if(name.length<2){errEl.textContent="Enter your full name (at least 2 characters).";errEl.style.display="block";return}
+  if(!/^[a-zA-ZÀ-ɏ\s\-\.']{2,80}$/.test(name)){errEl.textContent="Name must contain only letters, spaces, hyphens, or periods.";errEl.style.display="block";return}
   if(!validEmail(email)){errEl.textContent="Enter a valid email address.";errEl.style.display="block";return}
   if(pw.length<8){errEl.textContent="Password must be at least 8 characters.";errEl.style.display="block";return}
   if(!/[A-Z]/.test(pw)){errEl.textContent="Password must contain at least one uppercase letter.";errEl.style.display="block";return}
@@ -1504,10 +1848,11 @@ async function handleRegister(){
   const passwordHash=await hashPassword(pw);
   const newAcc={id:"ACC"+secureId(8),name:sanitize(name),email,passwordHash,balance:0,createdAt:new Date().toISOString().split("T")[0]};
   accounts.push(newAcc);
+  saveAccounts();
   const {passwordHash:_,...safe}=newAcc;
   setCurrentUser(safe);
   btn.textContent="Create Account";btn.disabled=false;
-  showPage("home");showToast("Account created! Welcome, "+newAcc.name.split(" ")[0]+"!");
+  supaUpsert("accounts",[{id:newAcc.id,name:newAcc.name,email:newAcc.email,password_hash:newAcc.passwordHash||"",balance:0,created_at:newAcc.createdAt||new Date().toISOString().split("T")[0]}]).then(function(){showPage("home");}).catch(function(){showPage("home");});//showToast("Account created! Welcome, "+newAcc.name.split(" ")[0]+"!");
 }
 async function handleRegister(){
   const errEl=document.getElementById("auth-error");
@@ -1545,7 +1890,44 @@ async function handleRegister(){
   // Clear sensitive form fields immediately
   document.getElementById("auth-pw").value="";
   document.getElementById("auth-pw2").value="";
-  showPage("home");showToast("Account created! Welcome, "+newAcc.name.split(" ")[0]+"!");
+  // Save to Supabase then redirect
+  supaUpsert("accounts",[{id:newAcc.id,name:newAcc.name,email:newAcc.email,password_hash:newAcc.passwordHash||"",balance:0,created_at:newAcc.createdAt||new Date().toISOString().split("T")[0]}]).then(function(){
+    // Notify admin of new account + send welcome email to customer
+    if(typeof sendEmail!=="undefined"&&payConfig.emailjsServiceId){
+      var welcomeData={
+        order_id: newAcc.id,
+        customer_name: newAcc.name,
+        customer_email: newAcc.email,
+        service: "Welcome to Rotten Apple GSM! Your account is ready.",
+        imei_masked: "rottenapplegsm.com",
+        amount: "Free Account",
+        payment_method: "WhatsApp: (323) 829-1991",
+        placed: new Date().toLocaleDateString()
+      };
+      // Welcome email to customer
+      sendEmail(payConfig, payConfig.emailjsTemplateNew, welcomeData);
+      // Alert email to admin
+      sendEmail(payConfig, payConfig.emailjsTemplateNew, {
+        order_id: newAcc.id,
+        customer_name: "NEW CUSTOMER: "+newAcc.name,
+        customer_email: "rottenapplegsm@gmail.com",
+        service: "New account created by "+newAcc.name+" ("+newAcc.email+")",
+        imei_masked: newAcc.email,
+        amount: "$0.00",
+        payment_method: "Registration",
+        placed: new Date().toLocaleDateString()
+      });
+    }
+    var newSecret2=generateTOTPSecret();
+    var uri2='otpauth://totp/RottenAppleGSM:'+encodeURIComponent(newAcc.email)+'?secret='+newSecret2+'&issuer=RottenAppleGSM&algorithm=SHA1&digits=6&period=30';
+    window._pendingAcc={newAcc:newAcc,secret:newSecret2};
+    var modal=document.getElementById('setup-2fa-modal');
+    if(!modal){modal=document.createElement('div');modal.id='setup-2fa-modal';modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';document.body.appendChild(modal);}
+    modal.innerHTML='<div style="background:#000814;border:1px solid rgba(0,245,255,.18);border-radius:20px;padding:32px;max-width:380px;width:100%;text-align:center"><div style="font-size:20px;font-weight:800;margin-bottom:8px">Set Up 2FA Required</div><div style="color:var(--muted);font-size:13px;margin-bottom:20px">Scan with Google Authenticator to secure your account.</div><img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent(uri2)+'" style="border-radius:8px;margin-bottom:16px"/><div style="font-size:12px;color:var(--muted);margin-bottom:8px">Enter the 6-digit code to verify:</div><input type="number" id="setup-verify-code" class="inp" placeholder="000000" maxlength="6" style="text-align:center;letter-spacing:8px;font-size:22px;font-weight:700;margin-bottom:16px"/><button class="btn" onclick="verifyAndCreateAccount()" style="width:100%;padding:14px">Verify & Create Account</button><div id="setup-2fa-err" style="color:#f87171;font-size:13px;margin-top:8px;display:none"></div></div>';
+    modal.style.display='flex';
+  }).catch(function(){
+    showPage("home");showToast("Account created! Welcome, "+newAcc.name.split(" ")[0]+"!");
+  });
 }
 
 function handleLogout(){
@@ -1602,6 +1984,21 @@ window.addEventListener("beforeunload",(e)=>{
 // ═══════════════════════════════════════════════════════════════════
 // HOME RENDER
 // ═══════════════════════════════════════════════════════════════════
+function getCarrierColor(carrier){
+  var c=(carrier||'').toLowerCase();
+  if(c.includes('t-mobile')||c.includes('tmobile')||c.includes('metropcs')||c.includes('sprint'))return '#e20074';
+  if(c.includes('at&t')||c.includes('att'))return '#00a8e0';
+  if(c.includes('verizon'))return '#cd040b';
+  if(c.includes('cricket'))return '#4caf50';
+  if(c.includes('boost'))return '#ff6600';
+  if(c.includes('xfinity'))return '#00819a';
+  if(c.includes('spectrum'))return '#9b59b6';
+  if(c.includes('samsung'))return '#1428a0';
+  if(c.includes('us reseller')||c.includes('reseller'))return '#ff8800';
+  if(c.includes('claro'))return '#e60026';
+  if(c.includes('globe')||c.includes('philippines'))return '#0056a2';
+  return '#00f5ff';
+}
 function renderHome(){
   const bal=getUserBalance();
   // Nav
@@ -1624,15 +2021,14 @@ function renderHome(){
     const popId=`hot-pop-${s.id}`;
     return`<div class="svc-card" style="position:relative" onclick="selectService(${s.id})">
       <div style="position:absolute;top:12px;right:12px" class="badge badge-hot">🔥 Hot</div>
-      <div style="font-size:11px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;padding-right:60px">${s.carrier}</div>
+      <div style="font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;padding-right:60px;color:${getCarrierColor(s.carrier)};text-shadow:0 0 12px ${getCarrierColor(s.carrier)},0 0 24px ${getCarrierColor(s.carrier)}88,0 0 40px ${getCarrierColor(s.carrier)}44">${s.carrier}</div>
       <span class="badge ${STYPE_CLASS[s.stype]||'stype-unlock'}" style="margin-bottom:8px;display:inline-block">${s.stype}</span>
       <div style="font-weight:700;font-size:14px;margin-bottom:4px">${s.brand} · ${s.series}</div>
       <!-- View description link -->
-      <button onclick="event.stopPropagation();openSvcPopup('${popId}')"
-        style="display:inline-flex;align-items:center;gap:4px;margin-bottom:8px;background:none;border:none;color:#60a5fa;font-size:12px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8" stroke-width="3"/><line x1="12" y1="12" x2="12" y2="17"/></svg>
-        View description
-      </button>
+      <button onclick="event.stopPropagation();openSvcPopup()"
+        style="background:none;border:none;color:#00f5ff;font-size:12px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px">View description</button>
+      <div id="desc-pop-${s.id}" style="display:none;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.25);border-radius:10px;padding:12px 14px;margin-bottom:8px;font-size:13px;color:var(--text);line-height:1.6">${s.description||'No description yet. Add one in Admin → Services.'}</div>
+      <div id="\${popId}" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px;font-size:13px;color:var(--text);line-height:1.6">\${s.description||'No description available.'}</div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
         <div>
           <div style="font-weight:800;font-size:18px;color:var(--purpleL)">$${s.price.toFixed(2)}</div>
@@ -1641,7 +2037,7 @@ function renderHome(){
         <div style="background:var(--surface3);color:var(--muted);font-size:11px;padding:3px 10px;border-radius:100px">${s.time}</div>
       </div>
       <!-- Popup -->
-      <div id="${popId}" style="display:none;position:absolute;bottom:calc(100% + 8px);left:0;right:0;z-index:300;background:var(--surface2);border:1px solid var(--purple);border-radius:12px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,.5)">
+      <div id="desc-pop-${s.id}" style="display:none;position:absolute;bottom:calc(100% + 8px);left:0;right:0;z-index:300;background:var(--surface2);border:1px solid var(--purple);border-radius:12px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,.5)">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px">
           <div style="font-weight:700;font-size:13px;color:#f0eeff">${s.brand} · ${s.series}</div>
           <button onclick="event.stopPropagation();closeSvcPopup('${popId}')"
@@ -1685,7 +2081,7 @@ function renderAllServices(query){
   });
   el.innerHTML=Object.entries(groups).map(([carrier,svcs])=>`
     <div style="margin-bottom:28px">
-      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)">${carrier}</div>
+      <div style="font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid ${getCarrierColor(carrier)}44;color:${getCarrierColor(carrier)};text-shadow:0 0 12px ${getCarrierColor(carrier)},0 0 28px ${getCarrierColor(carrier)}88">${carrier}</div>
       <div style="display:flex;flex-direction:column;gap:8px">
         ${svcs.map(s=>{
           const sp=savePct(s);
@@ -1709,10 +2105,7 @@ function renderAllServices(query){
               </div>
               <!-- View description link -->
               <button onclick="event.stopPropagation();openSvcPopup('${descId}')"
-                style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;background:none;border:none;color:#60a5fa;font-size:12px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8" stroke-width="3"/><line x1="12" y1="12" x2="12" y2="17"/></svg>
-                View description
-              </button>
+                style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;background:none;border:none;color:#00f5ff;font-size:12px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px">View description</button>
             </div>
 
             <!-- Right: price + order button -->
@@ -1758,8 +2151,8 @@ function toggleInlineDesc(){
   const open=panel.style.display==="block";
   panel.style.display=open?"none":"block";
   if(btn)btn.innerHTML=open
-    ?`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8" stroke-width="3"/><line x1="12" y1="12" x2="12" y2="17"/></svg> View description`
-    :`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8" stroke-width="3"/><line x1="12" y1="12" x2="12" y2="17"/></svg> Hide description`;
+    ?`View description`
+    :`🍎 Hide description`;
 }
 function openSvcPopup(id){
   // Close any open popup first
@@ -1843,10 +2236,7 @@ function updateSvcDetail(){
         </div>
         <!-- View description link -->
         ${matchedSvc.description||true?`<button onclick="toggleInlineDesc()" id="inline-desc-btn"
-          style="display:inline-flex;align-items:center;gap:4px;background:none;border:none;color:#60a5fa;font-size:12px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8" stroke-width="3"/><line x1="12" y1="12" x2="12" y2="17"/></svg>
-          View description
-        </button>`:""}
+          style="display:inline-flex;align-items:center;gap:4px;background:none;border:none;color:#00f5ff;font-size:12px;font-weight:600;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px">View description</button>`:""}
       </div>
       <div style="text-align:right">
         ${hasDiscount?`<div style="font-size:12px;text-decoration:line-through;color:var(--muted)">$${matchedSvc.price.toFixed(2)}</div>`:""}
@@ -1980,16 +2370,18 @@ async function submitImeiCheck(){
 
   // Build a checkout for the IMEI check — reuse checkout modal
   // Store context so recordImeiOrder knows what to run after payment
+  sessionStorage.removeItem("pendingImeiCheck");
   pendingImeiCheck={type:selectedImeiCheckType,imei,imeiMasked:imei.slice(0,3)+"*****"+imei.slice(-4),email,accountId:currentUser?.id||null};
 
   // Open payment modal for IMEI check
   checkoutPending={
+    imei,
     imeiMasked:imei.slice(0,3)+"*****"+imei.slice(-4),
     email,name:currentUser?.name||"",
-    svc:{price:selectedImeiCheckType.price,carrier:"IMEI Check",stype:selectedImeiCheckType.label,series:"",brand:"",carrier:selectedImeiCheckType.label},
+    svc:{price:selectedImeiCheckType.price,label:selectedImeiCheckType.label,carrier:"IMEI Check",stype:selectedImeiCheckType.label,series:"",brand:"",sickwServiceId:selectedImeiCheckType.sickwServiceId||"",id:selectedImeiCheckType.id||""},
     isImeiCheck:true
   };
-  matchedSvc={price:selectedImeiCheckType.price,carrier:selectedImeiCheckType.label,stype:"IMEI Check",series:"",brand:selectedImeiCheckType.label,stripeLink:selectedImeiCheckType.stripeLink||payConfig.stripePaymentLink||""};
+  matchedSvc={price:selectedImeiCheckType.price,carrier:selectedImeiCheckType.label,stype:"IMEI Check",series:"",brand:selectedImeiCheckType.label,stripeLink:selectedImeiCheckType.stripeLink||payConfig.stripePaymentLink_disabled||""};
   document.getElementById("checkout-total").textContent="$"+selectedImeiCheckType.price.toFixed(2);
   document.getElementById("stripe-total").textContent="$"+selectedImeiCheckType.price.toFixed(2);
   document.getElementById("paypal-total").textContent="$"+selectedImeiCheckType.price.toFixed(2);
@@ -2035,14 +2427,15 @@ async function runImeiLookup(){
   const sickwServiceId=type.sickwServiceId;
   const sickwUrl=type.apiUrl||"https://sickw.com/api.php";
   let resultData=null,isLive=false;
-  if(sickwKey&&sickwServiceId){
+  if(sickwServiceId){
     try{
-      const res=await fetch(`${sickwUrl}?format=JSON&key=${sickwKey}&imei=${imei}&service=${sickwServiceId}`);
+      const res=await fetch('/.netlify/functions/sickw-check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({imei,serviceId:sickwServiceId,apiUrl:sickwUrl})});
       const data=await res.json();
       if(data&&data.result){resultData=data.result;isLive=true;}
       else throw new Error(data?.result||"No result from sickw.com");
     }catch(e){
-      resultData="API error: "+e.message+". Please contact support.";
+      resultData="Check failed: "+e.message+". Please contact us at rottenapplegsm@gmail.com or WhatsApp (323) 829-1991.";
+      isLive=false;
     }
   } else {
     // Demo result
@@ -2061,6 +2454,40 @@ async function runImeiLookup(){
   };
   imeiHistory.unshift(historyEntry);
 
+  // Save IMEI check as order to Supabase
+  var imeiOrder = {
+    id: historyEntry.id,
+    order_number: 0,
+    customer_name: currentUser ? currentUser.name : 'Guest',
+    email: email || '',
+    description: (type.label||'IMEI Check') + ' · ' + (imeiMasked||''),
+    imei: imeiMasked || '',
+    amount: parseFloat(type.price) || 0,
+    cost: 0,
+    payment_method: 'IMEI Check',
+    status: isLive ? 'Completed' : 'Processing',
+    placed: new Date().toISOString().split('T')[0],
+    completed: isLive ? new Date().toISOString().split('T')[0] : null,
+    account_id: accountId || null,
+    notes: 'Sickw service ID: ' + (type.sickwServiceId || '')
+  };
+  allOrders.unshift(imeiOrder);
+  saveOrders();
+
+  // Send results email to customer
+  if(email && typeof sendEmail!=="undefined" && payConfig.emailjsServiceId && payConfig.emailjsTemplateNew) {
+    sendEmail(payConfig, payConfig.emailjsTemplateNew, {
+      order_id: historyEntry.id,
+      customer_name: currentUser ? currentUser.name : 'Customer',
+      customer_email: email,
+      service: type.label + ' — IMEI Check Results',
+      imei_masked: imeiMasked,
+      amount: '$' + type.price.toFixed(2),
+      payment_method: 'IMEI Check',
+      placed: new Date().toLocaleDateString()
+    });
+  }
+
   // Suggest matching services based on result
   const suggestions=suggestServices(resultData,type.id);
 
@@ -2074,7 +2501,7 @@ async function runImeiLookup(){
             ${isLive?"✓ Live Result":"Demo Result"}
           </span>
         </div>
-        <div style="background:var(--surface2);border-radius:10px;padding:16px;font-size:13px;line-height:1.9;white-space:pre-wrap;word-break:break-word;color:#f0eeff;font-family:inherit">${sanitize(resultData)}</div>
+        <div style="background:var(--surface2);border-radius:10px;padding:16px;font-size:13px;line-height:1.9;word-break:break-word;color:#f0eeff">${formatImeiResult(resultData)}</div>
         ${accountId?`<div style="margin-top:12px;font-size:12px;color:var(--green)">✓ Saved to your account · View in My Account → IMEI Checks</div>`:`<div style="margin-top:12px;font-size:12px;color:var(--muted)">Sign in to save and view past checks in your account</div>`}
       </div>
       ${suggestions.length>0?`
@@ -2087,7 +2514,7 @@ async function runImeiLookup(){
             return`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;cursor:pointer"
               onclick="selectService(${s.id})" onmouseover="this.style.borderColor='var(--purple)'" onmouseout="this.style.borderColor='var(--border)'">
               <div>
-                <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">${s.carrier}</div>
+                <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;color:${getCarrierColor(s.carrier)};text-shadow:0 0 10px ${getCarrierColor(s.carrier)},0 0 20px ${getCarrierColor(s.carrier)}88">${s.carrier}</div>
                 <div style="font-weight:600;font-size:14px;margin-bottom:2px">${s.brand} · ${s.series}</div>
                 <span class="badge ${STYPE_CLASS[s.stype]||'stype-unlock'}">${s.stype}</span>
               </div>
@@ -2106,10 +2533,41 @@ async function runImeiLookup(){
   if(currentUser&&accountTab==="imei")renderAccountPage();
 }
 
+function formatImeiResult(raw){
+  if(!raw) return 'No result.';
+  var clean=String(raw).replace(/<br\s*\/?>/gi,'\n').replace(/<font[^>]*>/gi,'').replace(/<\/font>/gi,'').replace(/<[^>]+>/g,'');
+  return clean.split('\n').filter(function(l){return l.trim();}).map(function(line){
+    var idx=line.indexOf(':');
+    if(idx>0){var k=line.slice(0,idx).trim();var v=line.slice(idx+1).trim();
+      return '<div style="display:flex;gap:12px;padding:5px 0;border-bottom:1px solid rgba(0,245,255,0.08)"><span style="color:rgba(0,245,255,0.6);min-width:180px;font-size:12px;flex-shrink:0">'+k+'</span><span style="color:#ffffff;font-weight:600">'+v+'</span></div>';}
+    return '<div style="padding:5px 0;color:#f0eeff">'+line+'</div>';
+  }).join('');
+}
 function suggestServices(resultText,typeId){
-  const txt=(resultText||"").toLowerCase();
+  var cleanTxt=String(resultText||'').replace(/<[^>]+>/g,'').toLowerCase();
+  const txt=cleanTxt;
+  var isATT=txt.includes('at&t')||txt.includes('att');
+  var isTMobile=txt.includes('t-mobile')||txt.includes('tmobile');
+  var isVerizon=txt.includes('verizon');
+  var isCricket=txt.includes('cricket');
+  var isBoost=txt.includes('boost')||txt.includes('dish');
+  var isSpectrum=txt.includes('spectrum');
+  var isXfinity=txt.includes('xfinity');
+  var simLocked=txt.includes('locked');
+  var icloudOn=txt.includes('icloud')&&txt.includes(' on');
   const active=activeServices();
   let suggestions=[];
+
+  // Smart suggestions based on carrier detected in result
+  if(suggestions.length===0){
+    var matchCarrier = isATT?"AT&T":isTMobile?"T-Mobile":isVerizon?"Verizon":isCricket?"Cricket":isBoost?"Boost":isSpectrum?"Spectrum":isXfinity?"Xfinity Mobile":"";
+    if(matchCarrier){
+      suggestions=active.filter(function(s){return s.carrier.toLowerCase().includes(matchCarrier.toLowerCase());});
+    }
+    if(suggestions.length===0&&simLocked){
+      suggestions=active.filter(function(s){return s.stype.includes("Carrier Unlock");}).slice(0,3);
+    }
+  }
 
   // Blacklist check → suggest unbarring services for that carrier
   if(typeId==="blacklist_att")       suggestions=active.filter(s=>s.carrier.includes("AT&T")&&s.stype.includes("Blacklist"));
@@ -2155,7 +2613,7 @@ function openCheckout(){
   document.getElementById("paypal-total").textContent="$"+discPrice.toFixed(2);
   document.getElementById("checkout-order-summary").innerHTML=`
     <div style="font-weight:700;font-size:14px;margin-bottom:4px">${matchedSvc.brand} · ${matchedSvc.series}</div>
-    <div style="color:var(--muted);font-size:13px;margin-bottom:4px">${matchedSvc.carrier} · ${matchedSvc.stype}</div>
+    <div style="color:var(--muted);font-size:13px;margin-bottom:4px;color:${getCarrierColor(matchedSvc.carrier)};text-shadow:0 0 10px ${getCarrierColor(matchedSvc.carrier)}">${matchedSvc.carrier} · ${matchedSvc.stype}</div>
     <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:${savedAmt>0?6:0}px">
       <span style="color:var(--muted)">IMEI: ${imei.slice(0,3)}*****${imei.slice(-4)}</span>
       <span style="font-weight:700;color:var(--purpleL)">$${discPrice.toFixed(2)}</span>
@@ -2180,10 +2638,14 @@ function openCheckout(){
 }
 function closeCheckout(){document.getElementById("checkout-overlay").classList.remove("open")}
 function setCheckoutStep(step){
-  ["method","stripe","paypal","crypto","done"].forEach(s=>document.getElementById("step-"+s).style.display="none");
+  ["method","stripe","paypal","crypto","zelle","done"].forEach(s=>{var el=document.getElementById("step-"+s);if(el)el.style.display="none";});
   document.getElementById("step-"+step).style.display="block";
   const backBtn=document.getElementById("checkout-back");
   backBtn.style.display=(step!=="method"&&step!=="done")?"block":"none";
+  if(step==="method"){
+    var zb=document.getElementById('zelle-method-btn');
+    if(zb){var amt=checkoutPending?checkoutPending.discPrice||(checkoutPending.svc&&checkoutPending.svc.price)||0:matchedSvc?matchedSvc.price:0;zb.style.display=amt>=50?'flex':'none';}
+  }
   if(step==="paypal")mountPayPal();
   if(step==="stripe"){
     const total=matchedSvc?matchedSvc.price:0;
@@ -2191,7 +2653,12 @@ function setCheckoutStep(step){
     document.getElementById("stripe-order-detail").textContent=
       matchedSvc?`${matchedSvc.brand} · ${matchedSvc.series} · ${matchedSvc.carrier}`:"";
     const warnEl=document.getElementById("stripe-key-warn");
-    warnEl.style.display="none";
+    warnEl.style.display=payConfig.stripePublicKey&&payConfig.stripePaymentLink_disabled?"none":"block";
+    if(!payConfig.stripePublicKey){
+      warnEl.textContent="⚠ Stripe publishable key not configured. Go to Admin → Payment Config.";
+    } else if(!payConfig.stripePaymentLink_disabled){
+      warnEl.textContent="⚠  not set. Go to Admin → Payment Config → .";
+    }
   }
 }
 function checkoutBack(){setCheckoutStep("method")}
@@ -2207,29 +2674,44 @@ function recordOrder(method, initialStatus){
   if(!checkoutPending)return;
   // IMEI check payment — close modal and run the lookup
   if(checkoutPending.isImeiCheck){
-    if(method==="wallet"&&currentUser)updateBalance(currentUser.id,-checkoutPending.svc.price);
-    closeCheckout();
-    runImeiLookup();
+    if(method==="wallet"&&currentUser){
+      updateBalance(currentUser.id,-checkoutPending.svc.price);
+      closeCheckout();
+      runImeiLookup();
+      return;
+    }
+    // For Stripe/PayPal - save IMEI check to sessionStorage before redirect
+    try{
+      sessionStorage.setItem("pendingImeiCheck", JSON.stringify({
+        type: checkoutPending.svc,
+        imei: checkoutPending.imei||checkoutPending.imeiMasked,
+        imeiMasked: checkoutPending.imeiMasked,
+        email: checkoutPending.email,
+        accountId: currentUser?currentUser.id:null
+      }));
+    }catch(e){}
     return;
   }
   const finalPrice=checkoutPending.discPrice||matchedSvc.price;
+  var orderDesc = matchedSvc.carrier+' – '+matchedSvc.stype+' – '+matchedSvc.series;
   const o={
     id:"RA-"+secureId(8),
     orderNumber:++orderCounter,
     accountId:currentUser?currentUser.id:null,
-    desc:`${matchedSvc.carrier} – ${matchedSvc.stype} – ${matchedSvc.series}`,
+    desc:orderDesc,
     carrier:matchedSvc.carrier,stype:matchedSvc.stype,series:matchedSvc.series,
     brand:matchedSvc.brand||"",
-    name:checkoutPending.name||"",
+    name:checkoutPending.name||"Guest",
     imeiMasked:checkoutPending.imeiMasked,
     email:checkoutPending.email,
     amount:finalPrice,
     originalPrice:matchedSvc.price,
     tierDiscount:checkoutPending.tier?.discount||0,
     cost:parseFloat((matchedSvc.cost||0).toFixed(2)),
-    placed:new Date().toLocaleString(),
-    status:initialStatus||"Processing",paymentMethod:method,
-    supplierOrderId:"",notes:""
+    placed:new Date().toISOString().split('T')[0],
+    status:initialStatus||"Pending Verification",paymentMethod:method,
+    supplierOrderId:"",notes:"",
+    supplier:matchedSvc.supplier||""
   };
   allOrders.unshift(o);
   // Auto-submit to supplier API if service has apiServiceId configured
@@ -2237,6 +2719,7 @@ function recordOrder(method, initialStatus){
     placeSupplierOrder(o, matchedSvc).catch(()=>{});
   }
   if(method==="wallet"&&currentUser)updateBalance(currentUser.id,-matchedSvc.price);
+  saveOrders();
   notifyNew(payConfig,o);
   document.getElementById("order-imei").value="";
   if(document.getElementById("order-email"))document.getElementById("order-email").value="";
@@ -2256,7 +2739,8 @@ function launchStripeCheckout(){
   const errEl=document.getElementById("stripe-error");
   errEl.style.display="none";
   if(!pk){
-    document.getElementById("stripe-key-warn").style.display="none";
+    document.getElementById("stripe-key-warn").style.display="block";
+    document.getElementById("stripe-key-warn").textContent="⚠ Stripe not configured. Contact support.";
     return;
   }
   if(!checkoutPending)return;
@@ -2270,13 +2754,24 @@ function launchStripeCheckout(){
   const desc=`${matchedSvc.carrier} – ${matchedSvc.stype} – ${matchedSvc.series}`;
 
   // Save pending order to sessionStorage so we can record it on return
-  sessionStorage.setItem("pendingStripeOrder",JSON.stringify({
-    orderId, carrier:matchedSvc.carrier, stype:matchedSvc.stype,
-    series:matchedSvc.series, brand:matchedSvc.brand||"",
-    price:finalPrice, imeiMasked:checkoutPending.imeiMasked,
-    email:checkoutPending.email, name:checkoutPending.name,
-    paymentMethod:"stripe"
-  }));
+  // Save IMEI check or regular order to sessionStorage before Stripe redirect
+  if(checkoutPending.isImeiCheck){
+    sessionStorage.setItem("pendingImeiCheck", JSON.stringify({
+      type: checkoutPending.svc,
+      imei: checkoutPending.imei||checkoutPending.imeiMasked,
+      imeiMasked: checkoutPending.imeiMasked,
+      email: checkoutPending.email,
+      accountId: currentUser?currentUser.id:null
+    }));
+  } else {
+    sessionStorage.setItem("pendingStripeOrder",JSON.stringify({
+      orderId, carrier:matchedSvc.carrier, stype:matchedSvc.stype,
+      series:matchedSvc.series, brand:matchedSvc.brand||"",
+      price:finalPrice, imeiMasked:checkoutPending.imeiMasked,
+      email:checkoutPending.email, name:checkoutPending.name,
+      paymentMethod:"stripe"
+    }));
+  }
 
   fetch("/.netlify/functions/stripe-create-session",{
     method:"POST",
@@ -2286,7 +2781,17 @@ function launchStripeCheckout(){
       currency:"USD",
       description:desc,
       orderId,
-      customerEmail:checkoutPending.email||""
+      customerEmail:checkoutPending.email||"",
+      metadata:{
+        orderId:orderId,
+        orderNumber:String(orderCounter||0),
+        customerName:checkoutPending.name||"Guest",
+        email:checkoutPending.email||"",
+        description:desc,
+        imei:checkoutPending.imei||"",
+        cost:String(checkoutPending.svc?checkoutPending.svc.cost||0:0),
+        accountId:currentUser?currentUser.id:""
+      }
     })
   })
   .then(r=>r.json())
@@ -2375,16 +2880,27 @@ async function mountPayPal(){
         loadEl.style.display="block";
         loadEl.textContent="Confirming payment…";
         try{
+          const finalPP=checkoutPending?.discPrice||matchedSvc?.price||0;
           const res=await fetch("/.netlify/functions/paypal-capture-order",{
             method:"POST",
             headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({orderID:data.orderID})
+            body:JSON.stringify({
+              orderID:data.orderID,
+              orderId:"RA-"+secureId(8),
+              orderNumber:String(orderCounter||0),
+              customerName:checkoutPending?.name||"Guest",
+              email:checkoutPending?.email||"",
+              description:matchedSvc?matchedSvc.carrier+" – "+matchedSvc.stype+" – "+matchedSvc.series:"",
+              imei:checkoutPending?.imeiMasked||"",
+              cost:String(matchedSvc?.cost||0),
+              accountId:currentUser?currentUser.id:""
+            })
           });
           if(!res.ok) throw new Error("Payment capture failed. Please contact support.");
           const capture=await res.json();
-          if(capture.status==="COMPLETED"){
+          if(capture.success){
             recordOrder("paypal");
-            setCheckoutStep("done");
+            if(!checkoutPending?.isImeiCheck) setCheckoutStep("done");
           } else {
             throw new Error("Payment not completed. Status: "+capture.status);
           }
@@ -2432,6 +2948,27 @@ function checkStripeReturn(){
   const saved=sessionStorage.getItem("pendingStripeOrder")||sessionStorage.getItem("pendingOrder");
   sessionStorage.removeItem("pendingStripeOrder");
   sessionStorage.removeItem("pendingOrder");
+  // Check if it was an IMEI check payment
+  const savedImei = sessionStorage.getItem("pendingImeiCheck");
+  console.log("pendingImeiCheck from sessionStorage:", savedImei);
+  sessionStorage.removeItem("pendingImeiCheck");
+  if(savedImei){
+    try{
+      const imeiData = JSON.parse(savedImei);
+      pendingImeiCheck = imeiData;
+      showToast("Payment confirmed! Running IMEI check...");
+      // Wait for Supabase/payConfig to load before running check
+      var imeiWait = 0;
+      var imeiInterval = setInterval(function(){
+        imeiWait++;
+        if(typeof supaGet !== "undefined" || imeiWait > 10){
+          clearInterval(imeiInterval);
+          runImeiLookup();
+        }
+      }, 500);
+      return;
+    }catch(e){}
+  }
   if(!saved){showToast("Payment received! Contact us with your order details.");return}
   try{
     const o=JSON.parse(saved);
@@ -2463,7 +3000,7 @@ function toggleCryptoCheck(){
   const btn=document.getElementById("crypto-submit-btn");
   if(cryptoChecked){
     box.textContent="✓";box.style.background="var(--purpleL)";box.style.borderColor="var(--purpleL)";box.style.color="#fff";
-    label.style.borderColor="var(--purpleL)";label.style.background="rgba(124,58,237,.08)";
+    label.style.borderColor="var(--purpleL)";label.style.background="rgba(0,245,255,.05)";
     btn.disabled=false;btn.style.background="var(--purpleL)";btn.style.color="#fff";btn.style.cursor="pointer";
     btn.textContent="✅ Submit Order — Pending Verification";
   } else {
@@ -2496,6 +3033,15 @@ function setCheckoutStep_crypto(type){
   document.getElementById("crypto-amount").textContent=amountStr;
   document.getElementById("crypto-label").textContent="equivalent in "+(isUsdt?"USDT":"BTC");
   document.getElementById("crypto-address").textContent=addr||"Address not configured";
+  var _qrAddr=addr;var _qrTry=function(){var qrc=document.getElementById("crypto-qr-container");if(qrc&&_qrAddr){var qurl="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data="+encodeURIComponent(_qrAddr)+"&bgcolor=ffffff&color=000000&format=png";qrc.innerHTML="<img src='"+qurl+"' width=160 height=160 style='display:block;border-radius:8px' alt='QR Code'>";}else if(!qrc){setTimeout(_qrTry,200);}};setTimeout(_qrTry,300);
+  // Generate QR code
+  const qrContainer = document.getElementById("crypto-qr-container");
+  if(qrContainer && addr){
+    qrContainer.innerHTML = "";
+    if(typeof QRCode !== "undefined"){
+      new QRCode(qrContainer,{text:addr,width:160,height:160,colorDark:"#000",colorLight:"#fff"});
+    }
+  }
   const warn=document.getElementById("crypto-network-warn");
   if(warn) warn.textContent=networkShort;
   const step=document.getElementById("crypto-step-amount");
@@ -2543,7 +3089,7 @@ function openDeposit(){
 function closeDeposit(){document.getElementById("deposit-overlay").classList.remove("open")}
 function renderDepositQuickBtns(){
   document.getElementById("deposit-quick-btns").innerHTML=DEP_AMOUNTS.map(a=>`
-    <button onclick="setDepositAmt(${a})" id="dep-btn-${a}" style="flex:1 1 60px;padding:10px 4px;border-radius:10px;border:1.5px solid ${depositAmt===a&&!depositCustom?"var(--purple)":"var(--border)"};background:${depositAmt===a&&!depositCustom?"rgba(124,58,237,.2)":"var(--surface2)"};color:${depositAmt===a&&!depositCustom?"var(--purpleL)":"var(--muted)"};font-weight:700;font-size:14px;cursor:pointer">$${a}</button>`).join("")
+    <button onclick="setDepositAmt(${a})" id="dep-btn-${a}" style="flex:1 1 60px;padding:10px 4px;border-radius:10px;border:1.5px solid ${depositAmt===a&&!depositCustom?"var(--purple)":"var(--border)"};background:${depositAmt===a&&!depositCustom?"rgba(0,245,255,.1)":"var(--surface2)"};color:${depositAmt===a&&!depositCustom?"var(--purpleL)":"var(--muted)"};font-weight:700;font-size:14px;cursor:pointer">$${a}</button>`).join("")
 }
 function setDepositAmt(a){depositAmt=a;depositCustom="";document.getElementById("deposit-custom").value="";document.getElementById("deposit-over-limit").style.display="none";renderDepositQuickBtns();updateDepositDisplay()}
 function depositCustomChange(v){depositCustom=v;depositAmt=0;renderDepositQuickBtns();const over=parseFloat(v)>MAX_DEP;document.getElementById("deposit-over-limit").style.display=over?"block":"none";updateDepositDisplay()}
@@ -2696,7 +3242,7 @@ function renderAccountPage(){
               <span style="font-weight:600;font-size:13px;color:var(--muted)">${o.id}</span>
               ${statusBadge(o.status)}
             </div>
-            <div style="font-weight:600;font-size:14px;margin-bottom:4px">${o.carrier} – ${o.stype}</div>
+            <div style="font-weight:600;font-size:14px;margin-bottom:4px;color:${getCarrierColor(o.carrier)};text-shadow:0 0 8px ${getCarrierColor(o.carrier)}88">${o.carrier} – ${o.stype}</div>
             <div style="color:var(--muted);font-size:13px">${o.series}</div>
           </div>
           <div style="text-align:right">
@@ -2705,7 +3251,7 @@ function renderAccountPage(){
           </div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;border-top:1px solid var(--border);padding-top:14px">
-          ${[["IMEI",o.imeiMasked],["Email",o.email],["Placed",o.placed],["Supplier ID",o.supplierOrderId||"Processing"]].map(([l,v])=>`<div><div style="color:var(--muted);font-size:11px;margin-bottom:2px">${l}</div><div style="font-size:13px;font-weight:500;word-break:break-all">${v}</div></div>`).join("")}
+          ${[["IMEI",o.imeiMasked||o.imei||"—"],["Email",o.email],["Placed",o.placed],["Supplier ID",o.supplierOrderId||"Processing"]].map(([l,v])=>`<div><div style="color:var(--muted);font-size:11px;margin-bottom:2px">${l}</div><div style="font-size:13px;font-weight:500;word-break:break-all">${v}</div></div>`).join("")}
         </div>
       </div>`).join("")
     }
@@ -2762,7 +3308,7 @@ function renderAccountPage(){
               <div style="font-size:12px;color:var(--muted);margin-bottom:10px">${t.date}</div>
               <div style="background:var(--surface2);border-radius:8px;padding:12px;font-size:13px;color:#f0eeff;line-height:1.6">${sanitize(t.message)}</div>
               ${t.reply?`
-              <div style="margin-top:10px;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:8px;padding:12px">
+              <div style="margin-top:10px;background:rgba(0,245,255,.05);border:1px solid rgba(0,245,255,.1);border-radius:8px;padding:12px">
                 <div style="font-size:11px;font-weight:700;color:var(--purpleL);margin-bottom:4px">Rotten Apple GSM replied:</div>
                 <div style="font-size:13px;color:#f0eeff;line-height:1.6">${sanitize(t.reply)}</div>
               </div>`:""}
@@ -2909,8 +3455,8 @@ function confirmDeleteAccount(){
 // ADMIN PAGE
 // ═══════════════════════════════════════════════════════════════════
 // Admin credentials — password stored as SHA-256 hash, never plaintext
-// To change admin password: generate SHA-256 hash of new password and replace the hash below
-const ADMIN_PW_HASH="04092b2cb2449689d9aabb2f76147047cf7abf027e7d95b053c53f8ebad5a73b";
+// Hash of "RottenApple2025" — change by running: crypto.subtle.digest('SHA-256', new TextEncoder().encode('YourNewPassword')).then(b=>console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
+const ADMIN_PW_HASH="416784d053c2d34a69e303e483b2c8482c65d93e6ba8d46d56b3d2de90fec163";
 let adminLockout=false;
 function renderAdminPage(){
   const el=document.getElementById("admin-content");
@@ -2919,6 +3465,10 @@ function renderAdminPage(){
       <div style="font-size:22px;font-weight:800;margin-bottom:6px">Admin Login</div>
       <div style="color:var(--muted);font-size:13px;margin-bottom:22px">Strong password required.</div>
       <input class="inp" type="password" id="admin-pw-input" placeholder="Admin password" style="margin-bottom:12px" onkeydown="if(event.key==='Enter')adminLogin()" ${adminLockout?"disabled":""}/>
+      <div style="margin-bottom:12px">
+        <div style="font-size:12px;color:#00f5ff;font-weight:600;margin-bottom:6px;text-align:left">🔐 Google Authenticator Code</div>
+        <input class="inp" type="number" id="admin-totp-input" placeholder="000000" style="letter-spacing:8px;text-align:center;font-size:22px;font-weight:700" maxlength="6" onkeydown="if(event.key==='Enter')adminLogin()" ${adminLockout?"disabled":""}/>
+      </div>
       <button class="btn" onclick="adminLogin()" style="width:100%" ${adminLockout?"disabled":""}>
         ${adminLockout?"Locked":"Login"}
       </button>
@@ -2933,7 +3483,6 @@ function renderAdminPage(){
     ["suppliers","Suppliers"],
     ["services","Services"],
     ["tickets",`Tickets (${tickets.filter(t=>t.status==="Open").length})`],
-    ["reports","Reports"],
     ["payments","Payment Config"],
   ];
   let content="";
@@ -2961,7 +3510,7 @@ function renderAdminPage(){
           {label:"Total Cost",value:"$"+totalCost.toFixed(2),icon:"💸",color:"var(--orange)"},
           {label:"Total Profit",value:"$"+totalProfit.toFixed(2),icon:"📈",color:totalProfit>=0?"var(--green)":"var(--red)"},
           {label:"Open Tickets",value:openTickets.length,icon:"🎫",color:openTickets.length>0?"var(--red)":"var(--muted)"},
-        ].map(k=>`<div class="card-sm" style="text-align:center;padding:16px 12px">
+        ].map(k=>`<div class="card-sm" style="padding:16px;text-align:center">
           <div style="font-size:24px;margin-bottom:6px">${k.icon}</div>
           <div style="font-weight:800;font-size:20px;color:${k.color};margin-bottom:4px">${k.value}</div>
           <div style="font-size:12px;color:var(--muted)">${k.label}</div>
@@ -2995,7 +3544,7 @@ function renderAdminPage(){
           <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:12px;flex-wrap:wrap">
             <div>
               <span style="font-weight:700;color:var(--purpleL)">#${o.orderNumber||"—"}</span>
-              <span style="font-size:13px;color:var(--muted);margin-left:8px">${o.carrier} · ${o.stype}</span>
+              <span style="font-size:13px;color:var(;margin-left:8px;color:${getCarrierColor(o.carrier)};text-shadow:0 0 8px ${getCarrierColor(o.carrier)}88">${o.carrier} · ${o.stype}</span>
             </div>
             <div style="display:flex;align-items:center;gap:10px">
               <span style="font-weight:700;font-size:13px;color:var(--green)">$${o.amount.toFixed(2)}</span>
@@ -3098,7 +3647,7 @@ function renderAdminPage(){
           </div>
         </div>
         <div style="background:var(--surface2);border-radius:8px;padding:12px;font-size:13px;color:#f0eeff;line-height:1.6;margin-bottom:12px">${sanitize(t.message)}</div>
-        ${t.reply?`<div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:8px;padding:12px;font-size:13px;color:var(--purpleL);line-height:1.6;margin-bottom:10px"><span style="font-weight:700">Your Reply:</span> ${sanitize(t.reply)}</div>`:""}
+        ${t.reply?`<div style="background:rgba(0,245,255,.05);border:1px solid rgba(0,245,255,.1);border-radius:8px;padding:12px;font-size:13px;color:#ffffff;line-height:1.6;margin-bottom:10px"><span style="font-weight:700">Your Reply:</span> ${sanitize(t.reply)}</div>`:""}
         <div style="display:flex;gap:8px">
           <input class="inp" style="flex:1;font-size:13px;padding:8px 12px" placeholder="Type a reply…" id="ticket-reply-${i}"/>
           <button class="btn" style="padding:8px 16px;font-size:13px" onclick="replyTicket(${i})">Reply</button>
@@ -3156,7 +3705,7 @@ function renderAdminPage(){
             const pct=totalRev>0?Math.round((data.rev/totalRev)*100):0;
             return`<div>
               <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-                <span style="color:#f0eeff">${carrier}</span>
+                <span style="color:${getCarrierColor(carrier)};text-shadow:0 0 8px ${getCarrierColor(carrier)}88;font-weight:700">${carrier}</span>
                 <span style="color:var(--green);font-weight:700">$${data.rev.toFixed(2)} · ${data.count} orders</span>
               </div>
               <div style="height:6px;background:var(--surface3);border-radius:100px">
@@ -3197,7 +3746,7 @@ function renderAdminPage(){
                 return`<tr style="border-bottom:1px solid var(--border)">
                   <td style="padding:8px 10px;font-weight:700;color:var(--purpleL)">#${o.orderNumber||"—"}</td>
                   <td style="padding:8px 10px;font-family:monospace;font-size:11px;color:var(--muted)">${o.id}</td>
-                  <td style="padding:8px 10px;white-space:nowrap">${o.carrier} · ${o.stype}</td>
+                  <td style="padding:8px 10px;white-space:nowrap;color:${getCarrierColor(o.carrier)};text-shadow:0 0 8px ${getCarrierColor(o.carrier)}">${o.carrier} · ${o.stype}</td>
                   <td style="padding:8px 10px;color:var(--muted)">${o.name||"Guest"}</td>
                   <td style="padding:8px 10px;font-weight:700;color:var(--green)">$${o.amount.toFixed(2)}</td>
                   <td style="padding:8px 10px;color:var(--orange)">$${cost.toFixed(2)}</td>
@@ -3241,7 +3790,7 @@ function renderAdminPage(){
           <!-- Service info -->
           <div style="background:var(--surface2);border-radius:10px;padding:12px 14px;margin-bottom:12px">
             <div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Service</div>
-            <div style="font-weight:700;font-size:14px;margin-bottom:2px">${o.carrier} — ${o.stype}</div>
+            <div style="font-weight:700;font-size:14px;margin-bottom:2px;color:${getCarrierColor(o.carrier||o.description)};text-shadow:0 0 8px ${getCarrierColor(o.carrier||o.description)}">${o.carrier&&o.stype?o.carrier+" — "+o.stype:o.description||o.desc||"Service"}</div>
             <div style="font-size:13px;color:var(--muted)">${o.brand?o.brand+" · ":""}${o.series||""}</div>
           </div>
 
@@ -3277,10 +3826,18 @@ function renderAdminPage(){
             <input class="inp" style="flex:1;min-width:160px;padding:8px 12px;font-size:13px" placeholder="Admin notes…" value="${sanitize(o.notes||"")}" onchange="updateOrderField('${o.id}','notes',this.value)"/>
             ${o.supplierOrderId?`<button class="btn-ghost" style="padding:8px 14px;font-size:12px" onclick="refreshOrderFromSupplier('${o.id}')">🔄 Check Supplier</button>`:""}
             ${o.status==="Pending Verification"?`<button class="btn" style="padding:8px 16px;font-size:13px;background:rgba(59,130,246,.8)" onclick="confirmCryptoPayment('${o.id}')">✅ Confirm Payment</button>`:""}
-            <button class="btn" style="padding:8px 16px;font-size:13px" onclick="showToast('Order #${o.orderNumber||o.id} saved.')">Save</button>
+            <button class="btn" style="padding:8px 16px;font-size:13px;background:#00f5ff;border:1px solid #00f5ff;color:#000000 !important;font-weight:700" onclick="showToast('Order #${o.orderNumber||o.id} saved.')">💾 Save</button>
+            <button class="btn" style="padding:8px 16px;font-size:13px;background:#ef4444;border:1px solid #ef4444;color:#ffffff !important;font-weight:700" onclick="deleteOrder('${o.id}','${o.orderNumber||o.id}')">🗑 Delete</button>
           </div>
         </div>`}).join("")
   } else if(adminTab==="accounts"){
+    // Reload accounts from Supabase fresh
+    supaGet('accounts','order=created_at.desc').then(function(data){
+      if(data&&data.length){
+        accounts=data.map(function(r){return {id:r.id,name:r.name,email:r.email,passwordHash:r.password_hash||'',totpSecret:r.totp_secret||'',totpSecret:r.totp_secret||'',balance:parseFloat(r.balance)||0,spend:0,createdAt:r.created_at,loginCount:1};});
+        saveAccounts();
+      }
+    }).catch(function(e){console.log('accounts reload error:',e);});
     content=accounts.length===0
       ?`<div style="text-align:center;padding:60px;color:var(--muted)">No accounts yet.</div>`
       :accounts.map(acc=>{
@@ -3298,42 +3855,62 @@ function renderAdminPage(){
             <div style="text-align:right">
               <div style="font-weight:800;font-size:20px;color:var(--purpleL)">$${acc.balance.toFixed(2)}</div>
               <div style="color:var(--muted);font-size:12px">balance · ${accOrders.length} orders</div>
+              <button onclick="deleteAccount('${acc.id}','${acc.name}')" style="margin-top:8px;background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Delete Account</button>
+              <button onclick="adminSendEmail('${acc.email}','${acc.name}')" style="margin-top:4px;background:rgba(0,245,255,.1);color:#00f5ff;border:1px solid rgba(0,245,255,.3);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">✉ Send Email</button>
+              <button onclick="adminReset2FA('${acc.id}','${acc.name}')" style="margin-top:4px;background:rgba(0,245,255,.1);color:#ffffff;border:1px solid rgba(0,245,255,.18);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-weight:600">Reset 2FA</button>
+              
             </div>
           </div>
-          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-            <span style="color:var(--muted);font-size:13px">Adjust balance:</span>
-            ${[-50,-20,-10,10,20,50].map(d=>`<button onclick="adminAdjustBalance('${acc.id}',${d},'${acc.name}')" style="padding:5px 10px;border-radius:7px;border:1px solid ${d>0?"rgba(34,197,94,.3)":"rgba(239,68,68,.3)"};background:${d>0?"rgba(34,197,94,.08)":"rgba(239,68,68,.08)"};color:${d>0?"var(--green)":"var(--red)"};cursor:pointer;font-size:13px;font-weight:600">${d>0?"+":""}${d}</button>`).join("")}
-          </div>
+          
         </div>`}).join("")
   } else if(adminTab==="imei_admin"){
-    content=imeiHistory.length===0
-      ?`<div style="text-align:center;padding:60px;color:var(--muted)">No IMEI checks yet.</div>`
-      :imeiHistory.map(h=>{
-        const acc=h.accountId?accounts.find(a=>a.id===h.accountId):null;
-        return`<div class="card-sm" style="margin-bottom:12px">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px">
-            <div>
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
-                <span style="font-size:16px">${h.typeIcon}</span>
-                <span style="font-weight:700;font-size:14px">${h.typeLabel}</span>
-                <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;${h.isLive?"background:rgba(34,197,94,.15);color:var(--green)":"background:rgba(249,115,22,.12);color:var(--orange)"}">${h.isLive?"Live":"Demo"}</span>
-              </div>
-              <div style="color:var(--muted);font-size:12px">${acc?acc.name+" ("+acc.email+")":h.email||"Guest"} · IMEI: ${h.imeiMasked}</div>
-              <div style="color:var(--muted);font-size:12px">${h.date}</div>
-            </div>
-            <div style="font-weight:700;font-size:15px;color:var(--purpleL)">$${h.price.toFixed(2)}</div>
-          </div>
-          <div style="background:var(--surface3);border-radius:8px;padding:12px;font-size:12px;line-height:1.8;white-space:pre-wrap;word-break:break-word;color:#f0eeff;max-height:140px;overflow-y:auto">${sanitize(h.result)}</div>
-        </div>`}).join("")
+    content=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-weight:700;font-size:18px">IMEI Check Services</div>
+      <button class="btn" onclick="addImeiCheckType();renderAdminPage();" style="padding:8px 16px;font-size:13px">+ Add New Check</button>
+    </div>
+    ` + imeiCheckTypes.map((t,i)=>`
+    <div style="background:var(--surface3);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:22px">${t.icon||'🔍'}</span>
+          <input class="inp" value="${sanitize(t.label||'')}" onblur="imeiCheckTypes[${i}].label=this.value;saveImeiCheckTypes()" style="font-weight:700;font-size:14px;width:220px"/>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px">
+            <input type="checkbox" ${t.active!==false?'checked':''} onchange="imeiCheckTypes[${i}].active=this.checked;saveImeiCheckTypes()" style="accent-color:var(--blue)"/> Active
+          </label>
+          <button onclick="imeiCheckTypes.splice(${i},1);saveImeiCheckTypes();renderAdminPage()" style="background:rgba(239,68,68,.15);color:#f87171;border:none;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:12px">✕ Remove</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Price ($)</div>
+          <input class="inp" type="number" step="0.01" value="${t.price||0}" onblur="imeiCheckTypes[${i}].price=parseFloat(this.value)||0;saveImeiCheckTypes()" style="font-size:14px"/>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Icon (emoji)</div>
+          <input class="inp" value="${sanitize(t.icon||'🔍')}" onblur="imeiCheckTypes[${i}].icon=this.value;saveImeiCheckTypes()" style="font-size:14px"/>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Description</div>
+      <input class="inp" value="${sanitize(t.desc||t.description||'')}" onblur="imeiCheckTypes[${i}].desc=this.value;imeiCheckTypes[${i}].description=this.value;saveImeiCheckTypes()" style="font-size:13px;margin-bottom:10px"/>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Sickw Service ID</div>
+      <input class="inp" value="${sanitize(t.sickwServiceId||t.apiServiceId||'')}" onblur="imeiCheckTypes[${i}].sickwServiceId=this.value;saveImeiCheckTypes()" style="font-size:13px"/>
+      <div style="margin-top:10px;font-size:12px;color:var(--green)">✓ Live — $${(t.price||0).toFixed(2)} per check</div>
+    </div>
+    `).join('') + `
+    <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">
+      ${imeiCheckTypes.length} check types · Changes save automatically
+    </div>`
   } else if(adminTab==="services"){
     const carriers=["T-Mobile / MetroPCS / Sprint","AT&T","Cricket","Verizon","Boost Mobile","Claro","Samsung WorldWide","Spectrum","Xfinity Mobile","Philippines Globe","US Reseller Flex","Xiaomi","Tecno / Infinix"];
     const stypes=["Carrier Unlock","Blacklist / Unbarring","FRP Bypass","MDM Remove","Mi Account Remove"];
     const brands=["Apple iPhone","Samsung","Any Device","Xiaomi","Tecno/Infinix"];
     content=`<div style="display:flex;gap:12px;margin-bottom:14px;align-items:center;flex-wrap:wrap">
       <span style="color:var(--muted);font-size:13px">${services.length} services</span>
-        <input class="inp" style="width:200px;padding:8px 12px" placeholder="Search…" id="svc-search" oninput="renderAdminServices(this.value)"/>
-      </div>
-      <button onclick="saveServicesToStorage();showToast('✅ All prices saved!');" style="padding:8px 18px;border-radius:10px;border:none;background:var(--purpleL);color:#fff;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">💾 Save All Prices</button>
+        <button onclick="deployToGitHub()" style="padding:6px 14px;border-radius:8px;border:none;background:#00ccee;color:#fff;font-size:12px;font-weight:700;cursor:pointer;margin-left:8px">🚀 Deploy Changes</button> <button onclick="saveServicesToStorage();showToast('Prices saved ✓');" style="padding:6px 14px;border-radius:8px;border:none;background:rgba(0,245,255,.2);color:#ffffff;font-size:12px;font-weight:700;cursor:pointer;border:1px solid rgba(0,245,255,.6);text-shadow:none">💾 Save All</button>
+      <input class="inp" style="width:240px;padding:8px 12px" placeholder="Search…" id="svc-search" oninput="renderAdminServices(this.value)"/>
     </div>
     <div id="admin-svc-list"></div>
     <div class="card-sm" style="margin-top:18px">
@@ -3348,16 +3925,23 @@ function renderAdminPage(){
         <div><label class="lbl">Cost $</label><input class="inp" type="number" id="ns-cost" placeholder="0"/></div>
         <div><label class="lbl">Turnaround</label><input class="inp" id="ns-time" placeholder="24 hrs"/></div>
         <div><label class="lbl">Success %</label><input class="inp" id="ns-rate" placeholder="100%"/></div>
-
-        <div style="grid-column:1/-1">
-          <label class="lbl">Service Description <span style="font-weight:400;color:var(--muted)">(shown to customers when selecting this service)</span></label>
-          <textarea class="inp" id="ns-description" placeholder="e.g. Permanently unlocks your iPhone from T-Mobile so you can use any carrier worldwide. Phone must be fully paid off." style="resize:vertical;min-height:68px;line-height:1.5"></textarea>
-        </div>
-        <div style="grid-column:1/-1;margin-top:4px"><button class="btn" onclick="addService()" style="padding:11px 28px">+ Add Service</button></div>
+      <div style="grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--border)"><input type="checkbox" id="ns-active" checked style="accent-color:var(--purpleL);width:16px;height:16px;cursor:pointer"/><span style="font-size:13px;font-weight:600;color:var(--text)">Publish immediately (visible to customers)</span></div>
+      <div style="grid-column:1/-1"><div style="font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600">Supplier / Source</div><input class="inp" id="ns-supplier" placeholder="e.g. iFoneUnlock, SNFusions, sickw" style="width:100%"/></div>
+      <div style="grid-column:1/-1;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:10px 0;border-top:1px solid var(--border)">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase">⚡ Sickw Auto-Unlock</span>
+        <label style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--text);cursor:pointer"><input type="checkbox" id="ns-sickauto" style="accent-color:var(--purpleL)"/> Auto-submit via sickw</label>
+        <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Sickw Service ID</div><input class="inp" id="ns-sickwid" placeholder="e.g. 14" style="width:110px;padding:6px 10px;font-size:13px;font-family:monospace"/></div>
+      <button class="btn" onclick="addService()" style="margin-top:12px;width:100%;padding:12px;font-size:15px;font-weight:700">+ Add Service to List</button>
       </div>
     </div>`;
   } else if(adminTab==="payments"){
-    content=`<div style="display:flex;flex-direction:column;gap:20px;max-width:660px">
+    content=`<div class="card-sm" style="margin-bottom:20px;border:1px solid rgba(0,245,255,.25)">
+          <div style="font-weight:700;font-size:16px;margin-bottom:4px">🚀 GitHub Deploy Token</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:10px">Enter once. Use to sync all price and service changes to every device instantly.</div>
+          <input class="inp" placeholder="ghp_..." value="${sanitize(payConfig.githubToken||"")}" onblur="payConfig.githubToken=this.value;savePayConfig();showToast('Token saved.');" style="font-family:monospace;font-size:13px;width:100%"/>
+          <div style="margin-top:10px;font-size:12px;color:var(--muted)">Get token: github.com/settings/tokens → Generate new → select <b>repo</b> scope</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:20px;max-width:660px">
 
       <!-- PayPal -->
       <div class="card-sm">
@@ -3395,6 +3979,19 @@ function renderAdminPage(){
         </div>
       </div>
 
+      <!-- 2FA Setup -->
+      <div class="card-sm" style="margin-bottom:16px">
+        <div style="font-weight:700;font-size:16px;margin-bottom:4px">🔐 Two-Factor Authentication (Admin)</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:10px">Add Google Authenticator to your admin login. Scan the QR code with the app, then save the secret.</div>
+        <button onclick="setup2FA()" class="btn" style="margin-bottom:10px;font-size:13px">Generate 2FA Secret & QR Code</button>
+        <div id="totp-setup-area" style="display:none;margin-bottom:10px">
+          <div id="totp-qr" style="margin-bottom:8px"></div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Scan with Google Authenticator, then save:</div>
+          <input class="inp" id="totp-secret-display" readonly style="font-family:monospace;font-size:12px;margin-bottom:8px"/>
+          <button onclick="saveTotpSecret()" class="btn" style="font-size:13px">Save & Enable 2FA</button>
+        </div>
+        <div style="font-size:12px;color:var(--muted)">Status: <span id="totp-status" style="font-weight:700;color:${payConfig.adminTotpSecret?'#4ade80':'#f97316'}">${payConfig.adminTotpSecret?'Enabled':'Not configured'}</span></div>
+      </div>
       <!-- EmailJS -->
       <div class="card-sm">
         <div style="font-weight:700;font-size:15px;margin-bottom:4px">✉️ EmailJS Notifications</div>
@@ -3415,67 +4012,7 @@ function renderAdminPage(){
       </div>
 
       <!-- IMEI Check Services -->
-      <div class="card-sm">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;flex-wrap:wrap;gap:8px">
-          <div style="font-weight:700;font-size:15px">🔍 IMEI Check Services</div>
-          <button class="btn" style="padding:7px 14px;font-size:12px" onclick="addImeiCheckType()">+ Add Check Type</button>
-        </div>
-        <div style="color:var(--muted);font-size:12px;margin-bottom:16px">Each check type is a paid service. Set the name, price, sickw API details, and toggle active. Find service IDs at sickw.com → Services.</div>
-        <div style="color:var(--muted);font-size:12px;margin-bottom:14px;padding:10px 12px;background:rgba(124,58,237,.07);border-radius:8px;border-left:3px solid var(--purple)">
-          sickw.com API Key: <input class="inp" style="display:inline;width:260px;font-family:monospace;font-size:12px;padding:5px 10px;margin-left:8px"
-            placeholder="31-character key" value="${sanitize(payConfig.sickwKey||"")}" onchange="payConfig.sickwKey=this.value"/>
-          <button class="btn" style="padding:6px 12px;font-size:12px;margin-left:6px" onclick="showToast('sickw API key saved.')">Save</button>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:12px" id="imei-types-admin-list">
-          ${imeiCheckTypes.map((t,i)=>`
-          <div style="background:var(--surface3);border:1px solid var(--border);border-radius:12px;padding:16px">
-            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-              <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px">
-                <input class="inp" style="width:42px;padding:6px;font-size:18px;text-align:center;background:var(--surface2)"
-                  placeholder="📱" value="${sanitize(t.icon||"")}"
-                  onchange="imeiCheckTypes[${i}].icon=this.value;renderImeiCheckTypes()"/>
-                <input class="inp" style="flex:1;font-size:13px;font-weight:600;padding:7px 10px"
-                  placeholder="Check type name" value="${sanitize(t.label||"")}"
-                  onchange="imeiCheckTypes[${i}].label=this.value;renderImeiCheckTypes()"/>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-                <span style="font-size:11px;color:var(--muted)">Active</span>
-                <div class="toggle${t.active?" on":""}" onclick="imeiCheckTypes[${i}].active=!imeiCheckTypes[${i}].active;renderImeiCheckTypes();renderAdminPage()"><div class="dot"></div></div>
-                <button onclick="removeImeiCheckType(${i})" style="padding:4px 10px;border-radius:6px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.07);color:var(--red);font-size:12px;cursor:pointer">✕</button>
-              </div>
-            </div>
-            <div style="margin-bottom:10px">
-              <label class="lbl" style="margin-bottom:4px">Short Description (shown to customers)</label>
-              <input class="inp" style="font-size:12px;padding:7px 10px" placeholder="e.g. Carrier, model, warranty, SIM lock status"
-                value="${sanitize(t.desc||"")}"
-                onchange="imeiCheckTypes[${i}].desc=this.value"/>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 90px;gap:10px;margin-bottom:10px">
-              <div>
-                <label class="lbl" style="margin-bottom:4px">sickw Service ID</label>
-                <input class="inp" style="font-family:monospace;font-size:12px;padding:7px 10px" placeholder="e.g. 1 or 42"
-                  value="${sanitize(t.sickwServiceId||"")}"
-                  onchange="imeiCheckTypes[${i}].sickwServiceId=this.value;renderImeiCheckTypes()"/>
-              </div>
-              <div>
-                <label class="lbl" style="margin-bottom:4px">sickw API URL (optional)</label>
-                <input class="inp" style="font-family:monospace;font-size:12px;padding:7px 10px" placeholder="https://sickw.com/api.php"
-                  value="${sanitize(t.apiUrl||"")}"
-                  onchange="imeiCheckTypes[${i}].apiUrl=this.value"/>
-              </div>
-              <div>
-                <label class="lbl" style="margin-bottom:4px">Price ($)</label>
-                <input class="inp" type="number" style="font-size:12px;padding:7px 10px" placeholder="4.99"
-                  value="${t.price}"
-                  onchange="imeiCheckTypes[${i}].price=parseFloat(this.value)||${t.price}" onblur="saveImeiCheckTypes();showToast('IMEI price saved.')"/>
-              </div>
-            </div>
-            <div style="font-size:11px;color:${t.sickwServiceId?"var(--green)":"var(--muted)"}">
-              ${t.sickwServiceId?`✓ Live — $${t.price.toFixed(2)} per check · Service ID: ${t.sickwServiceId}`:`Not configured — customers will see demo results`}
-            </div>
-          </div>`).join("")}
-        </div>
-      </div>
+      
 
     </div>`
   }
@@ -3501,35 +4038,55 @@ function renderAdminServices(search=""){
             <span class="badge ${sc}">${s.stype}</span>
             ${apiOk?`<span class="badge" style="background:rgba(34,197,94,.12);color:var(--green)">✓ API Connected</span>`:""}
           </div>
-          <div style="font-weight:700;font-size:14px">${s.carrier}</div>
+          <div style="font-weight:700;font-size:14px;color:#ffffff;text-shadow:0 0 12px ${getCarrierColor(s.carrier)},0 0 24px ${getCarrierColor(s.carrier)}88,0 0 40px ${getCarrierColor(s.carrier)}44">${s.carrier}</div>
           <div style="font-size:12px;color:var(--muted)">${s.brand} · ${s.series}</div>
         </div>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Price $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" value="${s.price}" onblur="updateSvcField(${s.id},'price',this.value)"/></div>
+          <div style="margin-bottom:10px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em;font-weight:600">Service Name</div>
+          <input class="inp" style="width:100%;padding:5px 8px;font-size:13px;font-weight:600" placeholder="Service name" value="${sanitize(s.name||s.brand+' '+s.series)}" onblur="updateSvcField(${s.id},'name',this.value)"/>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Carrier</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.carrier)}" onblur="updateSvcField(${s.id},'carrier',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Type</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.stype)}" onblur="updateSvcField(${s.id},'stype',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Brand</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.brand)}" onblur="updateSvcField(${s.id},'brand',this.value)"/></div>
+          <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Series</div><input class="inp" style="padding:4px 7px;font-size:11px;width:100%" value="${sanitize(s.series)}" onblur="updateSvcField(${s.id},'series',this.value)"/></div>
+        </div>
+        <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Price $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" value="${s.price}" onblur="updateSvcField(${s.id},'price',this.value)"/></div>
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Was $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" value="${s.orig||""}" onblur="updateSvcField(${s.id},'orig',this.value)"/></div>
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Cost $</div><input class="inp" style="width:72px;padding:5px 8px;font-size:12px" type="number" placeholder="0" value="${s.cost||""}" onblur="updateSvcField(${s.id},'cost',this.value)"/></div>
           <div><div style="font-size:10px;color:var(--muted);margin-bottom:3px">Time</div><input class="inp" style="width:88px;padding:5px 8px;font-size:12px" value="${s.time}" onblur="updateSvcField(${s.id},'time',this.value)"/></div>
-          <div style="display:flex;gap:8px;align-items:center;padding-top:16px">
+          <div style="margin-bottom:10px">
+          <div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">Description</div>
+          <textarea class="inp" style="width:100%;font-size:12px;padding:8px;min-height:60px;resize:vertical;font-family:inherit" placeholder="Shown to customers on order page" oninput="updateSvcField(${s.id},'description',this.value)">${sanitize(s.description||"")}</textarea>
+        </div>
+                <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+          <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">⚡ Sickw Auto-Unlock</div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:5px">Supplier / Source</div>
+          <input class="inp" style="width:100%;padding:6px 10px;font-size:13px" placeholder="e.g. iFoneUnlock, SNFusions, sickw" value="${sanitize(s.supplier||"")}" onblur="updateSvcField(${s.id},'supplier',this.value)"/>
+        </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <div style="display:flex;gap:6px;align-items:center">
+              <span style="font-size:12px;color:var(--muted)">Auto-submit</span>
+              <div class="toggle${s.sickwAutoSubmit?" on":""}" onclick="toggleSvc(${s.id},'sickwAutoSubmit')"><div class="dot"></div></div>
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Sickw Service ID</div>
+              <input class="inp" style="width:120px;padding:5px 8px;font-size:12px;font-family:monospace" placeholder="e.g. 14" value="${sanitize(String(s.sickwServiceId||""))}" onblur="updateSvcField(${s.id},'sickwServiceId',this.value)"/>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;padding-top:16px">
             <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:4px">🔥</div><div class="toggle${s.hot?" on":""}" onclick="toggleSvc(${s.id},'hot')"><div class="dot"></div></div></div>
             <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:4px">🆕</div><div class="toggle${s.recent?" on":""}" onclick="toggleSvc(${s.id},'recent')"><div class="dot"></div></div></div>
             <div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:4px">On</div><div class="toggle${s.active?" on":""}" onclick="toggleSvc(${s.id},'active')"><div class="dot"></div></div></div>
             <button onclick="deleteSvc(${s.id})" style="padding:5px 11px;border-radius:7px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.07);color:var(--red);font-size:12px;cursor:pointer;margin-top:14px">✕</button>
-            <button onclick="saveSvcRow(${s.id},this)" style="padding:5px 14px;border-radius:7px;border:none;background:var(--purpleL);color:#fff;font-size:12px;cursor:pointer;margin-top:14px;font-weight:600">💾 Save</button>
+            <button onclick="saveServicesToStorage();showToast('Saved ✓');" style="padding:5px 14px;border-radius:7px;border:none;background:var(--purpleL);color:#fff;font-size:12px;cursor:pointer;margin-top:14px;font-weight:600">💾 Save</button>
           </div>
         </div>
       </div>
       <div style="border-top:1px solid var(--border);padding-top:14px">
-
-        <div style="margin-bottom:12px">
-          <label class="lbl" style="margin-bottom:6px;font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase">Service Description <span style="font-weight:400;text-transform:none;color:var(--muted)">(shown to customers when selecting this service)</span></label>
-          <textarea style="width:100%;background:var(--surface3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:#f0eeff;font-size:13px;font-family:inherit;line-height:1.5;resize:vertical;min-height:68px;outline:none;transition:border-color .2s" placeholder="e.g. Permanently unlocks your iPhone from T-Mobile so you can use any carrier worldwide. Phone must be fully paid off. No jailbreak needed." onblur="updateSvcField(${s.id},'description',this.value)" onfocus="this.style.borderColor='var(--purpleL)'" onblur2="this.style.borderColor='var(--border)'">${sanitize(s.description||"")}</textarea>
-        </div>
-        <div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">Supplier API</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end">
-          <div><label class="lbl" style="margin-bottom:4px">API Panel URL</label><input class="inp" style="font-family:monospace;font-size:12px;padding:8px 10px" placeholder="https://supplier.com/api/" value="${sanitize(s.apiUrl||"")}" onblur="updateSvcField(${s.id},'apiUrl',this.value)"/></div>
-          <div><label class="lbl" style="margin-bottom:4px">API Key</label><input class="inp" type="password" style="font-family:monospace;font-size:12px;padding:8px 10px" placeholder="Supplier API key" value="${sanitize(s.apiKey||"")}" onblur="updateSvcField(${s.id},'apiKey',this.value)"/></div>
-          <div><label class="lbl" style="margin-bottom:4px">Service ID</label><input class="inp" style="width:90px;font-family:monospace;font-size:12px;padding:8px 10px" placeholder="e.g. 42" value="${sanitize(s.apiServiceId||"")}" onblur="updateSvcField(${s.id},'apiServiceId',this.value)"/></div>
-        </div>
         <div style="font-size:11px;margin-top:7px;color:${apiOk?"var(--green)":"var(--muted)"}">${apiOk?"✓ Orders auto-submit to "+s.apiUrl:"No API configured — manual processing required."}</div>
       </div>
     </div>`}).join("")
@@ -3539,7 +4096,27 @@ async function adminLogin(){
   if(adminLockout){showToast("Account locked. Refresh and try again.");return}
   if(rateLimit("admin_login",5,300000)){adminLockout=true;document.getElementById("admin-err").textContent="Too many failed attempts. Locked for this session.";return}
   const inputHash=await hashPassword(pw);
-  if(inputHash===ADMIN_PW_HASH){adminAuth=true;renderAdminPage()}
+  if(inputHash===ADMIN_PW_HASH){
+    var totpInput=document.getElementById('admin-totp-input');
+    var totpCode=totpInput?totpInput.value.trim():'';
+    var totpSecret=payConfig.adminTotpSecret||'';
+    if(totpSecret){
+      if(!totpCode){
+        document.getElementById('admin-err').textContent='2FA code required. Open Google Authenticator.';
+        document.getElementById('admin-err').style.display='block';
+        btn.textContent='Sign In';btn.disabled=false;return;
+      }
+      try{
+        var valid=await verifyTOTP(totpSecret,totpCode);
+        if(!valid){
+          document.getElementById('admin-err').textContent='Invalid 2FA code. Check Google Authenticator.';
+          document.getElementById('admin-err').style.display='block';
+          btn.textContent='Sign In';btn.disabled=false;return;
+        }
+      }catch(e){console.log('2FA error:',e);}
+    }
+    adminAuth=true;renderAdminPage()
+  }
   else{document.getElementById("admin-err").textContent="Incorrect password.";if(document.getElementById("admin-pw-input"))document.getElementById("admin-pw-input").value=""}
 }
 function addSupplier(){
@@ -3700,12 +4277,255 @@ async function refreshOrderFromSupplier(orderId){
   if(result){showToast("Status updated: "+o.status);renderAdminPage();}
   else{showToast("Could not reach supplier API.");}
 }
-function adminAdjustBalance(uid,delta,name){updateBalance(uid,delta);showToast("Balance "+(delta>0?"+":"")+"$"+delta+" for "+name);renderAdminPage()}
+function adminSendEmail(email, name){
+  var subject = prompt('Email subject:', 'Message from Rotten Apple GSM');
+  if(!subject)return;
+  var message = prompt('Email message:', 'Hi '+name+', ');
+  if(!message)return;
+  if(typeof sendEmail!=="undefined"&&payConfig.emailjsServiceId){
+    sendEmail(payConfig, payConfig.emailjsTemplateStatus, {
+      order_id: 'ADMIN',
+      customer_name: name,
+      customer_email: email,
+      service: subject,
+      amount: '',
+      new_status: message
+    });
+    showToast('Email sent to '+email);
+  } else {
+    showToast('EmailJS not configured.');
+  }
+}
+function adminReset2FA(id, name){
+  if(!confirm('Reset 2FA for '+name+'? They will need to set up Google Authenticator again on next login.'))return;
+  fetch('https://fkiajefrdcgiobrzftjx.supabase.co/rest/v1/accounts?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:SH,body:JSON.stringify({totp_secret:''})})
+    .then(function(){
+      var acc=accounts.find(function(a){return a.id===id;});
+      if(acc)acc.totpSecret='';
+      showToast('2FA reset for '+name+'. They can set up again on next login.');
+      renderAdminPage();
+    }).catch(function(){showToast('Reset failed.');});
+}
+
+function deleteOrder(id, num){
+  // SECURITY: only admin can delete orders
+  if(!adminAuthenticated){showToast('Permission denied.');return;}
+  if(!confirm('Delete order #'+num+'? This cannot be undone.'))return;
+  fetch('https://fkiajefrdcgiobrzftjx.supabase.co/rest/v1/orders?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:SH})
+    .then(function(r){
+      if(r.ok){
+        allOrders=allOrders.filter(function(o){return o.id!==id;});
+        try{localStorage.removeItem('ra_orders');}catch(e){}
+        renderAdminPage();
+        showToast('Order #'+num+' deleted.');
+      } else {
+        showToast('Delete failed. Try again.');
+      }
+    }).catch(function(){showToast('Delete failed.');});
+}
+function deleteAccount(id, name){
+  // SECURITY: only admin can delete other accounts (principle of least privilege)
+  if(!adminAuthenticated){showToast('Permission denied.');return;}
+  // SECURITY: validate id looks like our internal ACC format
+  if(!id||!/^ACC[A-Za-z0-9]{8}$/.test(id)){showToast('Invalid account ID.');return;}
+  if(!confirm('Delete account for '+sanitize(name)+'? This cannot be undone.'))return;
+  fetch('https://fkiajefrdcgiobrzftjx.supabase.co/rest/v1/accounts?id=eq.'+encodeURIComponent(id),{
+    method:'DELETE',headers:SH
+  }).then(function(r){
+      if(r.ok){
+        accounts=accounts.filter(function(a){return a.id!==id;});
+        try{localStorage.removeItem('ra_accounts');}catch(e){}
+        try{localStorage.setItem('ra_accounts',JSON.stringify(accounts));}catch(e){}
+        renderAdminPage();
+        showToast('Account deleted permanently.');
+      } else {
+        showToast('Delete failed. Try again.');
+      }
+    }).catch(function(){showToast('Delete failed. Check connection.');});
+}
+function adminAdjustBalance(uid,delta,name){showToast("Balance adjustments disabled for security.");}
+function saveAccounts(){
+  try{localStorage.setItem("ra_accounts",JSON.stringify(accounts));}catch(e){}
+  if(typeof supaUpsert!=="undefined"&&accounts.length){
+    var rows=accounts.map(function(a){return {id:a.id,name:a.name,email:a.email,password_hash:a.passwordHash||"",balance:parseFloat(a.balance)||0,created_at:a.createdAt||new Date().toISOString().split("T")[0]};});
+    supaUpsert("accounts",rows).then(function(ok){if(ok)console.log('Accounts saved to Supabase');else console.log('Accounts Supabase save FAILED');}).catch(function(e){console.log('Accounts save error:',e);});
+  }
+}
+function loadAccounts(){try{var s=localStorage.getItem("ra_accounts");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p)&&p.length){accounts=p;}}catch(e){}}
+function deployToGitHub(){
+  const token = payConfig.githubToken;
+  if(!token){showToast("Add GitHub token in Payment Config first.");return;}
+  showToast("Deploying changes... ~18 seconds");
+  const content = btoa(unescape(encodeURIComponent(document.documentElement.outerHTML)));
+  fetch("https://api.github.com/repos/tormil61-jpg/rottenapplegsm-live/contents/index.html",{
+    headers:{"Authorization":"token "+token,"Accept":"application/vnd.github.v3+json"}
+  }).then(r=>r.json()).then(d=>{
+    return fetch("https://api.github.com/repos/tormil61-jpg/rottenapplegsm-live/contents/index.html",{
+      method:"PUT",
+      headers:{"Authorization":"token "+token,"Content-Type":"application/json","Accept":"application/vnd.github.v3+json"},
+      body:JSON.stringify({message:"admin update",content:content,sha:d.sha})
+    });
+  }).then(r=>r.json()).then(d=>{
+    if(d.content)showToast("Deployed! Live in ~18 seconds.");
+    else showToast("Deploy failed: "+(d.message||"unknown error"));
+  }).catch(e=>showToast("Deploy error: "+e.message));
+
+  // Sync to Supabase
+  if(typeof supaUpsert !== 'undefined'){
+    var rows = accounts.map(function(a){
+      return {
+        id: a.id,
+        name: a.name,
+        email: a.email,
+        password_hash: a.passwordHash || '',
+        balance: parseFloat(a.balance) || 0,
+        spend: parseFloat(a.spend) || 0,
+        created_at: a.createdAt || new Date().toISOString().split('T')[0],
+        login_count: a.loginCount || 1
+      };
+    });
+    supaUpsert('accounts', rows);
+  }
+}
+function generateTOTPSecret(){
+  var chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  var secret='';
+  var arr=new Uint8Array(20);
+  crypto.getRandomValues(arr);
+  arr.forEach(function(b){secret+=chars[b%32];});
+  return secret;
+}
+async function verifyTOTP(secret,token){
+  var base32chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  var bits='';
+  secret.toUpperCase().replace(/=/g,'').split('').forEach(function(c){
+    var v=base32chars.indexOf(c);
+    if(v>=0)bits+=v.toString(2).padStart(5,'0');
+  });
+  var bytes=[];
+  for(var i=0;i+8<=bits.length;i+=8)bytes.push(parseInt(bits.slice(i,i+8),2));
+  var keyData=new Uint8Array(bytes);
+  var key=await crypto.subtle.importKey('raw',keyData,{name:'HMAC',hash:'SHA-1'},false,['sign']);
+  var now=Math.floor(Date.now()/1000);
+  for(var w=-1;w<=1;w++){
+    var t=Math.floor((now+w*30)/30);
+    var tb=new ArrayBuffer(8);
+    var tv=new DataView(tb);
+    tv.setUint32(4,t,false);
+    var sig=await crypto.subtle.sign('HMAC',key,tb);
+    var sa=new Uint8Array(sig);
+    var o=sa[19]&0xf;
+    var code=((sa[o]&0x7f)<<24|(sa[o+1]&0xff)<<16|(sa[o+2]&0xff)<<8|(sa[o+3]&0xff))%1000000;
+    if(code.toString().padStart(6,'0')===token.trim())return true;
+  }
+  return false;
+}
+function setup2FA(){
+  var secret=generateTOTPSecret();
+  var issuer='RottenAppleGSM';
+  var label=payConfig.zelleEmail||'admin';
+  var uri='otpauth://totp/'+encodeURIComponent(issuer)+':'+encodeURIComponent(label)+'?secret='+secret+'&issuer='+encodeURIComponent(issuer)+'&algorithm=SHA1&digits=6&period=30';
+  var qrDiv=document.getElementById('totp-qr');
+  var secretInput=document.getElementById('totp-secret-display');
+  var setupArea=document.getElementById('totp-setup-area');
+  if(secretInput)secretInput.value=secret;
+  if(qrDiv)qrDiv.innerHTML='<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(uri)+'" style="border-radius:8px"/>';
+  if(setupArea)setupArea.style.display='block';
+  window._totpNewSecret=secret;
+}
+function saveTotpSecret(){
+  if(!window._totpNewSecret){showToast('Generate a secret first.');return;}
+  payConfig.adminTotpSecret=window._totpNewSecret;
+  savePayConfig();
+  showToast('2FA enabled! Test it on your next admin login.');
+  renderAdminPage();
+}
+async function verifyAndCreateAccount(){
+  var codeEl=document.getElementById('setup-verify-code');
+  var errEl=document.getElementById('setup-2fa-err');
+  var code=codeEl?codeEl.value.trim():'';
+  if(!code){errEl.textContent='Enter the 6-digit code.';errEl.style.display='block';return;}
+  var acc=window._pendingAcc;
+  if(!acc){return;}
+  var valid=await verifyTOTP(acc.secret,code);
+  if(!valid){errEl.textContent='Invalid code. Try again.';errEl.style.display='block';return;}
+  // Save account with totpSecret
+  acc.newAcc.totpSecret=acc.secret;
+  accounts.push(acc.newAcc);
+  // Close modal
+  var modal=document.getElementById('setup-2fa-modal');
+  if(modal)modal.style.display='none';
+  // Save to Supabase
+  supaUpsert('accounts',[{id:acc.newAcc.id,name:acc.newAcc.name,email:acc.newAcc.email,password_hash:acc.newAcc.passwordHash||'',balance:0,created_at:acc.newAcc.createdAt||new Date().toISOString().split('T')[0],totp_secret:acc.secret}]).then(function(){
+    showPage('home');showToast('Account created! Welcome, '+acc.newAcc.name.split(' ')[0]+'!');
+  }).catch(function(){
+    showPage('home');showToast('Account created! Welcome, '+acc.newAcc.name.split(' ')[0]+'!');
+  });
+  var {passwordHash:_,...safe}=acc.newAcc;
+  setCurrentUser(safe);
+  window._pendingAcc=null;
+}
+async function verifyAndCreateAccount(){
+  var codeEl=document.getElementById('setup-verify-code');
+  var errEl=document.getElementById('setup-2fa-err');
+  var code=codeEl?codeEl.value.trim():'';
+  if(!code){errEl.textContent='Enter the 6-digit code.';errEl.style.display='block';return;}
+  var acc=window._pendingAcc;
+  if(!acc){return;}
+  var valid=await verifyTOTP(acc.secret,code);
+  if(!valid){errEl.textContent='Invalid code. Try again.';errEl.style.display='block';return;}
+  // Save account with totpSecret
+  acc.newAcc.totpSecret=acc.secret;
+  accounts.push(acc.newAcc);
+  // Close modal
+  var modal=document.getElementById('setup-2fa-modal');
+  if(modal)modal.style.display='none';
+  // Save to Supabase
+  supaUpsert('accounts',[{id:acc.newAcc.id,name:acc.newAcc.name,email:acc.newAcc.email,password_hash:acc.newAcc.passwordHash||'',balance:0,created_at:acc.newAcc.createdAt||new Date().toISOString().split('T')[0],totp_secret:acc.secret}]).then(function(){
+    showPage('home');showToast('Account created! Welcome, '+acc.newAcc.name.split(' ')[0]+'!');
+  }).catch(function(){
+    showPage('home');showToast('Account created! Welcome, '+acc.newAcc.name.split(' ')[0]+'!');
+  });
+  var {passwordHash:_,...safe}=acc.newAcc;
+  setCurrentUser(safe);
+  window._pendingAcc=null;
+}
+function savePayConfig(){
+  try{localStorage.setItem("ra_payconfig",JSON.stringify(payConfig));}catch(e){}
+  if(typeof supaUpsert!=="undefined"){
+    supaUpsert("config",[{key:"payconfig",value:JSON.stringify(payConfig)}]).catch(function(e){console.log("payconfig save error:",e);});
+  }
+}
+function loadPayConfig(){try{var s=localStorage.getItem("ra_payconfig");if(!s)return;var p=JSON.parse(s);if(p&&typeof p==="object")Object.assign(payConfig,p);}catch(e){}}
+function saveOrders(){
+  try{localStorage.setItem("ra_orders",JSON.stringify(allOrders||[]));}catch(e){}
+  if(typeof supaUpsert!=="undefined"&&allOrders&&allOrders.length){
+    var rows=allOrders.map(function(o){return {
+      id:o.id,
+      order_number:o.orderNumber||0,
+      customer_name:o.name||o.customer_name||"Guest",
+      email:o.email||"",
+      description:o.desc||o.description||"",
+      imei:o.imei||"",
+      amount:parseFloat(o.amount)||0,
+      cost:parseFloat(o.cost)||0,
+      payment_method:o.paymentMethod||o.payment_method||"",
+      status:o.status||"Pending Verification",
+      placed:o.placed||new Date().toISOString().split("T")[0],
+      completed:o.completed||null,
+      account_id:o.accountId||o.account_id||null,
+      notes:o.notes||""
+    };});
+    supaUpsert("orders",rows).catch(function(e){console.log("orders save error:",e);});
+  }
+}
+function loadOrders(){try{var s=localStorage.getItem("ra_orders");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p)&&p.length)orders=p;}catch(e){}}
 function updateOrderStatus(id,status){
   if(!ORDER_STATUSES.includes(status))return;
   const o=allOrders.find(x=>x.id===id);
   if(!o)return;
   o.status=status;
+  saveOrders();
   notifyStatus(payConfig,o,status);
   if(status==="Refunded"&&o.paymentMethod==="wallet"&&o.accountId){
     updateBalance(o.accountId,o.amount);showToast("Refund issued and balance credited.");
@@ -3717,73 +4537,84 @@ function confirmCryptoPayment(id){
   if(!confirm(`Confirm crypto payment received for order ${o.id}?\nThis will move the order to Processing.`))return;
   o.status="Processing";
   notifyStatus(payConfig,o,"Processing");
+  notifyNew(payConfig,o);
+  // Auto-submit to sickw if enabled for this service
+  const _svc = services.find(x=>x.id===matchedSvc?.id);
+  if(_svc&&_svc.sickwAutoSubmit&&_svc.sickwServiceId&&o.imeiMasked){
+    const _imei = o.imeiMasked.replace(/[^0-9]/g,'').padStart(15,'0');
+    fetch("/.netlify/functions/sickw-check",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({imei:_imei,serviceId:_svc.sickwServiceId})
+    }).then(r=>r.json()).then(d=>{
+      if(d&&d.result){
+        updateOrderField(o.id,"notes","sickw result: "+JSON.stringify(d.result).slice(0,200));
+        updateOrderStatus(o.id,"Completed");
+      } else {
+        updateOrderField(o.id,"notes","sickw submitted — awaiting result");
+      }
+    }).catch(()=>{updateOrderField(o.id,"notes","sickw submission failed — process manually");});
+  }
   showToast("✅ Payment confirmed — order is now Processing.");
   renderAdmin();
 }
-function updateOrderField(id,field,val){const o=allOrders.find(x=>x.id===id);if(o)o[field]=sanitize(val)}
+function updateOrderField(id,field,val){const o=allOrders.find(x=>x.id===id);if(o)o[field]=sanitize(val)
+  saveOrders();
+}
 function saveImeiCheckTypes(){
   try{localStorage.setItem("ra_imei_checks",JSON.stringify(imeiCheckTypes));}catch(e){}
+  if(typeof supaUpsert!=="undefined"&&imeiCheckTypes&&imeiCheckTypes.length){
+    var rows=imeiCheckTypes.map(function(t){return {
+      id:t.id,
+      label:t.label||"",
+      icon:t.icon||"🔍",
+      description:t.description||t.desc||"",
+      price:parseFloat(t.price)||0,
+      active:t.active!==false,
+      sickw_service_id:t.sickwServiceId||""
+    };});
+    supaUpsert("imei_checks",rows).catch(function(e){console.log("IMEI save error:",e);});
+  }
 }
-
-function loadImeiCheckTypes(){
-  try{
-    const saved=localStorage.getItem("ra_imei_checks");
-    if(saved){
-      const parsed=JSON.parse(saved);
-      if(Array.isArray(parsed)&&parsed.length>0){
-        parsed.forEach(s=>{
-          const t=imeiCheckTypes.find(x=>x.id===s.id);
-          if(t)Object.assign(t,{price:s.price,name:s.name||t.name});
-        });
-      }
-    }
-  }catch(e){}
+function loadImeiCheckTypes(){try{var s=localStorage.getItem("ra_imei_checks");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p))p.forEach(function(sv){var x=imeiCheckTypes.find(function(t){return t.id===sv.id});if(x&&sv.price!==undefined)x.price=sv.price;});}catch(e){}}
+function saveServicesToStorage(){
+  try{localStorage.setItem("ra_services",JSON.stringify(services));}catch(e){}
+  if(typeof supaUpsert!=="undefined"&&services&&services.length){
+    var rows=services.map(function(s){return {
+      id:s.id,
+      carrier:s.carrier||"",
+      stype:s.stype||"",
+      brand:s.brand||"",
+      series:s.series||"",
+      price:parseFloat(s.price)||0,
+      orig:parseFloat(s.orig)||null,
+      cost:parseFloat(s.cost)||0,
+      time:s.time||"24 hrs",
+      rate:s.rate||"100%",
+      notes:s.notes||"",
+      description:s.description||"",
+      supplier:s.supplier||"",
+      hot:!!s.hot,
+      recent:!!s.recent,
+      active:s.active!==false,
+      sickw_service_id:s.sickwServiceId||"",
+      sickw_auto_submit:!!s.sickwAutoSubmit
+    };});
+    supaUpsert("services",rows).then(function(){
+      console.log("Services saved to Supabase:",rows.length);
+    }).catch(function(e){console.log("Services save error:",e);});
+  }
 }
-
-function saveSvcRow(id, btn){
-  // Find all inputs in this service card and save them all at once
-  const card = btn.closest('.card-sm') || btn.closest('[data-svc-id]');
-  const inputs = btn.closest('div').closest('div').closest('div').querySelectorAll('input[type="number"], input[type="text"], input:not([type])');
-  // Just save current services state to localStorage
-  saveServicesToStorage();
-  // Visual feedback
-  const orig = btn.textContent;
-  btn.textContent = '✓ Saved!';
-  btn.style.background = 'var(--green)';
-  setTimeout(()=>{btn.textContent=orig;btn.style.background='var(--purpleL)';},2000);
-  showToast('Service saved successfully.');
-}
-
+function loadServicesFromStorage(){try{var s=localStorage.getItem("ra_services");if(!s)return;var p=JSON.parse(s);if(!Array.isArray(p)||!p.length)return;p.forEach(function(sv){var x=services.find(function(sc){return sc.id===sv.id});if(!x){services.push(sv);return;}if(sv.price!==undefined)x.price=parseFloat(sv.price)||x.price;if(sv.orig!==undefined)x.orig=parseFloat(sv.orig)||0;if(sv.cost!==undefined)x.cost=parseFloat(sv.cost)||0;if(sv.time!==undefined)x.time=sv.time;if(sv.active!==undefined)x.active=!!sv.active;if(sv.hot!==undefined)x.hot=!!sv.hot;if(sv.recent!==undefined)x.recent=!!sv.recent;if(sv.description!==undefined)x.description=sv.description;if(sv.supplier!==undefined)x.supplier=sv.supplier;if(sv.name!==undefined)x.name=sv.name;if(sv.carrier!==undefined)x.carrier=sv.carrier;if(sv.stype!==undefined)x.stype=sv.stype;if(sv.brand!==undefined)x.brand=sv.brand;if(sv.series!==undefined)x.series=sv.series;if(sv.sickwServiceId!==undefined)x.sickwServiceId=sv.sickwServiceId;if(sv.sickwAutoSubmit!==undefined)x.sickwAutoSubmit=!!sv.sickwAutoSubmit;});}catch(e){}}
 function updateSvcField(id,field,val){
   const s=services.find(x=>x.id===id);if(!s)return;
   s[field]=["price","orig","cost"].includes(field)?parseFloat(val)||0:sanitize(String(val));
   saveServicesToStorage();
+  saveServicesToStorage();
   showToast("Saved.");
   renderAllServices(document.getElementById("svc-search")?.value||"");
 }
-
-function saveServicesToStorage(){
-  try{localStorage.setItem("ra_services",JSON.stringify(services));}catch(e){}
-}
-
-function loadServicesFromStorage(){
-  try{
-    const saved=localStorage.getItem("ra_services");
-    if(!saved)return;
-    const parsed=JSON.parse(saved);
-    if(!Array.isArray(parsed)||parsed.length===0)return;
-    // Merge saved values into default services (keeps structure, updates values)
-    parsed.forEach(saved=>{
-      const svc=services.find(x=>x.id===saved.id);
-      if(!svc)return;
-      ["price","orig","cost","time","notes","description","stripeLink","apiUrl","apiKey","apiServiceId","hot","recent","active"].forEach(f=>{
-        if(saved[f]!==undefined)svc[f]=saved[f];
-      });
-    });
-  }catch(e){}
-}
-function toggleSvc(id,field){const s=services.find(x=>x.id===id);if(s){s[field]=!s[field];renderAdminServices(document.getElementById("svc-search")?.value||"")}}
-function deleteSvc(id){services=services.filter(s=>s.id!==id);renderAdminServices(document.getElementById("svc-search")?.value||"");showToast("Removed.")}
+function toggleSvc(id,field){const s=services.find(x=>x.id===id);if(s){s[field]=!s[field];saveServicesToStorage();renderAdminServices(document.getElementById("svc-search")?.value||"")}}
+function deleteSvc(id){services=services.filter(s=>s.id!==id);saveServicesToStorage();renderAdminServices(document.getElementById("svc-search")?.value||"");showToast("Removed.")}
 function addService(){
   const series=document.getElementById("ns-series").value.trim();
   const price=parseFloat(document.getElementById("ns-price").value);
@@ -3800,10 +4631,14 @@ function addService(){
     rate:document.getElementById("ns-rate").value||"100%",
     notes:"",
     description:sanitize(document.getElementById("ns-description")?.value||""),
-    stripeLink:"",
-    hot:false,recent:false,active:true,
+    sickwServiceId:(document.getElementById("ns-sickwid")?.value||"").trim(),
+    sickwAutoSubmit:document.getElementById("ns-sickauto")?.checked||false,
+    stripeLink:sanitize(document.getElementById("ns-stripelink")?.value||""),
+    hot:false,recent:false,active:document.getElementById("ns-active")?.checked!==false,
     apiUrl:"",apiKey:"",apiServiceId:""
-  });
+  })
+  saveServicesToStorage();
+  setTimeout(function(){loadServicesFromSupabase().then(function(){renderAdminServices("");renderHome();});},1000);
   document.getElementById("ns-series").value="";
   document.getElementById("ns-price").value="";
   document.getElementById("ns-orig").value="";
@@ -3819,14 +4654,291 @@ function addService(){
 // ═══════════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════════
-loadServicesFromStorage();
+
+localStorage.removeItem("ra_services");
+localStorage.removeItem("ra_imei_checks");
 loadImeiCheckTypes();
-try{
-  const savedCfg=localStorage.getItem("ra_payconfig");
-  if(savedCfg){const c=JSON.parse(savedCfg);Object.assign(payConfig,c);}
-}catch(e){}
+loadOrders();
+loadAccounts();
+loadPayConfig();
 checkStripeReturn();
+// Show loading state until Supabase loads
 renderHome();
+
+function setCheckoutStep_zelle(){
+  var svc=checkoutPending&&checkoutPending.svc?checkoutPending.svc:matchedSvc;
+  if(!svc)return;
+  var base=checkoutPending&&checkoutPending.discPrice?checkoutPending.discPrice:svc.price;
+  var fee=parseFloat((base*0.05).toFixed(2));
+  var total=parseFloat((base+fee).toFixed(2));
+  var el=document.getElementById('zelle-address');if(el)el.textContent=payConfig.zelleEmail||'Tormil61@icloud.com';
+  var en=document.getElementById('zelle-name');if(en)en.textContent=payConfig.zelleName||'Milton Torres';
+  var eb=document.getElementById('zelle-base');if(eb)eb.textContent='$'+base.toFixed(2);
+  var ef=document.getElementById('zelle-fee');if(ef)ef.textContent='$'+fee.toFixed(2)+' (5%)';
+  var ea=document.getElementById('zelle-amount');if(ea)ea.textContent='$'+total.toFixed(2)+' USD';
+  var ck=document.getElementById('zelle-check');if(ck)ck.checked=false;
+  var sb=document.getElementById('zelle-submit-btn');if(sb){sb.disabled=true;sb.style.opacity='.5';}
+  setCheckoutStep('zelle');
+}
+function confirmZelle(){
+  var svc=checkoutPending&&checkoutPending.svc?checkoutPending.svc:matchedSvc;
+  if(!svc)return;
+  var base=checkoutPending&&checkoutPending.discPrice?checkoutPending.discPrice:svc.price;
+  var total=parseFloat((base*1.05).toFixed(2));
+  recordOrder('zelle','Pending Verification');
+  var numEl=document.getElementById('done-order-number');
+  if(numEl&&allOrders[0])numEl.textContent='Order #'+allOrders[0].orderNumber+' · '+allOrders[0].id;
+  setCheckoutStep('done');
+}
+</script>
+<script>
+const SUPA_URL='https://fkiajefrdcgiobrzftjx.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZraWFqZWZyZGNnaW9icnpmdGp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI1NzcwNTgsImV4cCI6MjA5ODE1MzA1OH0.3f7jYWdqzLJjWpxb4_zZrS3Uo2VeHVx81TuXouYNwuk';
+const SH={'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
+async function supaGet(t,f){
+  // SECURITY: table name validated against allowlist; filter f is Supabase REST syntax (pre-built by our code only)
+  const ALLOWED_TABLES=['services','orders','accounts','imei_checks','config'];
+  if(!ALLOWED_TABLES.includes(t)){console.error('supaGet: blocked table',t);return[];}
+  try{
+    var url='https://fkiajefrdcgiobrzftjx.supabase.co/rest/v1/'+t+(f?'?'+f:'');
+    var r=await fetch(url,{headers:SH});
+    if(!r.ok)return[];
+    return await r.json();
+  }catch(e){console.log('supaGet error:',e);return[];}
+}
+async function supaPost(t,d){
+  const ALLOWED=['services','orders','accounts','imei_checks','config'];
+  if(!ALLOWED.includes(t)){console.error('supaPost: blocked table',t);return false;}
+  try{
+    var r=await fetch('https://fkiajefrdcgiobrzftjx.supabase.co/rest/v1/'+t,{method:'POST',headers:{...SH,'Prefer':'return=minimal'},body:JSON.stringify(d)});
+    return r.ok;
+  }catch(e){return false;}
+}
+async function supaPatch(t,d,f){
+  const ALLOWED=['services','orders','accounts','imei_checks','config'];
+  if(!ALLOWED.includes(t)){console.error('supaPatch: blocked table',t);return false;}
+  try{
+    var r=await fetch('https://fkiajefrdcgiobrzftjx.supabase.co/rest/v1/'+t+'?'+f,{method:'PATCH',headers:{...SH,'Prefer':'return=minimal'},body:JSON.stringify(d)});
+    return r.ok;
+  }catch(e){return false;}
+}
+async function supaUpsert(t,d){
+  const ALLOWED=['services','orders','accounts','imei_checks','config'];
+  if(!ALLOWED.includes(t)){console.error('supaUpsert: blocked table',t);return false;}
+  try{
+    var r=await fetch('https://fkiajefrdcgiobrzftjx.supabase.co/rest/v1/'+t,{method:'POST',headers:{...SH,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(d)});
+    return r.ok;
+  }catch(e){return false;}
+}
+
+// Hook saveServicesToStorage to also sync to Supabase
+
+async function syncServicesToSupabase(){
+  try{
+    var rows=services.map(s=>({id:s.id,carrier:(s.carrier||'').trim(),stype:(s.stype||'').trim(),brand:(s.brand||'').trim(),series:(s.series||'').trim(),price:s.price||0,orig:s.orig||0,cost:s.cost||0,time:s.time||'24 hrs',rate:s.rate||'100%',notes:s.notes||'',description:s.description||'',supplier:s.supplier||'',hot:!!s.hot,recent:!!s.recent,active:s.active!==false,sickw_service_id:s.sickwServiceId||'',sickw_auto_submit:!!s.sickwAutoSubmit}));
+    var r=await fetch('https://fkiajefrdcgiobrzftjx.supabase.co/rest/v1/services',{method:'POST',headers:{...SH,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(rows)});
+    if(r.ok){showToast('All changes saved!');renderHome();}
+    else{showToast('Save failed - try again');}
+    return r.ok;
+  }catch(e){console.log('Sync error:',e);showToast('Save error');}
+}
+const _origSaveSvc=saveServicesToStorage;
+window.saveServicesToStorage=function(){
+  _origSaveSvc();
+  syncServicesToSupabase().then(function(){
+    renderHome();
+  });
+};
+
+// Hook recordOrder
+const _origRecordOrder=recordOrder;
+window.recordOrder=function(o){_origRecordOrder(o);supaPost('orders',{id:o.id,order_number:o.orderNumber,customer_name:o.name,email:o.email,description:o.desc,imei:o.imeiMasked||o.imei||'',amount:o.amount,cost:o.cost||0,payment_method:o.paymentMethod,status:o.status||'Pending Verification',placed:o.placed,account_id:o.accountId||null});};
+
+// Hook updateOrderStatus
+const _origUpdateStatus=updateOrderStatus;
+window.updateOrderStatus=function(id,status){_origUpdateStatus(id,status);supaPatch('orders',{status:status,updated_at:new Date().toISOString()},'id=eq.'+id);};
+
+// Init - load from Supabase then render
+
+async function loadServicesFromSupabase(){
+  try{
+    var data = await supaGet('services','order=id.asc');
+    if(!data||!data.length)return;
+    services.length = 0;
+    data.forEach(function(row){
+      {
+        services.push({
+          id:row.id,
+          carrier:(row.carrier||'').trim(),
+          stype:(row.stype||'').trim(),
+          brand:(row.brand||'').trim(),
+          series:(row.series||'').trim(),
+          price:parseFloat(row.price)||0,
+          orig:parseFloat(row.orig)||0,
+          cost:parseFloat(row.cost)||0,
+          time:row.time||'24 hrs',
+          rate:row.rate||'100%',
+          notes:row.notes||'',
+          description:row.description||'',
+          supplier:row.supplier||'',
+          hot:!!row.hot,
+          recent:!!row.recent,
+          active:row.active!==false,
+          sickwServiceId:row.sickw_service_id||'',
+          sickwAutoSubmit:!!row.sickw_auto_submit
+        });
+      }
+    });
+    renderHome();
+    
+if(typeof updateOrderUI==='function')updateOrderUI();
+    if(typeof renderCarrierOptions==='function')renderCarrierOptions();
+    if(typeof renderCarrierDropdown==='function')renderCarrierDropdown();
+    if(typeof populateCarrierSelect==='function')populateCarrierSelect();
+    if(selCarrier&&selStype&&selSeries&&typeof onSeriesChange==='function')onSeriesChange();
+    console.log('Loaded from Supabase:', services.length);
+  }catch(e){console.log('Load error:',e);}
+}
+(async function(){
+  await loadServicesFromSupabase();
+  // Load custom IMEI checks from Supabase
+  try{
+    var imeiData=await supaGet('imei_checks','order=id.asc');
+    if(imeiData&&imeiData.length){
+      imeiData.forEach(function(row){
+        var t=imeiCheckTypes.find(function(x){return x.id===row.id;});
+        if(t){t.price=parseFloat(row.price)||t.price;t.active=row.active!==false;t.label=row.label||t.label;}
+        else if(row.active!==false){imeiCheckTypes.push({id:row.id,label:row.label||'New Check',icon:row.icon||'🔍',desc:row.description||'',description:row.description||'',price:parseFloat(row.price)||0,active:true,sickwServiceId:row.sickw_service_id||''});}
+      });
+    }
+  }catch(e){console.log('IMEI load error:',e);}
+  // Re-render IMEI dropdown and admin
+  if(typeof renderImeiCheckTypes==='function')renderImeiCheckTypes();
+  // Re-render admin if open to show updated IMEI prices
+  if(adminAuth&&adminTab==='imei_admin'){renderAdminPage();}
+  // Load accounts from Supabase
+  try{
+    var acctData=await supaGet('accounts','order=created_at.desc');
+    if(acctData&&acctData.length){
+      // Always replace accounts with Supabase data - don't merge with localStorage
+      accounts=acctData.map(function(row){
+        return {id:row.id,name:row.name,email:row.email,passwordHash:row.password_hash||'',balance:parseFloat(row.balance)||0,spend:parseFloat(row.spend)||0,createdAt:row.created_at,loginCount:row.login_count||1,totpSecret:row.totp_secret||''};
+      });
+      try{localStorage.setItem('ra_accounts',JSON.stringify(accounts));}catch(e){}
+    } else {
+      // No accounts in Supabase - clear localStorage too
+      accounts=[];
+      try{localStorage.removeItem('ra_accounts');}catch(e){}
+    }
+  }catch(e){console.log('Accounts load error:',e);}
+  // Load payConfig from Supabase
+  try{
+    var cfgData=await supaGet('config','key=eq.payconfig');
+    if(cfgData&&cfgData.length&&cfgData[0].value){
+      var savedCfg=JSON.parse(cfgData[0].value);
+      Object.assign(payConfig,savedCfg);
+      localStorage.setItem('ra_payconfig',JSON.stringify(payConfig));
+    }
+  }catch(e){console.log('payconfig load error:',e);}
+  const orders=await supaGet('orders','order=created_at.desc');
+  if(orders&&orders.length){allOrders=orders.map(o=>({id:o.id,orderNumber:o.order_number,name:o.customer_name,email:o.email,desc:o.description,imei:o.imei,amount:parseFloat(o.amount)||0,cost:parseFloat(o.cost)||0,paymentMethod:o.payment_method,status:o.status,placed:o.placed,completed:o.completed,accountId:o.account_id,notes:o.notes||''}));saveOrders();}
+})();
+</script>
+
+
+<!-- Privacy Policy Page -->
+<div id="page-privacy" class="page" style="display:none;min-height:100vh;padding:80px 24px 60px;max-width:800px;margin:0 auto;position:relative;z-index:1">
+  <button onclick="showPage('home')" style="margin-bottom:24px;background:none;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:0.1em">← BACK</button>
+  <h1 style="font-family:'Orbitron',monospace;font-size:28px;color:#fff;margin-bottom:8px">Privacy Policy</h1>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:32px;font-family:'Share Tech Mono',monospace">Last updated: July 2026</p>
+  <div style="font-family:'Share Tech Mono',monospace;font-size:14px;line-height:1.8;color:var(--text)">
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Information We Collect</h2>
+    <p>We collect your name, email address, IMEI number, and payment information when you place an order or create an account. We do not sell your personal data to third parties.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">How We Use Your Information</h2>
+    <p>We use your information to process unlock orders, send order status updates, and provide customer support. Your IMEI is only used to process your specific unlock request.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Data Security</h2>
+    <p>We use industry-standard encryption and secure payment processors (Stripe, PayPal) to protect your data. We never store full credit card numbers.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Cookies</h2>
+    <p>We use essential cookies to keep you logged in and remember your session. We do not use tracking or advertising cookies.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Contact</h2>
+    <p>For privacy questions: rottenapplegsm@gmail.com | WhatsApp: (323) 829-1991</p>
+  </div>
+</div>
+
+<!-- Terms of Service Page -->
+<div id="page-terms" class="page" style="display:none;min-height:100vh;padding:80px 24px 60px;max-width:800px;margin:0 auto;position:relative;z-index:1">
+  <button onclick="showPage('home')" style="margin-bottom:24px;background:none;border:1px solid var(--border);color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:0.1em">← BACK</button>
+  <h1 style="font-family:'Orbitron',monospace;font-size:28px;color:#fff;margin-bottom:8px">Terms of Service</h1>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:32px;font-family:'Share Tech Mono',monospace">Last updated: July 2026</p>
+  <div style="font-family:'Share Tech Mono',monospace;font-size:14px;line-height:1.8;color:var(--text)">
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Service Agreement</h2>
+    <p>By placing an order with Rotten Apple GSM, you agree that the device you are unlocking is legally yours or you have authorization to unlock it. Carrier unlocking is legal under US law.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Refund Policy</h2>
+    <p>We offer a full refund if we are unable to complete your unlock. No refunds are issued for completed unlocks. Orders that fail due to incorrect IMEI or device information provided by the customer are not eligible for refunds.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Processing Time</h2>
+    <p>Standard processing is 24–72 hours. We are not responsible for delays caused by carrier systems. Rush orders are not guaranteed.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Blacklisted Devices</h2>
+    <p>We offer blacklist removal services. Success rates vary by carrier. A device removed from the blacklist may be re-blacklisted if the original reason (e.g. unpaid balance) is not resolved.</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:16px;color:#00f5ff;margin:24px 0 8px">Contact</h2>
+    <p>rottenapplegsm@gmail.com | WhatsApp: (323) 829-1991 | Los Angeles, CA</p>
+  
+      <div style="margin-top:16px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap">
+        <span onclick="showPage('privacy')" style="color:rgba(0,245,255,0.5);font-size:11px;font-family:'Share Tech Mono',monospace;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;text-decoration:underline">Privacy Policy</span>
+        <span onclick="showPage('terms')" style="color:rgba(0,245,255,0.5);font-size:11px;font-family:'Share Tech Mono',monospace;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;text-decoration:underline">Terms of Service</span>
+      </div></div>
+</div>
+<script>
+(function(){
+  var cv=document.getElementById('tron-bg');if(!cv)return;
+  var cx=cv.getContext('2d'),W,H,CELL=35,COLS,ROWS,bikes=[],fc=0;
+  function rgba(h,a){var r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return 'rgba('+r+','+g+','+b+','+a+')';}
+  function blocked(c,r,id){if(c<0||c>=COLS||r<0||r>=ROWS)return true;for(var i=0;i<bikes.length;i++){if(bikes[i].id===id)continue;if(bikes[i].trail.some(function(t){return t.c===c&&t.r===r;}))return true;}return false;}
+  function reset(){bikes=[{col:Math.floor(COLS*.25),row:Math.floor(ROWS*.3),dir:{dc:1,dr:0},color:'#00f5ff',trail:[],tmr:0,iv:10,id:1},{col:Math.floor(COLS*.75),row:Math.floor(ROWS*.7),dir:{dc:-1,dr:0},color:'#ff8800',trail:[],tmr:0,iv:12,id:2}];}
+  function move(b){
+    var nc=b.col+b.dir.dc,nr=b.row+b.dir.dr;
+    if(blocked(nc,nr,b.id)){
+      var t=[{dc:-b.dir.dr,dr:b.dir.dc},{dc:b.dir.dr,dr:-b.dir.dc}].filter(function(t){return !blocked(b.col+t.dc,b.row+t.dr,b.id);});
+      if(t.length){b.dir=t[Math.floor(Math.random()*t.length)];b.col+=b.dir.dc;b.row+=b.dir.dr;}
+      else{b.col=Math.floor(Math.random()*COLS);b.row=Math.floor(Math.random()*ROWS);b.trail=[];return;}
+    }else{b.col=nc;b.row=nr;}
+    b.trail.push({c:b.col,r:b.row});
+    if(b.trail.length>350)b.trail.shift();
+    b.tmr++;
+    if(b.tmr>=b.iv){
+      var t2=[{dc:-b.dir.dr,dr:b.dir.dc},{dc:b.dir.dr,dr:-b.dir.dc}].filter(function(t){return !blocked(b.col+t.dc,b.row+t.dr,b.id);});
+      if(t2.length&&Math.random()>.5)b.dir=t2[Math.floor(Math.random()*t2.length)];
+      b.tmr=0;b.iv=20+Math.floor(Math.random()*25);
+    }
+  }
+  function draw(){
+    cx.clearRect(0,0,W,H);
+    cx.strokeStyle='rgba(0,245,255,0.1)';cx.lineWidth=0.5;
+    for(var cc=0;cc<=COLS;cc++){cx.beginPath();cx.moveTo(cc*CELL,0);cx.lineTo(cc*CELL,H);cx.stroke();}
+    for(var rr=0;rr<=ROWS;rr++){cx.beginPath();cx.moveTo(0,rr*CELL);cx.lineTo(W,rr*CELL);cx.stroke();}
+    if(fc%4===0)bikes.forEach(move);fc++;
+    bikes.forEach(function(b){
+      var n=b.trail.length;
+      b.trail.forEach(function(s,i){
+        var a=(i/n)*.45;
+        cx.fillStyle=rgba(b.color,a*.18);
+        cx.fillRect(s.c*CELL+1,s.r*CELL+1,CELL-2,CELL-2);
+        if(i>0){var p=b.trail[i-1];
+          cx.beginPath();cx.moveTo(p.c*CELL+CELL/2,p.r*CELL+CELL/2);cx.lineTo(s.c*CELL+CELL/2,s.r*CELL+CELL/2);
+          cx.strokeStyle=rgba(b.color,a);cx.lineWidth=2;cx.stroke();
+          cx.strokeStyle=rgba(b.color,a*.3);cx.lineWidth=6;cx.stroke();}
+      });
+      var hx=b.col*CELL,hy=b.row*CELL;
+      var g=cx.createRadialGradient(hx+CELL/2,hy+CELL/2,0,hx+CELL/2,hy+CELL/2,CELL*1.8);
+      g.addColorStop(0,rgba(b.color,.7));g.addColorStop(1,'transparent');
+      cx.fillStyle=g;cx.fillRect(hx-CELL,hy-CELL,CELL*3,CELL*3);
+      cx.fillStyle=b.color;cx.fillRect(hx+2,hy+2,CELL-4,CELL-4);
+      cx.fillStyle='#fff';cx.fillRect(hx+CELL/2-3,hy+CELL/2-3,6,6);
+    });
+    requestAnimationFrame(draw);
+  }
+  function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;COLS=Math.floor(W/CELL);ROWS=Math.floor(H/CELL);reset();}
+  window.addEventListener('resize',resize);resize();draw();
+})();
 </script>
 </body>
 </html>
