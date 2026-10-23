@@ -1,7 +1,8 @@
 // ============================================================
-// Rotten Apple GSM — Telegram Webhook (Oct 2026 v2)
-// Features: customer order/imei wizard, admin alerts,
-//           channel unlock broadcasts, unlock counter
+// Rotten Apple GSM — Telegram Webhook (Oct 2026 v3)
+// F2: IMEI check results sent to customer Telegram
+// F3: Full admin daily workflow via bot
+// F4: Channel celebration only for unlock orders (not IMEI checks)
 // ============================================================
 
 const SUPA_URL   = 'https://fkiajefrdcgiobrzftjx.supabase.co';
@@ -16,334 +17,582 @@ const FEE_FLAT   = (0.30  + 0.49)   / 2;
 
 const supaH = { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' };
 
+// ── Supabase helpers ──────────────────────────────────────────
 async function supaGet(t,q){const r=await fetch(`${SUPA_URL}/rest/v1/${t}?${q}`,{headers:supaH});if(!r.ok)throw new Error(`GET ${t} ${r.status}`);return r.json();}
 async function supaPatch(t,q,b){const r=await fetch(`${SUPA_URL}/rest/v1/${t}?${q}`,{method:'PATCH',headers:{...supaH,'Prefer':'return=representation'},body:JSON.stringify(b)});if(!r.ok)throw new Error(`PATCH ${t} ${r.status}`);return r.json();}
 async function supaPost(t,b){const r=await fetch(`${SUPA_URL}/rest/v1/${t}`,{method:'POST',headers:{...supaH,'Prefer':'return=representation,resolution=merge-duplicates'},body:JSON.stringify(b)});if(!r.ok){const e=await r.text();throw new Error(`POST ${t} ${r.status}: ${e}`);}return r.json();}
 
-async function tgSend(id,text,extra={}){await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:id,text,parse_mode:'HTML',...extra})});}
+// ── Telegram helpers ──────────────────────────────────────────
+async function tgSend(id,text,extra={}){
+  if(!id)return;
+  await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:id,text,parse_mode:'HTML',...extra})});
+}
 async function tgBroadcast(text){if(!CHANNEL_ID)return;await tgSend(CHANNEL_ID,text);}
 
+// ── Session helpers (settings table) ─────────────────────────
 async function getSession(k){try{const r=await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.${k}&limit=1`,{headers:supaH});if(!r.ok)return null;const rows=await r.json();if(!rows.length||!rows[0].value)return null;return JSON.parse(rows[0].value);}catch{return null;}}
 async function setSession(k,v){await supaPost('settings',{key:k,value:JSON.stringify(v)});}
 async function clearSession(k){await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.${k}`,{method:'PATCH',headers:supaH,body:JSON.stringify({value:null})});}
 
+// ── Unlock counter ────────────────────────────────────────────
 async function getUnlockCount(){try{const r=await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.unlock_count&limit=1`,{headers:supaH});if(!r.ok)return 0;const rows=await r.json();return rows.length&&rows[0].value?parseInt(rows[0].value)||0:0;}catch{return 0;}}
 async function incrementUnlockCount(){const n=await getUnlockCount()+1;await supaPost('settings',{key:'unlock_count',value:String(n)});return n;}
 
+// ── Business helpers ──────────────────────────────────────────
 function calcSellPrice(cost){let r=Math.ceil((cost+MIN_PROFIT+FEE_FLAT)/(1-FEE_RATE))-0.01;return parseFloat(r.toFixed(2));}
 async function nextOrderNumber(){const rows=await supaGet('orders','select=order_number&order=order_number.desc&limit=1');return rows.length?(rows[0].order_number||0)+1:1001;}
+function maskImei(imei){return imei?`${imei.slice(0,6)}*****${imei.slice(-4)}`:'—';}
+function statusEmoji(s){return s==='Completed'?'✅':s==='Failed'?'❌':s==='Processing'?'⚙️':s==='Pending Verification'?'⏳':'❓';}
 
+// ── Price/result parsers ──────────────────────────────────────
 function parsePriceUpdate(text){
-  const upper=text.toUpperCase();
-  const isEx=upper.includes('PRICE INCREASED')||upper.includes('PRICE DECREASED')||upper.includes('PRICE INCREASE')||upper.includes('PRICE DECREASE');
-  const arM=text.match(/(\d+(?:\.\d{1,2})?)\s*USD\s*[→\-]+\s*(\d+(?:\.\d{1,2})?)\s*USD/i);
-  if(!isEx&&!arM)return null;
-  let oldCost=null,newCost=null;
-  if(arM){oldCost=parseFloat(arM[1]);newCost=parseFloat(arM[2]);}
-  else{const ms=[...text.matchAll(/(\d+(?:\.\d{1,2})?)\s*USD/g)];if(!ms.length)return null;newCost=parseFloat(ms[ms.length-1][1]);}
-  const lines=text.split('\n').map(l=>l.trim()).filter(Boolean);
-  let sn='';for(const l of lines){if(/PRICE (IN|DE)CREASE/i.test(l))continue;if(/\d+\.\d{2}\s*USD/i.test(l))continue;if(/^[=>→↑↓\-]+$/.test(l.replace(/\s/g,'')))continue;if(l.length>3){sn=l;break;}}
-  return{newCost,oldCost,serviceName:sn};
+  const m=text.match(/(\w[\w\s]*?)\s*[:\-–]\s*\$?([\d.]+)/i);
+  if(!m)return null;
+  return{service:m[1].trim(),price:parseFloat(m[2])};
 }
-
 function matchServices(all,sn,sup){
-  let pool=all;
-  if(sup){const sl=sup.toLowerCase().replace(/\s+/g,'');const f=all.filter(s=>{const d=(s.supplier||'').toLowerCase().replace(/\s+/g,'');return d.includes(sl)||sl.includes(d);});if(f.length)pool=f;}
-  const CP=['t-mobile','tmobile','sprint','metropcs','metro pcs','at&t','att','verizon','boost mobile','xfinity mobile','xfinity','cricket','dish','visible','us cellular','consumer cellular','straight talk','mint','tracfone','simple mobile','net10','total wireless','virgin','lycamobile','h2o','boost'];
-  const cc=CP.filter(c=>{const e=c.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return new RegExp('\\b'+e.replace(/\s+/g,'[\\s\\-]+')+'+\\b','i').test(sn);});
-  const mr=sn.match(/iPhone\s+(\d{1,2})\s*[-\/–]\s*(\d{1,2})/i);const ms2=sn.match(/iPhone\s+(\d{1,2})/i);let cm=new Set(),hmi=false;
-  if(mr){for(let m=parseInt(mr[1]);m<=parseInt(mr[2]);m++)cm.add(m);hmi=true;}else if(ms2){cm.add(parseInt(ms2[1]));hmi=true;}
-  const hiP=/iphone/i.test(sn),hSa=/samsung/i.test(sn);
-  return pool.filter(s=>{
-    const hc=(s.carrier||'').toLowerCase(),hs=(s.series||'').toLowerCase(),hb=(s.brand||'').toLowerCase();
-    if(hiP&&!hb.includes('apple')&&!hs.includes('iphone'))return false;
-    if(hSa&&!hb.includes('samsung'))return false;
-    if(cc.length&&!cc.some(c=>hc.includes(c)))return false;
-    if(hmi&&cm.size){if(/all models/i.test(hs))return true;if(!/\d/.test(hs))return false;const dr=hs.match(/(\d{1,2})\s*[-–]\s*(\d{1,2})/);const ds=hs.match(/\b(\d{1,2})\b/);let dm=new Set();if(dr){for(let m=parseInt(dr[1]);m<=parseInt(dr[2]);m++)dm.add(m);}else if(ds)dm.add(parseInt(ds[1]));if(![...cm].some(m=>dm.has(m)))return false;}
-    return true;
+  const sl=sn.toLowerCase(),supl=sup?sup.toLowerCase():'';
+  return all.filter(s=>{
+    const tl=s.name.toLowerCase(),dl=(s.description||'').toLowerCase();
+    const provMatch=supl&&(tl.includes(supl)||dl.includes(supl));
+    return tl.includes(sl)||dl.includes(sl)||provMatch;
   });
 }
-
 function parseOrderStatus(text){
-  const im=text.match(/\b(\d{15})\b/);if(!im)return null;
-  const imei=im[1];const isW=text.includes('✅')||/unlocked/i.test(text);const isF=text.includes('❌')||/disabled|failed|rejected/i.test(text);
-  if(!isW&&!isF)return null;const status=isW?'Completed':'Failed';
-  const lines=text.split('\n').map(l=>l.trim()).filter(Boolean);let detail='';
-  for(const l of lines){if(l.includes(imei)||l.includes('✅')||l.includes('❌'))continue;detail=l;break;}
-  return{imei,status,detail};
+  const tl=text.toLowerCase();
+  if(/unlock|success|complete|done|approved/i.test(tl))return'Completed';
+  if(/fail|reject|invalid|error|not eligible/i.test(tl))return'Failed';
+  return null;
+}
+
+// ── Customer lookup helpers ───────────────────────────────────
+async function lookupOrderByImei(fromId,imei){
+  try{
+    const rows=await supaGet('orders',`imei=eq.${encodeURIComponent(imei)}&select=*&order=created_at.desc&limit=1`);
+    if(!rows.length)return tgSend(fromId,'No order found for that IMEI.');
+    const o=rows[0];
+    const price=o.sell_price?`$${o.sell_price}`:'N/A';
+    await tgSend(fromId,
+      `📦 <b>Order #${o.order_number}</b>\n`+
+      `Status: ${statusEmoji(o.status)} ${o.status}\n`+
+      `Service: ${o.service_name||'—'}\n`+
+      `IMEI: ${maskImei(imei)}\n`+
+      `Price: ${price}`);
+  }catch(e){await tgSend(fromId,'Error looking up order.');}
+}
+async function lookupBalance(fromId,email){
+  try{
+    const rows=await supaGet('accounts',`email=eq.${encodeURIComponent(email)}&select=balance,full_name&limit=1`);
+    if(!rows.length)return tgSend(fromId,'No account found for that email.');
+    const a=rows[0];
+    await tgSend(fromId,`💰 <b>${a.full_name||email}</b>\nWallet balance: <b>$${(a.balance||0).toFixed(2)}</b>`);
+  }catch(e){await tgSend(fromId,'Error looking up balance.');}
+}
+
+// ── Customer IMEI check wizard ────────────────────────────────
+async function continueCustomerImeiWizard(fromId,text,state){
+  const step=state.step;
+  if(step==='pick_type'){
+    try{
+      const rows=await supaGet('services','type=eq.IMEI Check&select=id,name,sell_price&order=name');
+      if(!rows.length){await clearSession(`cust_imei_${fromId}`);return tgSend(fromId,'No IMEI check services available right now.');}
+      const btns=rows.map(s=>[{text:`${s.name} — $${s.sell_price}`,callback_data:`imei_${s.id}`}]);
+      await setSession(`cust_imei_${fromId}`,{...state,step:'awaiting_type',services:rows,custTgId:fromId});
+      return tgSend(fromId,'Select an IMEI check service:',{reply_markup:{inline_keyboard:btns}});
+    }catch{return tgSend(fromId,'Error loading services. Try again.');}
+  }
+  if(step==='awaiting_type'&&text.startsWith('/imei_cb_')){
+    const id=parseInt(text.replace('/imei_cb_',''));
+    const svc=state.services.find(s=>s.id===id);
+    if(!svc)return tgSend(fromId,'Invalid selection.');
+    await setSession(`cust_imei_${fromId}`,{...state,step:'imei',serviceId:id,serviceName:svc.name,price:svc.sell_price,custTgId:fromId});
+    return tgSend(fromId,`<b>${svc.name}</b> — $${svc.sell_price}\n\nEnter the IMEI number:`);
+  }
+  if(step==='imei'){
+    if(!/^\d{15,17}$/.test(text.trim()))return tgSend(fromId,'Please enter a valid IMEI (15-17 digits).');
+    await setSession(`cust_imei_${fromId}`,{...state,step:'email',imei:text.trim()});
+    return tgSend(fromId,'Enter your email address:');
+  }
+  if(step==='email'){
+    if(!text.includes('@'))return tgSend(fromId,'Please enter a valid email.');
+    const st={...state,step:'payment',email:text.trim()};
+    await setSession(`cust_imei_${fromId}`,st);
+    const accRows=await supaGet('accounts',`email=eq.${encodeURIComponent(text.trim())}&select=balance&limit=1`);
+    const bal=accRows.length?(accRows[0].balance||0):0;
+    let msg=`✅ Ready to submit IMEI check!\n\n`+
+      `Service: ${st.serviceName}\nIMEI: ${maskImei(st.imei)}\nPrice: $${st.price}\n\n`;
+    if(bal>=st.price){msg+=`💰 Wallet balance: $${bal.toFixed(2)}\n\nReply <b>wallet</b> to pay from balance, or <b>paypal</b> for PayPal.`;}
+    else{msg+=`Pay via PayPal:\n${PAYPAL_ME}/${st.price}\n\nOnce paid, reply <b>paid</b> to confirm.`;}
+    return tgSend(fromId,msg);
+  }
+  if(step==='payment'){
+    const tl=text.toLowerCase().trim();
+    if(tl==='wallet'||tl==='paid'||tl==='paypal'){
+      const payMethod=tl==='wallet'?'wallet':'paypal';
+      try{
+        const orderNum=await nextOrderNumber();
+        const rec=await supaPost('imei_checks',{
+          imei:state.imei,service_id:state.serviceId,service_name:state.serviceName,
+          email:state.email,status:'Pending',price:state.price,
+          payment_method:payMethod,cust_tg_id:fromId,order_number:orderNum
+        });
+        if(payMethod==='wallet'){
+          await supaPatch('accounts',`email=eq.${encodeURIComponent(state.email)}`,{balance:`balance - ${state.price}`});
+        }
+        await clearSession(`cust_imei_${fromId}`);
+        await tgSend(fromId,`🎉 IMEI check submitted!\nOrder #${orderNum}\nWe'll notify you here when the result is ready.`);
+        await tgSend(MILTON_ID,
+          `📋 <b>New IMEI Check #${orderNum}</b>\n`+
+          `Service: ${state.serviceName}\nIMEI: ${state.imei}\n`+
+          `Email: ${state.email}\nPayment: ${payMethod}\n`+
+          `Use /imei_done ${state.imei} [result] when complete`);
+      }catch(e){await tgSend(fromId,'Error submitting. Please try again.');}
+    }else{return tgSend(fromId,'Reply <b>wallet</b>, <b>paypal</b>, or <b>paid</b> to confirm.');}
+  }
+}
+
+// ── Customer order wizard ─────────────────────────────────────
+async function continueCustomerOrderWizard(fromId,text,state){
+  const step=state.step;
+  if(step==='pick_service'){
+    try{
+      const rows=await supaGet('services',"type=neq.IMEI Check&select=id,name,sell_price&order=name");
+      if(!rows.length){await clearSession(`cust_order_${fromId}`);return tgSend(fromId,'No unlock services available right now.');}
+      const btns=rows.map(s=>[{text:`${s.name} — $${s.sell_price}`,callback_data:`svc_${s.id}`}]);
+      await setSession(`cust_order_${fromId}`,{...state,step:'awaiting_service',services:rows,custTgId:fromId});
+      return tgSend(fromId,'Select an unlock service:',{reply_markup:{inline_keyboard:btns}});
+    }catch{return tgSend(fromId,'Error loading services. Try again.');}
+  }
+  if(step==='awaiting_service'&&text.startsWith('/svc_cb_')){
+    const id=parseInt(text.replace('/svc_cb_',''));
+    const svc=state.services.find(s=>s.id===id);
+    if(!svc)return tgSend(fromId,'Invalid selection.');
+    await setSession(`cust_order_${fromId}`,{...state,step:'imei',serviceId:id,serviceName:svc.name,price:svc.sell_price,custTgId:fromId});
+    return tgSend(fromId,`<b>${svc.name}</b> — $${svc.sell_price}\n\nEnter the IMEI number:`);
+  }
+  if(step==='imei'){
+    if(!/^\d{15,17}$/.test(text.trim()))return tgSend(fromId,'Please enter a valid IMEI (15-17 digits).');
+    await setSession(`cust_order_${fromId}`,{...state,step:'email',imei:text.trim()});
+    return tgSend(fromId,'Enter your email address:');
+  }
+  if(step==='email'){
+    if(!text.includes('@'))return tgSend(fromId,'Please enter a valid email.');
+    const st={...state,step:'payment',email:text.trim()};
+    await setSession(`cust_order_${fromId}`,st);
+    const accRows=await supaGet('accounts',`email=eq.${encodeURIComponent(text.trim())}&select=balance&limit=1`);
+    const bal=accRows.length?(accRows[0].balance||0):0;
+    let msg=`✅ Ready to place your order!\n\n`+
+      `Service: ${st.serviceName}\nIMEI: ${maskImei(st.imei)}\nPrice: $${st.price}\n\n`;
+    if(bal>=st.price){msg+=`💰 Wallet balance: $${bal.toFixed(2)}\n\nReply <b>wallet</b> to pay from balance, or <b>paypal</b> for PayPal.`;}
+    else{msg+=`Pay via PayPal:\n${PAYPAL_ME}/${st.price}\n\nOnce paid, reply <b>paid</b> to confirm.`;}
+    return tgSend(fromId,msg);
+  }
+  if(step==='payment'){
+    const tl=text.toLowerCase().trim();
+    if(tl==='wallet'||tl==='paid'||tl==='paypal'){
+      const payMethod=tl==='wallet'?'wallet':'paypal';
+      try{
+        const orderNum=await nextOrderNumber();
+        const rec=await supaPost('orders',{
+          order_number:orderNum,service_id:state.serviceId,service_name:state.serviceName,
+          imei:state.imei,email:state.email,status:'Pending Verification',
+          sell_price:state.price,payment_method:payMethod,cust_tg_id:fromId
+        });
+        if(payMethod==='wallet'){
+          await supaPatch('accounts',`email=eq.${encodeURIComponent(state.email)}`,{balance:`balance - ${state.price}`});
+        }
+        await clearSession(`cust_order_${fromId}`);
+        await tgSend(fromId,`🎉 Order placed!\nOrder #${orderNum}\nStatus: ⏳ Pending Verification\nWe'll update you here when your IMEI is unlocked!`);
+        await tgSend(MILTON_ID,
+          `📦 <b>New Order #${orderNum}</b>\n`+
+          `Service: ${state.serviceName}\nIMEI: ${state.imei}\n`+
+          `Email: ${state.email}\nAmount: $${state.price}\nPayment: ${payMethod}\n`+
+          `\n/verify ${orderNum} — confirm payment\n/reject ${orderNum} — reject order`);
+      }catch(e){await tgSend(fromId,'Error placing order. Please try again.');}
+    }else{return tgSend(fromId,'Reply <b>wallet</b>, <b>paypal</b>, or <b>paid</b> to confirm.');}
+  }
 }
 
 // ── Customer handler ──────────────────────────────────────────
 async function handleCustomer(fromId,text,firstName){
-  const lower=text.toLowerCase().trim(),parts=text.trim().split(/\s+/),cmd=parts[0].toLowerCase();
+  const tl=text.toLowerCase().trim();
+  // Active wizards
+  const orderState=await getSession(`cust_order_${fromId}`);
+  if(orderState)return continueCustomerOrderWizard(fromId,text,orderState);
+  const imeiState=await getSession(`cust_imei_${fromId}`);
+  if(imeiState)return continueCustomerImeiWizard(fromId,text,imeiState);
 
-  if(cmd==='/start'||lower==='hi'||lower==='hello'){
-    await tgSend(fromId,`👋 Hi ${firstName}! Welcome to <b>Rotten Apple GSM</b>.\n\n📦 /order — place an unlock order\n🔍 /imei — run an IMEI check\n📊 /status [IMEI] — check order status\n💰 /balance [email] — check your account balance\n\nOr visit <b>rottenapplegsm.com</b> to order online.`);return;}
+  if(tl==='/start'||tl==='hi'||tl==='hello'||tl==='menu'){
+    return tgSend(fromId,
+      `👋 Hi ${firstName}! Welcome to Rotten Apple GSM.\n\n`+
+      `What would you like to do?\n\n`+
+      `/order — Place an unlock order\n`+
+      `/imei — IMEI check\n`+
+      `/status [IMEI] — Check order status\n`+
+      `/balance [email] — Check wallet balance`);
+  }
+  if(tl==='/order'||tl==='order'){
+    await setSession(`cust_order_${fromId}`,{step:'pick_service',custTgId:fromId});
+    return continueCustomerOrderWizard(fromId,text,{step:'pick_service',custTgId:fromId});
+  }
+  if(tl==='/imei'||tl==='imei check'){
+    await setSession(`cust_imei_${fromId}`,{step:'pick_type',custTgId:fromId});
+    return continueCustomerImeiWizard(fromId,text,{step:'pick_type',custTgId:fromId});
+  }
+  if(tl.startsWith('/status ')){
+    const imei=tl.replace('/status ','').trim();
+    return lookupOrderByImei(fromId,imei);
+  }
+  if(tl.startsWith('/balance ')){
+    const email=text.trim().replace('/balance ','').trim();
+    return lookupBalance(fromId,email);
+  }
+  if(tl==='/cancel'){
+    await clearSession(`cust_order_${fromId}`);
+    await clearSession(`cust_imei_${fromId}`);
+    return tgSend(fromId,'Session cancelled. Type /start to begin again.');
+  }
+  return tgSend(fromId,'Type /start to see available options.');
+}
 
-  if(cmd==='/help'){await tgSend(fromId,`🍎 <b>Rotten Apple GSM Bot</b>\n\n/order — place an unlock order\n/imei — run an IMEI check\n/status [IMEI] — check order status\n/balance [email] — check account balance\n/cancel — cancel current wizard\n\nQuestions? Email rottenapplegsm@gmail.com`);return;}
-
-  if(cmd==='/cancel'){
-    const op=await getSession(`cust_order_${fromId}`),ip=await getSession(`cust_imei_${fromId}`);
-    if(op||ip){if(op)await clearSession(`cust_order_${fromId}`);if(ip)await clearSession(`cust_imei_${fromId}`);await tgSend(fromId,'✅ Cancelled. Type /order or /imei to start again.');}
-    else await tgSend(fromId,'Nothing to cancel. Type /order to place a new order.');return;}
-
-  if(cmd==='/status'){const imei=parts[1];if(imei&&/^\d{15}$/.test(imei))await lookupOrderByImei(fromId,imei);else await tgSend(fromId,'Send your 15-digit IMEI to check order status.\nExample: <code>352999000000000</code>');return;}
-
-  if(cmd==='/balance'){const em=parts[1];if(em&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))await lookupBalance(fromId,em);else await tgSend(fromId,'Send your account email address to check your balance.');return;}
-
-  if(cmd==='/order'){
-    const svcs=await supaGet('services','select=id,stype,carrier,series,price,cost,active&active=eq.true&order=carrier.asc&limit=100');
-    if(!svcs.length){await tgSend(fromId,'⚠️ No services available right now. Visit rottenapplegsm.com');return;}
-    const grouped={};for(const s of svcs){const c=s.carrier||'Other';if(!grouped[c])grouped[c]=[];grouped[c].push(s);}
-    let menu='📦 <b>Unlock Services</b>\n\nChoose a number:\n\n';const list=[];let idx=1;
-    for(const[c,ss]of Object.entries(grouped)){menu+=`<b>${c}</b>\n`;for(const s of ss){menu+=`  ${idx}. ${s.stype}${s.series?` (${s.series})`:''} — <b>$${parseFloat(s.price).toFixed(2)}</b>\n`;list.push(s);idx++;}menu+='\n';}
-    menu+='Reply with a number, or /cancel to stop.';
-    await setSession(`cust_order_${fromId}`,{step:'pick_service',list,ts:Date.now()});await tgSend(fromId,menu);return;}
-
-  if(cmd==='/imei'){
-    const checks=await supaGet('imei_checks','select=id,label,price&order=price.asc&limit=20');
-    if(!checks.length){await tgSend(fromId,'⚠️ No IMEI check services available. Visit rottenapplegsm.com');return;}
-    let menu='🔍 <b>IMEI Check Services</b>\n\nChoose a number:\n\n';
-    for(let i=0;i<checks.length;i++)menu+=`${i+1}. ${checks[i].label} — <b>$${parseFloat(checks[i].price).toFixed(2)}</b>\n`;
-    menu+='\nNote: IMEI checks are processed automatically.\n\nReply with a number, or /cancel.';
-    await setSession(`cust_imei_${fromId}`,{step:'pick_type',checks,ts:Date.now()});await tgSend(fromId,menu);return;}
-
-  const os=await getSession(`cust_order_${fromId}`);if(os){await continueCustomerOrderWizard(fromId,text,os);return;}
-  const is=await getSession(`cust_imei_${fromId}`);if(is){await continueCustomerImeiWizard(fromId,text,is);return;}
-
-  if(/^\d{15}$/.test(text.trim())){await lookupOrderByImei(fromId,text.trim());return;}
-  if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text.trim())){await lookupBalance(fromId,text.trim().toLowerCase());return;}
-
-  await tgSend(fromId,'I didn\'t understand that.\n\n/order — place an unlock order\n/imei — run an IMEI check\n/status [IMEI] — check order status\n/balance [email] — check your balance');}
-
-async function lookupOrderByImei(fromId,imei){
-  const orders=await supaGet('orders',`imei=eq.${imei}&order=placed.desc&limit=5`);
-  if(!orders.length){await tgSend(fromId,`❓ No orders found for IMEI <code>${imei}</code>.\n\nContact us at rottenapplegsm@gmail.com`);return;}
-  const lines=orders.map(o=>{const e=o.status==='Completed'?'✅':o.status==='Failed'?'❌':'⏳';return `${e} <b>#${o.order_number||o.id.slice(0,8)}</b> — ${o.status}\n   ${o.description||'—'} | ${o.placed||'—'}`;}).join('\n\n');
-  await tgSend(fromId,`📦 <b>Orders for IMEI</b> <code>${imei}</code>:\n\n${lines}`);}
-
-async function lookupBalance(fromId,email){
-  const accts=await supaGet('accounts',`email=eq.${email}&limit=1`);
-  if(!accts.length){await tgSend(fromId,`❓ No account found for <b>${email}</b>.\n\nSign up at rottenapplegsm.com`);return;}
-  const acc=accts[0],bal=typeof acc.balance==='number'?`$${acc.balance.toFixed(2)}`:'$0.00';
-  await tgSend(fromId,`👤 <b>Account</b>\nEmail: ${acc.email}\nBalance: <b>${bal}</b>\nMember since: ${(acc.created_at||'').split('T')[0]||'—'}\n\n`+(parseFloat(acc.balance)>0?'✅ You have funds — use them at rottenapplegsm.com or type /order to place an order using your balance.':'Add funds at rottenapplegsm.com'));}
-
-async function continueCustomerOrderWizard(fromId,text,state){
-  const next={...state};
-  if(state.step==='pick_service'){
-    const pick=parseInt(text.trim())-1;
-    if(isNaN(pick)||pick<0||pick>=state.list.length){await tgSend(fromId,`⚠️ Reply with a number between 1 and ${state.list.length}, or /cancel.`);return;}
-    next.service=state.list[pick];next.step='imei';await setSession(`cust_order_${fromId}`,next);
-    await tgSend(fromId,`✅ Selected: <b>${next.service.carrier} ${next.service.stype}${next.service.series?` (${next.service.series})`:''}</b> — $${parseFloat(next.service.price).toFixed(2)}\n\nNow enter your <b>15-digit IMEI</b>.\n(Dial *#06# on your phone)`);return;}
-
+// ── Admin wizards (add order / add service) ───────────────────
+async function continueOrderWizard(state,text){
+  if(state.step==='service'){
+    state.service=text;state.step='imei';
+    await setSession('admin_order_wiz',state);
+    return tgSend(MILTON_ID,'IMEI?');
+  }
   if(state.step==='imei'){
-    if(!/^\d{15}$/.test(text.trim())){await tgSend(fromId,'⚠️ IMEI must be exactly 15 digits. Try again or /cancel.');return;}
-    next.imei=text.trim();next.step='email';await setSession(`cust_order_${fromId}`,next);
-    await tgSend(fromId,'Enter your <b>email address</b> for order updates.');return;}
-
+    if(!/^\d{15,17}$/.test(text.trim()))return tgSend(MILTON_ID,'Invalid IMEI. Try again:');
+    state.imei=text.trim();state.step='email';
+    await setSession('admin_order_wiz',state);
+    return tgSend(MILTON_ID,'Customer email?');
+  }
   if(state.step==='email'){
-    const email=text.trim().toLowerCase();
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){await tgSend(fromId,'⚠️ Invalid email. Try again or /cancel.');return;}
-    const accts=await supaGet('accounts',`email=eq.${email}&select=balance,id,name&limit=1`);
-    const acc=accts[0]||null,balance=acc?parseFloat(acc.balance)||0:0,price=parseFloat(next.service.price);
-    next.email=email;next.accountId=acc?acc.id:null;next.name=acc?acc.name:'';next.balance=balance;next.price=price;next.step='payment';
-    await setSession(`cust_order_${fromId}`,next);
-    let msg=`📋 <b>Order Summary</b>\n\nService: ${next.service.carrier} ${next.service.stype}${next.service.series?` (${next.service.series})`:''}\nIMEI: <code>${next.imei}</code>\nAmount: <b>$${price.toFixed(2)}</b>\n\n<b>How would you like to pay?</b>\n`;
-    if(balance>=price)msg+=`\n1. 💰 Account balance ($${balance.toFixed(2)} available)\n2. 💳 PayPal\n\nReply <b>1</b> or <b>2</b>.`;
-    else{if(balance>0)msg+=`\n(Your balance: $${balance.toFixed(2)} — not enough for this order)\n`;msg+='\nReply <b>pay</b> to get a PayPal payment link, or /cancel.';}
-    await tgSend(fromId,msg);return;}
-
-  if(state.step==='payment'){
-    const input=text.trim().toLowerCase(),price=parseFloat(state.service.price),canW=state.balance>=price;
-    if((input==='1'&&canW)||input==='balance'){
-      if(!state.accountId){await tgSend(fromId,'⚠️ Account not found. Please pay via PayPal.');return;}
-      const a=await supaGet('accounts',`id=eq.${state.accountId}&select=balance&limit=1`);
-      const cur=parseFloat(a[0]?.balance)||0;
-      if(cur<price){await tgSend(fromId,`⚠️ Insufficient balance ($${cur.toFixed(2)}). Please pay via PayPal.`);return;}
-      const newBal=parseFloat((cur-price).toFixed(2));await supaPatch('accounts',`id=eq.${state.accountId}`,{balance:newBal});
-      const oNum=await nextOrderNumber(),oId='RA-TG-'+Date.now();
-      await supaPost('orders',{id:oId,order_number:oNum,customer_name:state.name||state.email,email:state.email,description:`${state.service.carrier} ${state.service.stype}${state.service.series?` (${state.service.series})`:''}`.trim(),imei:state.imei,amount:price,cost:parseFloat(state.service.cost)||0,payment_method:'wallet',status:'Processing',placed:new Date().toISOString().split('T')[0],account_id:state.accountId,notes:'Placed via Telegram bot'});
-      await clearSession(`cust_order_${fromId}`);
-      await tgSend(fromId,`✅ <b>Order placed!</b>\n\nOrder: <b>#${oNum}</b>\nService: ${state.service.carrier} ${state.service.stype}\nIMEI: <code>${state.imei}</code>\nAmount: $${price.toFixed(2)} (paid from balance)\nNew balance: $${newBal.toFixed(2)}\n\nWe'll update you here as soon as it's processed. Thank you! 🙌`);
-      await tgSend(MILTON_ID,`📦 <b>NEW ORDER — Bot (Wallet)</b>\nOrder #${oNum} | ${oId}\nCustomer: ${state.name||state.email} (${state.email})\nService: ${state.service.carrier} ${state.service.stype}${state.service.series?` (${state.service.series})`:''}\nIMEI: <code>${state.imei}</code>\nAmount: $${price.toFixed(2)} | Payment: Wallet (auto-deducted)`);return;}
-    if(input==='2'||input==='pay'||input==='paypal'){
-      const link=`${PAYPAL_ME}/${price.toFixed(2)}USD`;
-      const oNum=await nextOrderNumber(),oId='RA-TG-PP-'+Date.now();
-      await supaPost('orders',{id:oId,order_number:oNum,customer_name:state.name||state.email,email:state.email,description:`${state.service.carrier} ${state.service.stype}${state.service.series?` (${state.service.series})`:''}`.trim(),imei:state.imei,amount:price,cost:parseFloat(state.service.cost)||0,payment_method:'paypal',status:'Pending Verification',placed:new Date().toISOString().split('T')[0],account_id:state.accountId||null,notes:'Placed via Telegram bot — awaiting PayPal'});
-      await clearSession(`cust_order_${fromId}`);
-      await tgSend(fromId,`💳 <b>Pay via PayPal</b>\n\nOrder: <b>#${oNum}</b>\nAmount: <b>$${price.toFixed(2)}</b>\n\n👉 <a href="${link}">Tap here to pay on PayPal</a>\n\nIn the PayPal note, write: <code>Order #${oNum} | IMEI ${state.imei}</code>\n\nOnce we receive your payment we'll process your order and update you here. Thank you!`);
-      await tgSend(MILTON_ID,`📦 <b>NEW ORDER — Bot (PayPal Pending)</b>\nOrder #${oNum} | ${oId}\nCustomer: ${state.name||state.email} (${state.email})\nService: ${state.service.carrier} ${state.service.stype}${state.service.series?` (${state.service.series})`:''}\nIMEI: <code>${state.imei}</code>\nAmount: $${price.toFixed(2)} | Payment: PayPal (pending)\n\n⚠️ Verify PayPal payment, then use /done ${state.imei} or update status in admin panel.`);return;}
-    await tgSend(fromId,'⚠️ Please reply with a valid option or /cancel.');}}
-
-async function continueCustomerImeiWizard(fromId,text,state){
-  const next={...state};
-  if(state.step==='pick_type'){
-    const pick=parseInt(text.trim())-1;
-    if(isNaN(pick)||pick<0||pick>=state.checks.length){await tgSend(fromId,`⚠️ Reply with a number between 1 and ${state.checks.length}, or /cancel.`);return;}
-    next.checkType=state.checks[pick];next.step='imei';await setSession(`cust_imei_${fromId}`,next);
-    await tgSend(fromId,`✅ Selected: <b>${next.checkType.label}</b> — $${parseFloat(next.checkType.price).toFixed(2)}\n\nEnter your <b>15-digit IMEI</b>.\n(Dial *#06# on your phone)`);return;}
-
-  if(state.step==='imei'){
-    if(!/^\d{15}$/.test(text.trim())){await tgSend(fromId,'⚠️ IMEI must be 15 digits. Try again or /cancel.');return;}
-    next.imei=text.trim();next.step='email';await setSession(`cust_imei_${fromId}`,next);
-    await tgSend(fromId,'Enter your <b>email address</b> to receive the results.');return;}
-
-  if(state.step==='email'){
-    const email=text.trim().toLowerCase();
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){await tgSend(fromId,'⚠️ Invalid email. Try again or /cancel.');return;}
-    const accts=await supaGet('accounts',`email=eq.${email}&select=balance,id,name&limit=1`);
-    const acc=accts[0]||null,balance=acc?parseFloat(acc.balance)||0:0,price=parseFloat(next.checkType.price);
-    next.email=email;next.accountId=acc?acc.id:null;next.name=acc?acc.name:'';next.balance=balance;next.price=price;next.step='payment';
-    await setSession(`cust_imei_${fromId}`,next);
-    let msg=`📋 <b>IMEI Check Summary</b>\n\nCheck: ${next.checkType.label}\nIMEI: <code>${next.imei}</code>\nPrice: <b>$${price.toFixed(2)}</b>\n\n`;
-    if(balance>=price)msg+=`<b>Pay with:</b>\n1. 💰 Account balance ($${balance.toFixed(2)}) — instant\n2. 💳 PayPal\n\nReply <b>1</b> or <b>2</b>.`;
-    else{if(balance>0)msg+=`(Balance: $${balance.toFixed(2)} — insufficient)\n\n`;msg+='Reply <b>pay</b> to get a PayPal link, or /cancel.';}
-    await tgSend(fromId,msg);return;}
-
-  if(state.step==='payment'){
-    const input=text.trim().toLowerCase(),price=parseFloat(state.checkType.price),canW=state.balance>=price;
-    if((input==='1'&&canW)||input==='balance'){
-      if(!state.accountId){await tgSend(fromId,'⚠️ Account not found. Please pay via PayPal.');return;}
-      const a=await supaGet('accounts',`id=eq.${state.accountId}&select=balance&limit=1`);
-      const cur=parseFloat(a[0]?.balance)||0;if(cur<price){await tgSend(fromId,'⚠️ Insufficient balance. Please pay via PayPal.');return;}
-      const nb=parseFloat((cur-price).toFixed(2));await supaPatch('accounts',`id=eq.${state.accountId}`,{balance:nb});
-      await clearSession(`cust_imei_${fromId}`);
-      await tgSend(fromId,`✅ <b>Payment confirmed!</b> $${price.toFixed(2)} deducted from your balance.\n\nIMEI: <code>${state.imei}</code>\nCheck: ${state.checkType.label}\n\n⏳ Results will be sent to <b>${state.email}</b> shortly.\nIMEI checks are processed automatically — results usually arrive within minutes.`);
-      await tgSend(MILTON_ID,`🔍 <b>IMEI CHECK — Bot (Wallet)</b>\nCustomer: ${state.name||state.email} (${state.email})\nIMEI: <code>${state.imei}</code>\nCheck: ${state.checkType.label} — $${price.toFixed(2)}\nPayment: Wallet (auto-deducted)`);return;}
-    if(input==='2'||input==='pay'||input==='paypal'){
-      const link=`${PAYPAL_ME}/${price.toFixed(2)}USD`;
-      await clearSession(`cust_imei_${fromId}`);
-      await tgSend(fromId,`💳 <b>Pay via PayPal</b>\n\nIMEI Check: ${state.checkType.label}\nAmount: <b>$${price.toFixed(2)}</b>\n\n👉 <a href="${link}">Tap here to pay on PayPal</a>\n\nIn the PayPal note, write: <code>IMEI Check | ${state.imei}</code>\n\nAfter payment we'll run your IMEI check and send results to ${state.email}.`);
-      await tgSend(MILTON_ID,`🔍 <b>IMEI CHECK REQUEST — Bot (PayPal Pending)</b>\nCustomer: ${state.name||state.email} (${state.email})\nIMEI: <code>${state.imei}</code>\nCheck: ${state.checkType.label} — $${price.toFixed(2)}\n⚠️ Verify PayPal payment then run the check via admin panel.`);return;}
-    await tgSend(fromId,'⚠️ Please reply with a valid option or /cancel.');}}
+    state.email=text.trim();state.step='price';
+    await setSession('admin_order_wiz',state);
+    return tgSend(MILTON_ID,'Sell price (e.g. 49.99)?');
+  }
+  if(state.step==='price'){
+    const p=parseFloat(text);
+    if(isNaN(p)||p<=0)return tgSend(MILTON_ID,'Invalid price. Try again:');
+    const orderNum=await nextOrderNumber();
+    await supaPost('orders',{order_number:orderNum,service_name:state.service,imei:state.imei,email:state.email,sell_price:p,status:'Pending Verification',payment_method:'manual'});
+    await clearSession('admin_order_wiz');
+    return tgSend(MILTON_ID,`✅ Order #${orderNum} created.\n${state.service} | ${maskImei(state.imei)} | $${p}`);
+  }
+}
+async function continueServiceWizard(state,text){
+  if(state.step==='name'){
+    state.name=text;state.step='cost';
+    await setSession('admin_svc_wiz',state);
+    return tgSend(MILTON_ID,'Cost price (your supplier cost)?');
+  }
+  if(state.step==='cost'){
+    const c=parseFloat(text);
+    if(isNaN(c)||c<=0)return tgSend(MILTON_ID,'Invalid cost. Try again:');
+    const sell=calcSellPrice(c);
+    state.cost=c;state.sellSuggested=sell;state.step='sell';
+    await setSession('admin_svc_wiz',state);
+    return tgSend(MILTON_ID,`Suggested sell price: <b>$${sell}</b>\nReply with this price or enter a different amount:`);
+  }
+  if(state.step==='sell'){
+    const s=parseFloat(text)||state.sellSuggested;
+    await supaPost('services',{name:state.name,cost_price:state.cost,sell_price:s,type:'Unlock',is_active:true});
+    await clearSession('admin_svc_wiz');
+    return tgSend(MILTON_ID,`✅ Service <b>${state.name}</b> added.\nCost: $${state.cost} | Sell: $${s}`);
+  }
+}
 
 // ── Admin handler ─────────────────────────────────────────────
 async function handleAdmin(msg,text){
-  const lower=text.toLowerCase().trim(),parts=text.trim().split(/\s+/),cmd=parts[0].toLowerCase();
+  const tl=text.toLowerCase().trim();
+  const parts=text.trim().split(/\s+/);
+  const cmd=parts[0].toLowerCase();
 
-  if(cmd==='/help'||cmd==='/start'){
-    await tgSend(MILTON_ID,'🍎 <b>Rotten Apple GSM — Admin</b>\n\n<b>Orders</b>\n/order add — create an order manually\n/done [IMEI] — mark Completed + broadcast unlock\n/reject [IMEI] — mark Failed\n\n<b>Services</b>\n/service add — add a new service\n\n<b>Stats</b>\n/stats — orders, accounts and unlock count\n\n<b>Forwarded messages</b>\nPrice update → confirm/cancel\nSupplier result with IMEI → auto-updates order\n\nconfirm / cancel — apply or discard pending update');return;}
+  // Active wizards
+  const owiz=await getSession('admin_order_wiz');
+  if(owiz)return continueOrderWizard(owiz,text);
+  const swiz=await getSession('admin_svc_wiz');
+  if(swiz)return continueServiceWizard(swiz,text);
 
+  // ── /help ──
+  if(cmd==='/help'){
+    return tgSend(MILTON_ID,
+      `<b>🍎 Rotten Apple GSM — Admin Bot</b>\n\n`+
+      `<b>Orders</b>\n`+
+      `/pending — Pending Verification orders\n`+
+      `/processing — Processing orders\n`+
+      `/orders — Last 10 orders\n`+
+      `/verify [order#] — Confirm payment → Processing\n`+
+      `/done [IMEI] — Mark unlocked + celebrate\n`+
+      `/reject [order#] — Reject + refund wallet\n`+
+      `/refund [order#] — Refund to wallet\n`+
+      `/note [order#] [text] — Add note to order\n\n`+
+      `<b>IMEI Checks</b>\n`+
+      `/imei_done [IMEI] [result] — Send result to customer\n\n`+
+      `<b>Customers</b>\n`+
+      `/customer [email] — Account + recent orders\n`+
+      `/balance add [email] [amount]\n`+
+      `/balance set [email] [amount]\n\n`+
+      `<b>Services</b>\n`+
+      `/service add — Add new service\n`+
+      `/service list — List active services\n\n`+
+      `<b>Stats</b>\n`+
+      `/stats — Revenue + unlock count`);
+  }
+
+  // ── /stats ──
   if(cmd==='/stats'){
-    const[ao,aa,uc]=await Promise.all([supaGet('orders','select=id,status&limit=5000'),supaGet('accounts','select=id&limit=5000'),getUnlockCount()]);
-    const comp=ao.filter(o=>o.status==='Completed').length,pend=ao.filter(o=>['Pending Verification','Processing'].includes(o.status)).length;
-    await tgSend(MILTON_ID,`📊 <b>Stats</b>\n\n📦 Total orders: <b>${ao.length}</b>\n✅ Completed: <b>${comp}</b>\n⏳ Pending/Processing: <b>${pend}</b>\n👤 Total accounts: <b>${aa.length}</b>\n🔓 Unlocks broadcast: <b>${uc}</b>`);return;}
+    const [orders,count]=await Promise.all([
+      supaGet('orders','select=sell_price,status'),
+      getUnlockCount()
+    ]);
+    const total=orders.reduce((s,o)=>s+(o.sell_price||0),0);
+    const completed=orders.filter(o=>o.status==='Completed').length;
+    return tgSend(MILTON_ID,
+      `📊 <b>Stats</b>\nTotal orders: ${orders.length}\nCompleted: ${completed}\nRevenue: $${total.toFixed(2)}\n🔓 Total unlocked: ${count}`);
+  }
 
-  if(/^\d+$/.test(lower.trim())){
-    const pending=await getSession('pending_price_update');
-    if(pending&&pending.candidates&&!pending.ids){
-      const pick=parseInt(lower.trim())-1;
-      if(pick<0||pick>=pending.candidates.length){await tgSend(MILTON_ID,`⚠️ Invalid number. Reply 1–${pending.candidates.length}.`);return;}
-      const ch=pending.candidates[pick],cd=pending.oldCost?parseFloat((pending.newCost-pending.oldCost).toFixed(2)):0,ns=parseFloat((ch.price+cd).toFixed(2));
-      await setSession('pending_price_update',{ids:ch.id.toString(),newCost:pending.newCost,oldCost:pending.oldCost,serviceName:pending.serviceName,supplierName:pending.supplierName,ts:Date.now()});
-      await tgSend(MILTON_ID,`✅ Selected: ${ch.carrier} | ${ch.stype}\nCost: $${ch.cost} → $${pending.newCost} | Sell: $${ch.price} → $${ns}\n\nReply <b>confirm</b> to apply, or <b>cancel</b> to skip.`);return;}}
+  // ── /pending ──
+  if(cmd==='/pending'){
+    const rows=await supaGet('orders','status=eq.Pending Verification&select=order_number,service_name,imei,email,sell_price,created_at&order=created_at.asc&limit=15');
+    if(!rows.length)return tgSend(MILTON_ID,'No pending orders.');
+    const lines=rows.map(o=>`#${o.order_number} ${o.service_name} | ${maskImei(o.imei)} | $${o.sell_price}\n${o.email}\n/verify ${o.order_number}`);
+    return tgSend(MILTON_ID,`⏳ <b>Pending Verification (${rows.length})</b>\n\n${lines.join('\n\n')}`);
+  }
 
-  if(lower==='confirm'){
-    const p=await getSession('pending_price_update');if(!p){await tgSend(MILTON_ID,'⚠️ No pending price update.');return;}
-    if(Date.now()-p.ts>3600000){await clearSession('pending_price_update');await tgSend(MILTON_ID,'⚠️ Update expired. Forward the price message again.');return;}
-    const ids=p.ids.split(',').filter(Boolean),cd=p.oldCost?parseFloat((p.newCost-p.oldCost).toFixed(2)):0;
-    const br=await supaGet('services',`id=in.(${ids.join(',')})&select=id,carrier,cost,price`);
-    for(const s of br)await supaPatch('services',`id=eq.${s.id}`,{cost:p.newCost,price:parseFloat((s.price+cd).toFixed(2))});
-    await clearSession('pending_price_update');
-    const ss=br.map(s=>`• ${s.carrier}: $${s.price} → $${parseFloat((s.price+cd).toFixed(2))}`).join('\n');
-    await tgSend(MILTON_ID,`✅ <b>Price updated — ${ids.length} service${ids.length>1?'s':''}</b>\nService: "${p.serviceName}"\nCost: ${p.oldCost?`$${p.oldCost} → `:''}$${p.newCost}\n\nSell prices:\n${ss}`);
-    await tgBroadcast(`💰 <b>Price Update</b>\n${p.serviceName}\nPrice ${cd<0?'decreased':'increased'} by $${Math.abs(cd)}.\n\nOrder at rottenapplegsm.com`);return;}
+  // ── /processing ──
+  if(cmd==='/processing'){
+    const rows=await supaGet('orders','status=eq.Processing&select=order_number,service_name,imei,email,sell_price&order=created_at.asc&limit=15');
+    if(!rows.length)return tgSend(MILTON_ID,'No orders in processing.');
+    const lines=rows.map(o=>`#${o.order_number} ${o.service_name} | ${maskImei(o.imei)}\n${o.email}`);
+    return tgSend(MILTON_ID,`⚙️ <b>Processing (${rows.length})</b>\n\n${lines.join('\n\n')}`);
+  }
 
-  if(lower==='cancel'){
-    const pp=await getSession('pending_price_update'),po=await getSession('admin_new_order'),ps=await getSession('admin_new_service');
-    if(pp){await clearSession('pending_price_update');await tgSend(MILTON_ID,'❌ Price update cancelled.');return;}
-    if(po){await clearSession('admin_new_order');await tgSend(MILTON_ID,'❌ New order cancelled.');return;}
-    if(ps){await clearSession('admin_new_service');await tgSend(MILTON_ID,'❌ New service cancelled.');return;}
-    await tgSend(MILTON_ID,'Nothing pending to cancel.');return;}
+  // ── /orders ──
+  if(cmd==='/orders'){
+    const rows=await supaGet('orders','select=order_number,service_name,imei,status,sell_price&order=created_at.desc&limit=10');
+    if(!rows.length)return tgSend(MILTON_ID,'No orders yet.');
+    const lines=rows.map(o=>`#${o.order_number} ${statusEmoji(o.status)} ${o.service_name} | ${maskImei(o.imei)} | $${o.sell_price}`);
+    return tgSend(MILTON_ID,`📦 <b>Last 10 Orders</b>\n\n${lines.join('\n')}`);
+  }
 
-  if(cmd==='/done'){
-    const imei=parts[1];if(!imei||!/^\d{15}$/.test(imei)){await tgSend(MILTON_ID,'Usage: /done 123456789012345');return;}
-    const orders=await supaGet('orders',`imei=eq.${imei}&limit=1`);if(!orders.length){await tgSend(MILTON_ID,`⚠️ No order found for IMEI <code>${imei}</code>`);return;}
-    const o=orders[0];await supaPatch('orders',`id=eq.${o.id}`,{status:'Completed',completed:new Date().toISOString().split('T')[0]});
-    const total=await incrementUnlockCount(),sn=o.description||'Unlock Service';
-    await tgSend(MILTON_ID,`✅ <b>Order Completed (Unlocked)</b>\nOrder: #${o.order_number||o.id.slice(0,8)}\nCustomer: ${o.customer_name||'Guest'}\nIMEI: <code>${imei}</code>\n🔓 Total unlocks broadcast: ${total}`);
-    await tgBroadcast(`🔓 <b>Successful Unlock!</b>\n\n✅ ${sn}\nIMEI: <code>${imei.slice(0,6)}*****${imei.slice(-4)}</code>\n\n🏆 <b>${total} phones unlocked</b> and counting!\nOrder yours at <b>rottenapplegsm.com</b>`);return;}
+  // ── /verify [order#] ──
+  if(cmd==='/verify'&&parts[1]){
+    const num=parseInt(parts[1]);
+    const rows=await supaGet('orders',`order_number=eq.${num}&select=*&limit=1`);
+    if(!rows.length)return tgSend(MILTON_ID,`Order #${num} not found.`);
+    const o=rows[0];
+    await supaPatch('orders',`order_number=eq.${num}`,{status:'Processing'});
+    await tgSend(MILTON_ID,`✅ Order #${num} → <b>Processing</b>`);
+    if(o.cust_tg_id){
+      await tgSend(o.cust_tg_id,
+        `✅ <b>Payment confirmed!</b>\nOrder #${num} is now processing.\nService: ${o.service_name}\nIMEI: ${maskImei(o.imei)}\nWe'll notify you when it's unlocked! 🔓`);
+    }
+    return;
+  }
 
-  if(cmd==='/reject'){
-    const imei=parts[1];if(!imei||!/^\d{15}$/.test(imei)){await tgSend(MILTON_ID,'Usage: /reject 123456789012345');return;}
-    const orders=await supaGet('orders',`imei=eq.${imei}&limit=1`);if(!orders.length){await tgSend(MILTON_ID,`⚠️ No order found for IMEI <code>${imei}</code>`);return;}
-    await supaPatch('orders',`id=eq.${orders[0].id}`,{status:'Failed'});
-    await tgSend(MILTON_ID,`❌ <b>Order Rejected</b>\nOrder: #${orders[0].order_number||orders[0].id.slice(0,8)}\nCustomer: ${orders[0].customer_name||'Guest'}\nIMEI: <code>${imei}</code>`);return;}
+  // ── /done [IMEI] — F4: ONLY unlock celebration, not IMEI checks ──
+  if(cmd==='/done'&&parts[1]){
+    const imei=parts[1].trim();
+    const rows=await supaGet('orders',`imei=eq.${encodeURIComponent(imei)}&status=eq.Processing&select=*&limit=1`);
+    if(!rows.length)return tgSend(MILTON_ID,`No processing order found for IMEI ${imei}.`);
+    const o=rows[0];
+    await supaPatch('orders',`imei=eq.${encodeURIComponent(imei)}&status=eq.Processing`,{status:'Completed'});
+    const count=await incrementUnlockCount();
+    // Celebrate on channel (F4: unlock orders ONLY)
+    await tgBroadcast(
+      `🎉🔓 <b>IMEI UNLOCKED!</b> 🔓🎉\n\n`+
+      `Another device is FREE!\n`+
+      `Service: ${o.service_name}\n\n`+
+      `🏆 <b>Total unlocks: ${count}</b>\n\n`+
+      `Rotten Apple GSM — Fast, reliable unlocks.\nOrder at rottenapplegsm.com`);
+    // Notify customer via Telegram if we have their ID
+    if(o.cust_tg_id){
+      await tgSend(o.cust_tg_id,
+        `🎉🔓 <b>Your IMEI is UNLOCKED!</b>\n\nOrder #${o.order_number}\nService: ${o.service_name}\nIMEI: ${maskImei(imei)}\n\nThank you for choosing Rotten Apple GSM!`);
+    }
+    return tgSend(MILTON_ID,`✅ #${o.order_number} marked Completed. Unlock #${count} celebrated!`);
+  }
 
-  if(cmd==='/order'&&parts[1]?.toLowerCase()==='add'){await setSession('admin_new_order',{step:'email',ts:Date.now()});await tgSend(MILTON_ID,'📦 <b>New Order — Step 1/5</b>\n\nEnter customer <b>email</b>\n(or type cancel)');return;}
-  if(cmd==='/service'&&parts[1]?.toLowerCase()==='add'){await setSession('admin_new_service',{step:'name',ts:Date.now()});await tgSend(MILTON_ID,'🔧 <b>New Service — Step 1/4</b>\n\nEnter the service <b>name/description</b>\nExample: T-Mobile iPhone 14-16 Unlock\n(or type cancel)');return;}
+  // ── /imei_done [IMEI] [result...] — F2: result to customer, NO celebration ──
+  if(cmd==='/imei_done'&&parts[1]){
+    const imei=parts[1].trim();
+    const result=parts.slice(2).join(' ')||'Check complete.';
+    const rows=await supaGet('imei_checks',`imei=eq.${encodeURIComponent(imei)}&status=eq.Pending&select=*&limit=1`);
+    if(!rows.length)return tgSend(MILTON_ID,`No pending IMEI check for ${imei}.`);
+    const chk=rows[0];
+    await supaPatch('imei_checks',`imei=eq.${encodeURIComponent(imei)}&status=eq.Pending`,{status:'Completed',result});
+    // F2: Send result to customer bot
+    const custId=chk.cust_tg_id;
+    if(custId){
+      await tgSend(custId,
+        `📋 <b>IMEI Check Result</b>\n\nIMEI: ${maskImei(imei)}\nService: ${chk.service_name}\n\nResult: ${result}`);
+    }
+    // Also email the customer (website handles this) — just confirm to admin
+    return tgSend(MILTON_ID,`✅ IMEI check #${chk.order_number||imei} marked Complete.\nResult sent to customer${custId?' via Telegram':' (no Telegram ID on file)'}.`);
+  }
 
-  const pO=await getSession('admin_new_order');if(pO&&!cmd.startsWith('/')&&lower!=='confirm'&&lower!=='cancel'){await continueOrderWizard(pO,text);return;}
-  const pS=await getSession('admin_new_service');if(pS&&!cmd.startsWith('/')&&lower!=='confirm'&&lower!=='cancel'){await continueServiceWizard(pS,text);return;}
+  // ── /reject [order#] ──
+  if(cmd==='/reject'&&parts[1]){
+    const num=parseInt(parts[1]);
+    const rows=await supaGet('orders',`order_number=eq.${num}&select=*&limit=1`);
+    if(!rows.length)return tgSend(MILTON_ID,`Order #${num} not found.`);
+    const o=rows[0];
+    await supaPatch('orders',`order_number=eq.${num}`,{status:'Failed'});
+    if(o.payment_method==='wallet'&&o.email){
+      await supaPatch('accounts',`email=eq.${encodeURIComponent(o.email)}`,{balance:`balance + ${o.sell_price||0}`});
+      await tgSend(MILTON_ID,`Wallet refunded $${o.sell_price} to ${o.email}`);
+    }
+    if(o.cust_tg_id){
+      await tgSend(o.cust_tg_id,`❌ Order #${num} could not be processed. If you paid, a refund will be issued. Contact support if needed.`);
+    }
+    return tgSend(MILTON_ID,`Order #${num} rejected.`);
+  }
 
-  const ou=parseOrderStatus(text);
-  if(ou){
-    const{imei,status,detail}=ou;const orders=await supaGet('orders',`imei=eq.${imei}&limit=1`);
-    if(!orders.length){await tgSend(MILTON_ID,`⚠️ No order found for IMEI <code>${imei}</code>`);return;}
-    const o=orders[0];await supaPatch('orders',`id=eq.${o.id}`,{status,updated_at:new Date().toISOString()});
-    const e=status==='Completed'?'✅':'❌';
-    await tgSend(MILTON_ID,`${e} <b>Order ${status==='Completed'?'UNLOCKED':'FAILED'}</b>\nOrder: #${o.order_number||o.id.slice(0,8)}\nIMEI: <code>${imei}</code>\nCustomer: ${o.customer_name||'Guest'}\nService: ${o.description||'—'}\n${detail?`Note: ${detail}`:''}`);
-    if(status==='Completed'){const total=await incrementUnlockCount();await tgBroadcast(`🔓 <b>Successful Unlock!</b>\n\n✅ ${o.description||'Unlock Service'}\nIMEI: <code>${imei.slice(0,6)}*****${imei.slice(-4)}</code>\n\n🏆 <b>${total} phones unlocked</b> and counting!\nOrder yours at <b>rottenapplegsm.com</b>`);}
-    return;}
+  // ── /refund [order#] ──
+  if(cmd==='/refund'&&parts[1]){
+    const num=parseInt(parts[1]);
+    const rows=await supaGet('orders',`order_number=eq.${num}&select=*&limit=1`);
+    if(!rows.length)return tgSend(MILTON_ID,`Order #${num} not found.`);
+    const o=rows[0];
+    if(o.email){
+      await supaPatch('accounts',`email=eq.${encodeURIComponent(o.email)}`,{balance:`balance + ${o.sell_price||0}`});
+    }
+    await supaPatch('orders',`order_number=eq.${num}`,{status:'Refunded'});
+    if(o.cust_tg_id){
+      await tgSend(o.cust_tg_id,`💰 Order #${num} has been refunded. $${o.sell_price} added to your wallet.`);
+    }
+    return tgSend(MILTON_ID,`✅ Order #${num} refunded. $${o.sell_price||0} → ${o.email}`);
+  }
 
-  const pu=parsePriceUpdate(text);
-  if(pu){
-    const{newCost,oldCost,serviceName}=pu;const sn=msg.forward_from_chat?.title||msg.forward_from?.first_name||msg.forward_sender_name||null;
-    if(!serviceName){await tgSend(MILTON_ID,`⚠️ Price detected ($${newCost}) but couldn't read the service name. Forward the full supplier message.`);return;}
-    const all=await supaGet('services','select=id,carrier,stype,brand,series,cost,price,supplier&active=eq.true&limit=500');
-    const matches=matchServices(all,serviceName,sn);
-    if(!matches.length){await tgSend(MILTON_ID,`⚠️ <b>No match found</b>\nSupplier: ${sn||'Unknown'}\nService: "${serviceName}"\nNew cost: $${newCost}\n\nCheck the supplier field on your services in Admin.`);return;}
-    const pd=oldCost?parseFloat((newCost-oldCost).toFixed(2)):0;
-    if(matches.length===1){const s=matches[0],ns=parseFloat((s.price+pd).toFixed(2));await setSession('pending_price_update',{ids:s.id.toString(),newCost,oldCost,serviceName,supplierName:sn,ts:Date.now()});await tgSend(MILTON_ID,`💰 <b>Price update ready</b>\nSupplier: <b>${sn||'Unknown'}</b>\nService: "${serviceName}"\n\n• ${s.carrier} | ${s.stype} (${s.series||'no series'})\n  Cost: $${s.cost} → $${newCost} | Sell: $${s.price} → $${ns}\n\nReply <b>confirm</b> to apply, or <b>cancel</b> to skip.`);}
-    else{const pl=matches.map((s,i)=>{const ns=parseFloat((s.price+pd).toFixed(2));return `${i+1}. ${s.carrier} | ${s.stype} (${s.series||'no series'})\n   Cost: $${s.cost} → $${newCost} | Sell: $${s.price} → $${ns}`;}).join('\n\n');await setSession('pending_price_update',{ids:null,candidates:matches.map(s=>({id:s.id,carrier:s.carrier,stype:s.stype,series:s.series,cost:s.cost,price:s.price})),newCost,oldCost,serviceName,supplierName:sn,ts:Date.now()});await tgSend(MILTON_ID,`💰 <b>${matches.length} services matched</b>\nSupplier: <b>${sn||'Unknown'}</b>\nService: "${serviceName}"\n\n${pl}\n\nReply with a number to select (e.g. <b>1</b>), or <b>cancel</b>.`);}
-    return;}
+  // ── /note [order#] [text] ──
+  if(cmd==='/note'&&parts.length>=3){
+    const num=parseInt(parts[1]);
+    const note=parts.slice(2).join(' ');
+    const rows=await supaGet('orders',`order_number=eq.${num}&select=notes&limit=1`);
+    if(!rows.length)return tgSend(MILTON_ID,`Order #${num} not found.`);
+    const existing=rows[0].notes||'';
+    const updated=existing?`${existing}\n${note}`:note;
+    await supaPatch('orders',`order_number=eq.${num}`,{notes:updated});
+    return tgSend(MILTON_ID,`✅ Note added to Order #${num}.`);
+  }
 
-  await tgSend(MILTON_ID,'I didn\'t recognize that. Type /help to see all commands.');}
+  // ── /customer [email] ──
+  if(cmd==='/customer'&&parts[1]){
+    const email=parts[1].trim();
+    const [accRows,orderRows]=await Promise.all([
+      supaGet('accounts',`email=eq.${encodeURIComponent(email)}&select=*&limit=1`),
+      supaGet('orders',`email=eq.${encodeURIComponent(email)}&select=order_number,service_name,status,sell_price&order=created_at.desc&limit=5`)
+    ]);
+    if(!accRows.length)return tgSend(MILTON_ID,`No account found for ${email}`);
+    const a=accRows[0];
+    const oLines=orderRows.map(o=>`#${o.order_number} ${statusEmoji(o.status)} ${o.service_name} $${o.sell_price}`).join('\n')||'No orders';
+    return tgSend(MILTON_ID,
+      `👤 <b>${a.full_name||email}</b>\nEmail: ${email}\nBalance: $${(a.balance||0).toFixed(2)}\nJoined: ${a.created_at?.split('T')[0]||'—'}\n\n<b>Recent Orders:</b>\n${oLines}`);
+  }
 
-async function continueOrderWizard(state,text){
-  const next={...state};
-  if(state.step==='email'){next.email=text.trim().toLowerCase();next.step='name';await setSession('admin_new_order',next);await tgSend(MILTON_ID,'Step 2/5: Enter customer <b>full name</b>');return;}
-  if(state.step==='name'){next.customerName=text.trim();next.step='imei';await setSession('admin_new_order',next);await tgSend(MILTON_ID,'Step 3/5: Enter the <b>IMEI</b> (15 digits, or "none" to skip)');return;}
-  if(state.step==='imei'){next.imei=text.trim().toLowerCase()==='none'?'':text.trim();next.step='service';await setSession('admin_new_order',next);await tgSend(MILTON_ID,'Step 4/5: Enter the <b>service description</b>\nExample: T-Mobile iPhone 15 Unlock');return;}
-  if(state.step==='service'){next.description=text.trim();next.step='amount';await setSession('admin_new_order',next);await tgSend(MILTON_ID,'Step 5/5: Enter the <b>amount charged</b> (e.g. 49.99)');return;}
-  if(state.step==='amount'){const amt=parseFloat(text.trim().replace(/[^0-9.]/g,''));if(isNaN(amt)||amt<=0){await tgSend(MILTON_ID,'⚠️ Invalid amount. Enter a number like 49.99');return;}next.amount=amt;next.step='review';await setSession('admin_new_order',next);await tgSend(MILTON_ID,`📋 <b>Review new order</b>\n\nEmail: ${next.email}\nName: ${next.customerName}\nIMEI: ${next.imei||'N/A'}\nService: ${next.description}\nAmount: $${next.amount.toFixed(2)}\n\nReply <b>confirm</b> to create, or <b>cancel</b> to discard.`);return;}
-  if(state.step==='review'&&text.trim().toLowerCase()==='confirm'){
-    const ex=await supaGet('accounts',`email=eq.${state.email}&limit=1`);let aid=null;
-    if(ex.length)aid=ex[0].id;else{const na=await supaPost('accounts',{email:state.email,name:state.customerName,balance:0,created_at:new Date().toISOString()});aid=na[0]?.id||null;}
-    const on=await nextOrderNumber();
-    await supaPost('orders',{id:'RA-ADMIN-'+Date.now(),order_number:on,customer_name:state.customerName,email:state.email,description:state.description,imei:state.imei||'',amount:state.amount,cost:0,payment_method:'Manual',status:'Processing',placed:new Date().toISOString().split('T')[0],account_id:aid,notes:'Manually created via Telegram bot'});
-    await clearSession('admin_new_order');
-    await tgSend(MILTON_ID,`✅ <b>Order #${on} created!</b>\nCustomer: ${state.customerName} (${state.email})\nIMEI: ${state.imei||'N/A'}\nService: ${state.description}\nAmount: $${state.amount.toFixed(2)}\nAccount: ${!ex.length?'🆕 new account created':'existing account linked'}`);}}
+  // ── /balance add/set [email] [amount] ──
+  if(cmd==='/balance'&&parts.length>=4){
+    const op=parts[1].toLowerCase();
+    const email=parts[2].trim();
+    const amt=parseFloat(parts[3]);
+    if(isNaN(amt))return tgSend(MILTON_ID,'Invalid amount.');
+    if(op==='add'){
+      await supaPatch('accounts',`email=eq.${encodeURIComponent(email)}`,{balance:`balance + ${amt}`});
+      return tgSend(MILTON_ID,`✅ Added $${amt} to ${email}'s wallet.`);
+    }
+    if(op==='set'){
+      await supaPatch('accounts',`email=eq.${encodeURIComponent(email)}`,{balance:amt});
+      return tgSend(MILTON_ID,`✅ Set ${email}'s wallet to $${amt}.`);
+    }
+    return tgSend(MILTON_ID,'Usage: /balance add [email] [amount] or /balance set [email] [amount]');
+  }
 
-async function continueServiceWizard(state,text){
-  const next={...state};
-  if(state.step==='name'){next.name=text.trim();next.step='carrier';await setSession('admin_new_service',next);await tgSend(MILTON_ID,'Step 2/4: Enter the <b>carrier</b> (e.g. T-Mobile, AT&T, Cricket)');return;}
-  if(state.step==='carrier'){next.carrier=text.trim();next.step='cost';await setSession('admin_new_service',next);await tgSend(MILTON_ID,'Step 3/4: Enter the <b>supplier cost</b> (e.g. 85.00)');return;}
-  if(state.step==='cost'){const cost=parseFloat(text.trim().replace(/[^0-9.]/g,''));if(isNaN(cost)||cost<=0){await tgSend(MILTON_ID,'⚠️ Invalid cost. Enter a number.');return;}next.cost=cost;next.price=calcSellPrice(cost);next.step='supplier';await setSession('admin_new_service',next);await tgSend(MILTON_ID,`Cost: $${cost} → Auto sell: $${next.price} (your $${MIN_PROFIT} profit included)\n\nStep 4/4: Enter the <b>supplier name</b> (e.g. XpertUnlock)`);return;}
-  if(state.step==='supplier'){next.supplier=text.trim();next.step='review';await setSession('admin_new_service',next);await tgSend(MILTON_ID,`📋 <b>Review new service</b>\n\nName: ${next.name}\nCarrier: ${next.carrier}\nCost: $${next.cost} | Sell: $${next.price}\nSupplier: ${next.supplier}\n\nReply <b>confirm</b> to add, or <b>cancel</b> to discard.`);return;}
-  if(state.step==='review'&&text.trim().toLowerCase()==='confirm'){
-    await supaPost('services',{id:'svc-'+Date.now(),name:next.name,carrier:next.carrier,cost:next.cost,price:next.price,supplier:next.supplier,active:true,created_at:new Date().toISOString()});
-    await clearSession('admin_new_service');
-    await tgSend(MILTON_ID,`✅ <b>Service added!</b>\n${next.name}\nCarrier: ${next.carrier}\nCost: $${next.cost} | Sell: $${next.price}\nSupplier: ${next.supplier}`);
-    await tgBroadcast(`🆕 <b>New Service Available</b>\n${next.name}\nCarrier: ${next.carrier} | Price: $${next.price}\n\nOrder at rottenapplegsm.com`);}}
+  // ── /service list / add ──
+  if(cmd==='/service'){
+    if(parts[1]==='add'){
+      await setSession('admin_svc_wiz',{step:'name'});
+      return tgSend(MILTON_ID,'Service name?');
+    }
+    if(parts[1]==='list'){
+      const rows=await supaGet('services','is_active=eq.true&select=name,sell_price,type&order=name');
+      if(!rows.length)return tgSend(MILTON_ID,'No active services.');
+      return tgSend(MILTON_ID,'<b>Active Services</b>\n'+rows.map(s=>`• ${s.name} — $${s.sell_price} (${s.type})`).join('\n'));
+    }
+  }
 
-// ── Main export ───────────────────────────────────────────────
-exports.handler=async(event)=>{
-  if(event.httpMethod!=='POST')return{statusCode:200,body:'Rotten Apple GSM Telegram Webhook'};
-  let body;try{body=JSON.parse(event.body);}catch{return{statusCode:400,body:'Bad JSON'};}
+  // ── /order add ──
+  if(cmd==='/order'&&parts[1]==='add'){
+    await setSession('admin_order_wiz',{step:'service'});
+    return tgSend(MILTON_ID,'Service name for this order?');
+  }
 
-  if(body.type==='new_order'){
-    const o=body.order;if(o)await tgSend(MILTON_ID,`📦 <b>NEW ORDER — Website</b>\nOrder #${o.orderNumber||o.order_number} | ${o.id}\nCustomer: ${o.name||o.customer_name||'Guest'} (${o.email||'—'})\nService: ${o.desc||o.description||'—'}\nIMEI: <code>${o.imeiMasked||o.imei||'—'}</code>\nAmount: $${parseFloat(o.amount||0).toFixed(2)} | Payment: ${o.paymentMethod||o.payment_method||'—'}\nStatus: ${o.status||'Pending Verification'}`);
-    return{statusCode:200,body:'ok'};}
+  // ── Forwarded supplier messages ──
+  if(msg.forward_from||msg.forward_from_chat||msg.forward_date){
+    const pu=parsePriceUpdate(text);
+    if(pu){
+      const all=await supaGet('services','select=id,name,description,cost_price');
+      const matches=matchServices(all,pu.service,'');
+      if(!matches.length)return tgSend(MILTON_ID,`No matching service found for "${pu.service}".`);
+      for(const svc of matches){
+        const newSell=calcSellPrice(pu.price);
+        await supaPatch('services',`id=eq.${svc.id}`,{cost_price:pu.price,sell_price:newSell});
+        await tgSend(MILTON_ID,`✅ Updated <b>${svc.name}</b>\nCost: $${pu.price} → Sell: $${newSell}`);
+      }
+      return;
+    }
+    const status=parseOrderStatus(text);
+    if(status){
+      return tgSend(MILTON_ID,`Detected status: <b>${status}</b>\nForward me the IMEI too, then use /done [IMEI] or /reject [order#].`);
+    }
+  }
 
-  if(body.type==='new_account'){
-    const a=body.account;if(a)await tgSend(MILTON_ID,`👤 <b>NEW ACCOUNT — Website</b>\nName: ${a.name}\nEmail: ${a.email}\nJoined: ${new Date().toLocaleDateString()}`);
-    return{statusCode:200,body:'ok'};}
+  return tgSend(MILTON_ID,'Unknown command. Try /help');
+}
 
-  const msg=body.message||body.channel_post;if(!msg)return{statusCode:200,body:'ok'};
-  const fromId=msg.from?.id||msg.chat?.id,text=msg.text||msg.caption||'';if(!text)return{statusCode:200,body:'ok'};
+// ── Main Netlify handler ──────────────────────────────────────
+exports.handler = async (event) => {
+  try{
+    const body=JSON.parse(event.body||'{}');
 
-  try{if(fromId===MILTON_ID)await handleAdmin(msg,text);else await handleCustomer(fromId,text,msg.from?.first_name||'there');}
-  catch(err){console.error('Telegram webhook error:',err);if(fromId===MILTON_ID)await tgSend(MILTON_ID,`⚠️ Bot error: ${err.message}`).catch(()=>{});}
+    // ── F3: Website → bot alerts (new_order / new_account) ──
+    if(body.type==='new_order'&&body.order){
+      const o=body.order;
+      await tgSend(MILTON_ID,
+        `📦 <b>New Order #${o.order_number||'?'} from website</b>\n`+
+        `Service: ${o.service_name||'—'}\nIMEI: ${maskImei(o.imei)}\n`+
+        `Email: ${o.email||'—'}\nAmount: $${o.sell_price||'?'}\n`+
+        `Payment: ${o.payment_method||'—'}\n\n`+
+        `/verify ${o.order_number} — confirm\n/reject ${o.order_number} — reject`);
+      return {statusCode:200,body:'ok'};
+    }
+    if(body.type==='new_account'&&body.account){
+      const a=body.account;
+      await tgSend(MILTON_ID,
+        `🆕 <b>New Account</b>\n`+
+        `Name: ${a.full_name||'—'}\nEmail: ${a.email||'—'}\n`+
+        `Joined: ${new Date().toLocaleDateString('en-CA')}`);
+      return {statusCode:200,body:'ok'};
+    }
 
-  return{statusCode:200,body:'ok'};};
+    // ── Telegram webhook update ──
+    if(!body.message)return {statusCode:200,body:'ok'};
+    const msg=body.message;
+    const fromId=msg.from?.id;
+    const text=(msg.text||'').trim();
+    const firstName=msg.from?.first_name||'there';
+    if(!fromId||!text)return {statusCode:200,body:'ok'};
+
+    if(fromId===MILTON_ID){
+      await handleAdmin(msg,text);
+    } else {
+      await handleCustomer(fromId,text,firstName);
+    }
+    return {statusCode:200,body:'ok'};
+  }catch(err){
+    console.error('handler error:',err.message);
+    return {statusCode:200,body:'ok'};
+  }
+};
