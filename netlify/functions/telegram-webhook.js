@@ -100,50 +100,46 @@ function parsePriceUpdate(text) {
 }
 
 function matchServices(allServices, serviceName, supplierName) {
-  // Step 1: narrow by supplier if known
+  // Step 1: narrow by supplier
   let pool = allServices;
   if (supplierName) {
-    const supLower = supplierName.toLowerCase().replace(/\s+/g,'');
+    const supLower = supplierName.toLowerCase().replace(/\s+/g, '');
     const filtered = allServices.filter(s => {
-      const dbSup = (s.supplier || '').toLowerCase().replace(/\s+/g,'');
+      const dbSup = (s.supplier || '').toLowerCase().replace(/\s+/g, '');
       return dbSup.includes(supLower) || supLower.includes(dbSup);
     });
     if (filtered.length > 0) pool = filtered;
   }
 
-  // Step 2: extract caption carrier names (exact, no stripping)
-  // We match the DB carrier field directly against these phrases
+  // Step 2: extract carrier names from caption
   const CARRIER_PHRASES = [
-    't-mobile','tmobile','sprint','metropcs','metro pcs',
-    'at&t','att','verizon','boost mobile','xfinity mobile','xfinity',
-    'cricket','dish','visible','us cellular','consumer cellular',
-    'straight talk','mint','tracfone','simple mobile','net10',
-    'total wireless','virgin','lycamobile','h2o','boost'
+    't-mobile', 'tmobile', 'sprint', 'metropcs', 'metro pcs',
+    'at&t', 'att', 'verizon', 'boost mobile', 'xfinity mobile', 'xfinity',
+    'cricket', 'dish', 'visible', 'us cellular', 'consumer cellular',
+    'straight talk', 'mint', 'tracfone', 'simple mobile', 'net10',
+    'total wireless', 'virgin', 'lycamobile', 'h2o', 'boost'
   ];
   const svcLower = serviceName.toLowerCase();
-  // Only keep carriers that actually appear as a word/phrase in the caption
   const captionCarriers = CARRIER_PHRASES.filter(c => {
     const escaped = c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    return new RegExp('\\b' + escaped.replace(/\s+/g,'[\\s\\-]+') + '\\b', 'i').test(serviceName);
+    return new RegExp('\\b' + escaped.replace(/\s+/g, '[\\s\\-]+') + '\\b', 'i').test(serviceName);
   });
 
   // Step 3: extract iPhone model numbers from caption
-  // Caption examples: "iPhone 18 / Duo", "iPhone 15 - 17"
   const captionModelRange = serviceName.match(/iPhone\s+(\d{1,2})\s*[-\/–]\s*(\d{1,2})/i);
   const captionSingleModel = serviceName.match(/iPhone\s+(\d{1,2})/i);
 
   let captionModels = new Set();
-  let skipModelFilter = false;
+  let hasModelInfo = false;
 
   if (captionModelRange) {
     const s = parseInt(captionModelRange[1]);
     const e = parseInt(captionModelRange[2]);
-    if (e - s > 8) { skipModelFilter = true; }
-    else { for (let m = s; m <= e; m++) captionModels.add(m); }
+    for (let m = s; m <= e; m++) captionModels.add(m);
+    hasModelInfo = true;
   } else if (captionSingleModel) {
     captionModels.add(parseInt(captionSingleModel[1]));
-  } else {
-    skipModelFilter = true;
+    hasModelInfo = true;
   }
 
   const hasiPhone  = /iphone/i.test(serviceName);
@@ -158,27 +154,30 @@ function matchServices(allServices, serviceName, supplierName) {
     if (hasiPhone  && !hBrand.includes('apple') && !hSeries.includes('iphone')) return false;
     if (hasSamsung && !hBrand.includes('samsung')) return false;
 
-    // Carrier: at least one caption carrier must appear in the DB carrier field
+    // Carrier filter: at least one caption carrier in DB carrier field
     if (captionCarriers.length > 0) {
       const hit = captionCarriers.some(c => hCarrier.includes(c));
       if (!hit) return false;
     }
 
-    // Model: extract numbers from the DB series field and check overlap
-    if (!skipModelFilter && captionModels.size > 0) {
-      // Parse DB series like "iPhone 15-17 Series", "iPhone 18 Series", "iPhone All Models"
-      if (/all models/i.test(hSeries)) return true; // "All Models" covers everything
+    // Model filter: only apply when caption has model info
+    if (hasModelInfo && captionModels.size > 0) {
+      // "All Models" always matches
+      if (/all models/i.test(hSeries)) return true;
 
+      // Series must contain at least one iPhone model number to be eligible
+      const hasAnyModel = /\d{1,2}/.test(hSeries);
+      if (!hasAnyModel) return false; // "Lost & Stolen", "Non-Payment" etc — skip
+
+      // Extract DB model range
       const dbRange  = hSeries.match(/(\d{1,2})\s*[-–]\s*(\d{1,2})/);
-      const dbSingle = hSeries.match(/\biphone\s+(\d{1,2})\b/i) || hSeries.match(/\b(\d{1,2})\b/);
+      const dbSingle = hSeries.match(/\b(\d{1,2})\b/);
 
       let dbModels = new Set();
       if (dbRange) {
         for (let m = parseInt(dbRange[1]); m <= parseInt(dbRange[2]); m++) dbModels.add(m);
       } else if (dbSingle) {
         dbModels.add(parseInt(dbSingle[1]));
-      } else {
-        return true; // can't parse series — include it
       }
 
       const overlap = [...captionModels].some(m => dbModels.has(m));
@@ -448,6 +447,32 @@ async function handleAdmin(msg, text) {
     return;
   }
 
+  // Handle number selection when multiple services matched
+  if (/^\d+$/.test(lower.trim())) {
+    const pending = await getSession('pending_price_update');
+    if (pending && pending.candidates && !pending.ids) {
+      const pick = parseInt(lower.trim()) - 1;
+      if (pick < 0 || pick >= pending.candidates.length) {
+        await tgSend(MILTON_ID, `⚠️ Invalid number. Reply 1–${pending.candidates.length} to pick a service.`);
+        return;
+      }
+      const chosen = pending.candidates[pick];
+      const costDelta = pending.oldCost ? parseFloat((pending.newCost - pending.oldCost).toFixed(2)) : 0;
+      const newSell = parseFloat((chosen.price + costDelta).toFixed(2));
+      // Update session with the chosen id so confirm flow works
+      await setSession('pending_price_update', {
+        ids: chosen.id.toString(), newCost: pending.newCost, oldCost: pending.oldCost,
+        serviceName: pending.serviceName, supplierName: pending.supplierName, ts: Date.now()
+      });
+      await tgSend(MILTON_ID,
+        `✅ Selected: ${chosen.carrier} | ${chosen.stype}\n` +
+        `Cost: $${chosen.cost} → $${pending.newCost} | Sell: $${chosen.price} → $${newSell}\n\n` +
+        `Reply <b>confirm</b> to apply, or <b>cancel</b> to skip.`
+      );
+      return;
+    }
+  }
+
   if (lower === 'confirm') {
     const pending = await getSession('pending_price_update');
     if (!pending) { await tgSend(MILTON_ID, `⚠️ No pending price update found.`); return; }
@@ -593,22 +618,39 @@ async function handleAdmin(msg, text) {
     }
 
     const previewDelta = oldCost ? parseFloat((newCost - oldCost).toFixed(2)) : 0;
-    const previewLines = matches.map(s => {
+
+    if (matches.length === 1) {
+      // Single match — go straight to confirm/cancel
+      const s = matches[0];
       const newSell = parseFloat((s.price + previewDelta).toFixed(2));
-      return `• ${s.carrier} | ${s.stype} — cost $${s.cost} → $${newCost} | sell $${s.price} → $${newSell}`;
-    }).join('\n');
-
-    await setSession('pending_price_update', {
-      ids: matches.map(s => s.id).join(','), newCost, oldCost, serviceName, supplierName, ts: Date.now()
-    });
-
-    await tgSend(MILTON_ID,
-      `💰 <b>Price update ready</b>\n` +
-      `Supplier: <b>${supplierName || 'Unknown'}</b>\nService: "${serviceName}"\n` +
-      (oldCost ? `$${oldCost} → ` : '') + `$${newCost} new cost (your sell prices unchanged)\n` +
-      `${matches.length} service${matches.length > 1 ? 's' : ''} matched:\n\n${previewLines}\n\n` +
-      `Reply <b>confirm</b> to apply, or <b>cancel</b> to skip.`
-    );
+      await setSession('pending_price_update', {
+        ids: s.id.toString(), newCost, oldCost, serviceName, supplierName, ts: Date.now()
+      });
+      await tgSend(MILTON_ID,
+        `💰 <b>Price update ready</b>\n` +
+        `Supplier: <b>${supplierName || 'Unknown'}</b>\nService: "${serviceName}"\n\n` +
+        `• ${s.carrier} | ${s.stype}\n` +
+        `  Cost: $${s.cost} → $${newCost} | Sell: $${s.price} → $${newSell}\n\n` +
+        `Reply <b>confirm</b> to apply, or <b>cancel</b> to skip.`
+      );
+    } else {
+      // Multiple matches — let Milton pick
+      const previewLines = matches.map((s, i) => {
+        const newSell = parseFloat((s.price + previewDelta).toFixed(2));
+        return `${i + 1}. ${s.carrier} | ${s.stype} (${s.series || 'no series'})\n   Cost: $${s.cost} → $${newCost} | Sell: $${s.price} → $${newSell}`;
+      }).join('\n\n');
+      await setSession('pending_price_update', {
+        ids: null, // will be set when Milton picks
+        candidates: matches.map(s => ({ id: s.id, carrier: s.carrier, stype: s.stype, series: s.series, cost: s.cost, price: s.price })),
+        newCost, oldCost, serviceName, supplierName, ts: Date.now()
+      });
+      await tgSend(MILTON_ID,
+        `💰 <b>${matches.length} services matched</b>\n` +
+        `Supplier: <b>${supplierName || 'Unknown'}</b>\nService: "${serviceName}"\n\n` +
+        `${previewLines}\n\n` +
+        `Reply with a number to select (e.g. <b>1</b>), or <b>cancel</b> to skip.`
+      );
+    }
     return;
   }
 
