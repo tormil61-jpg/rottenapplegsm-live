@@ -22,6 +22,15 @@ async function supaGet(t,q){const r=await fetch(`${SUPA_URL}/rest/v1/${t}?${q}`,
 async function supaPatch(t,q,b){const r=await fetch(`${SUPA_URL}/rest/v1/${t}?${q}`,{method:'PATCH',headers:{...supaH,'Prefer':'return=representation'},body:JSON.stringify(b)});if(!r.ok)throw new Error(`PATCH ${t} ${r.status}`);return r.json();}
 async function supaPost(t,b){const r=await fetch(`${SUPA_URL}/rest/v1/${t}`,{method:'POST',headers:{...supaH,'Prefer':'return=representation,resolution=merge-duplicates'},body:JSON.stringify(b)});if(!r.ok){const e=await r.text();throw new Error(`POST ${t} ${r.status}: ${e}`);}return r.json();}
 
+// ── Balance helper (fetch-then-set, avoids SQL expressions in REST) ──
+async function supaBalanceAdd(email, delta) {
+  const rows = await supaGet('accounts', `email=eq.${encodeURIComponent(email)}&select=balance&limit=1`);
+  const current = rows.length ? (parseFloat(rows[0].balance) || 0) : 0;
+  const updated = Math.max(0, parseFloat((current + delta).toFixed(2)));
+  await supaPatch('accounts', `email=eq.${encodeURIComponent(email)}`, { balance: updated });
+  return updated;
+}
+
 // ── Telegram helpers ──────────────────────────────────────────
 async function tgSend(id,text,extra={}){
   if(!id)return;
@@ -131,13 +140,13 @@ async function continueCustomerImeiWizard(fromId,text,state){
       const payMethod=tl==='wallet'?'wallet':'paypal';
       try{
         const orderNum=await nextOrderNumber();
-        const rec=await supaPost('imei_checks',{
+        await supaPost('imei_checks',{
           imei:state.imei,service_id:state.serviceId,service_name:state.serviceName,
           email:state.email,status:'Pending',price:state.price,
           payment_method:payMethod,cust_tg_id:fromId,order_number:orderNum
         });
         if(payMethod==='wallet'){
-          await supaPatch('accounts',`email=eq.${encodeURIComponent(state.email)}`,{balance:`balance - ${state.price}`});
+          await supaBalanceAdd(state.email, -state.price);
         }
         await clearSession(`cust_imei_${fromId}`);
         await tgSend(fromId,`🎉 IMEI check submitted!\nOrder #${orderNum}\nWe'll notify you here when the result is ready.`);
@@ -193,13 +202,13 @@ async function continueCustomerOrderWizard(fromId,text,state){
       const payMethod=tl==='wallet'?'wallet':'paypal';
       try{
         const orderNum=await nextOrderNumber();
-        const rec=await supaPost('orders',{
+        await supaPost('orders',{
           order_number:orderNum,service_id:state.serviceId,service_name:state.serviceName,
           imei:state.imei,email:state.email,status:'Pending Verification',
           sell_price:state.price,payment_method:payMethod,cust_tg_id:fromId
         });
         if(payMethod==='wallet'){
-          await supaPatch('accounts',`email=eq.${encodeURIComponent(state.email)}`,{balance:`balance - ${state.price}`});
+          await supaBalanceAdd(state.email, -state.price);
         }
         await clearSession(`cust_order_${fromId}`);
         await tgSend(fromId,`🎉 Order placed!\nOrder #${orderNum}\nStatus: ⏳ Pending Verification\nWe'll update you here when your IMEI is unlocked!`);
@@ -356,7 +365,7 @@ async function handleAdmin(msg,text){
 
   // ── /pending ──
   if(cmd==='/pending'){
-    const rows=await supaGet('orders','status=eq.Pending Verification&select=order_number,service_name,imei,email,sell_price,created_at&order=created_at.asc&limit=15');
+    const rows=await supaGet('orders','status=eq.Pending%20Verification&select=order_number,service_name,imei,email,sell_price,created_at&order=created_at.asc&limit=15');
     if(!rows.length)return tgSend(MILTON_ID,'No pending orders.');
     const lines=rows.map(o=>`#${o.order_number} ${o.service_name} | ${maskImei(o.imei)} | $${o.sell_price}\n${o.email}\n/verify ${o.order_number}`);
     return tgSend(MILTON_ID,`⏳ <b>Pending Verification (${rows.length})</b>\n\n${lines.join('\n\n')}`);
@@ -442,7 +451,7 @@ async function handleAdmin(msg,text){
     const o=rows[0];
     await supaPatch('orders',`order_number=eq.${num}`,{status:'Failed'});
     if(o.payment_method==='wallet'&&o.email){
-      await supaPatch('accounts',`email=eq.${encodeURIComponent(o.email)}`,{balance:`balance + ${o.sell_price||0}`});
+      await supaBalanceAdd(o.email, o.sell_price || 0);
       await tgSend(MILTON_ID,`Wallet refunded $${o.sell_price} to ${o.email}`);
     }
     if(o.cust_tg_id){
@@ -458,7 +467,7 @@ async function handleAdmin(msg,text){
     if(!rows.length)return tgSend(MILTON_ID,`Order #${num} not found.`);
     const o=rows[0];
     if(o.email){
-      await supaPatch('accounts',`email=eq.${encodeURIComponent(o.email)}`,{balance:`balance + ${o.sell_price||0}`});
+      await supaBalanceAdd(o.email, o.sell_price || 0);
     }
     await supaPatch('orders',`order_number=eq.${num}`,{status:'Refunded'});
     if(o.cust_tg_id){
@@ -500,7 +509,7 @@ async function handleAdmin(msg,text){
     const amt=parseFloat(parts[3]);
     if(isNaN(amt))return tgSend(MILTON_ID,'Invalid amount.');
     if(op==='add'){
-      await supaPatch('accounts',`email=eq.${encodeURIComponent(email)}`,{balance:`balance + ${amt}`});
+      await supaBalanceAdd(email, amt);
       return tgSend(MILTON_ID,`✅ Added $${amt} to ${email}'s wallet.`);
     }
     if(op==='set'){
