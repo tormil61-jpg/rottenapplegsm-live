@@ -4201,8 +4201,10 @@ const SESSION_MS=30*60*1000,MAX_DEP=1000,MIN_DEP=5;
 const ADMIN_EMAIL="rottenapplegsm@gmail.com",WA="13238291991",DOMAIN="https://www.rottenapplegsm.com";
 const loadEJS=pk=>new Promise(r=>{if(window.emailjs){r();return}const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";s.onload=()=>{window.emailjs.init(pk);r()};document.head.appendChild(s)});
 const sendEmail=async(cfg,tid,params,toEmail)=>{if(!cfg.emailjsPublicKey||!cfg.emailjsServiceId||!tid)return;try{await loadEJS(cfg.emailjsPublicKey);await window.emailjs.send(cfg.emailjsServiceId,tid,{to_email:toEmail||ADMIN_EMAIL,...params})}catch(e){console.warn("Email fail",e)}};
-const notifyNew=(cfg,o)=>{const p={order_id:`#${o.orderNumber} (${o.id})`,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,imei_masked:o.imeiMasked,amount:`$${o.amount.toFixed(2)}`,payment_method:o.paymentMethod,placed:o.placed};sendEmail(cfg,cfg.emailjsTemplateNew,p,ADMIN_EMAIL);if(o.email&&o.email!==ADMIN_EMAIL)sendEmail(cfg,cfg.emailjsTemplateNew,p,o.email);};
-const notifyStatus=(cfg,o,st)=>{if(!["Completed","Refunded","Cancelled"].includes(st))return;const p={order_id:o.id,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,amount:`$${o.amount.toFixed(2)}`,new_status:st};sendEmail(cfg,cfg.emailjsTemplateStatus,p,ADMIN_EMAIL);if(o.email&&o.email!==ADMIN_EMAIL)sendEmail(cfg,cfg.emailjsTemplateStatus,p,o.email);};
+const notifyNew=(cfg,o)=>{const p={order_id:`#${o.orderNumber} (${o.id})`,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,imei_masked:o.imeiMasked,amount:`$${o.amount.toFixed(2)}`,payment_method:o.paymentMethod,placed:o.placed,new_status:"Payment received — processing your order"};sendEmail(cfg,cfg.emailjsTemplateNew,{...p,customer_name:`NEW ORDER from ${o.name||"Guest"}`,to_name:"Admin"},ADMIN_EMAIL);if(o.email&&o.email!==ADMIN_EMAIL)sendEmail(cfg,cfg.emailjsTemplateNew,{...p,to_name:o.name||"Guest"},o.email);};
+const notifyProcessing=(cfg,o)=>{const tid=cfg.emailjsTemplateProcessing||cfg.emailjsTemplateStatus;if(!tid)return;const p={order_id:`#${o.orderNumber||""} (${o.id})`,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,amount:`$${o.amount.toFixed(2)}`,new_status:"Processing — payment verified, your unlock is underway",payment_method:o.paymentMethod,placed:o.placed};sendEmail(cfg,tid,{...p,to_name:"Admin",customer_name:`ORDER PROCESSING: ${o.name||"Guest"}`},ADMIN_EMAIL);if(o.email&&o.email!==ADMIN_EMAIL)sendEmail(cfg,tid,{...p,to_name:o.name||"Guest"},o.email);};
+const notifyWelcome=(cfg,acc)=>{const tid=cfg.emailjsTemplateWelcome||cfg.emailjsTemplateNew;if(!tid)return;const p={order_id:acc.id,customer_name:acc.name,customer_email:acc.email,service:"Your account is ready — start placing unlock orders any time.",imei_masked:"rottenapplegsm.com",amount:"Free",payment_method:"Account registration",placed:new Date().toLocaleDateString(),new_status:"Welcome!"};sendEmail(cfg,tid,{...p,to_name:acc.name},acc.email);sendEmail(cfg,tid,{...p,customer_name:`NEW CUSTOMER: ${acc.name}`,service:`New account: ${acc.name} (${acc.email})`,to_name:"Admin"},ADMIN_EMAIL);};
+const notifyStatus=(cfg,o,st)=>{if(!["Processing","Completed","Refunded","Cancelled"].includes(st))return;if(st==="Processing"){notifyProcessing(cfg,o);return;}const p={order_id:`#${o.orderNumber||""} (${o.id})`,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,amount:`$${o.amount.toFixed(2)}`,new_status:st,payment_method:o.paymentMethod,placed:o.placed};sendEmail(cfg,cfg.emailjsTemplateStatus,{...p,to_name:"Admin",customer_name:`ORDER ${st.toUpperCase()}: ${o.name||"Guest"}`},ADMIN_EMAIL);if(o.email&&o.email!==ADMIN_EMAIL)sendEmail(cfg,cfg.emailjsTemplateStatus,{...p,to_name:o.name||"Guest"},o.email);};
 
 // ═══════════════════════════════════════════════════════════════════
 // DATA
@@ -4261,7 +4263,7 @@ let suppliers=[
 
 // Support tickets
 let tickets=[]; // starts at #1001 for first order
-let payConfig={backendUrl:"",stripePublicKey:"pk_live_51RAdiy1im1pzQEDTBG0uDRJunjMRS084946lVYkl0i5irM9Fb787d6rH0vMOQ6JKGA6lsI6XizEzU9SO7Y9LJmp000SIAZMg1A",stripePaymentLink_disabled:"",paypalClientId:"AVNQLqpnuHw6iz1WhMle_P_GsQRaAvpE0zHHy82EOlf3tzPiUWbnPuP_CkvXJ_W6Ue4D6OlZSTINacqs",btcAddress:"3H1wo2u43uh7kwfZk3L5JD7pJpTz3JT768",usdtAddress:"0x5CDA5992AB8CFD42C135F12756809AFea7d746F8",githubToken:"",adminTotpSecret:"",zelleEmail:"Tormil61@icloud.com",zelleName:"Milton Torres",emailjsPublicKey:"HVDMR09St7qz-fUxV",emailjsServiceId:"service_zfgxbhe",emailjsTemplateNew:"template_8hpp3n8",emailjsTemplateStatus:"template_ts2m4ye"};
+let payConfig={backendUrl:"",stripePublicKey:"pk_live_51RAdiy1im1pzQEDTBG0uDRJunjMRS084946lVYkl0i5irM9Fb787d6rH0vMOQ6JKGA6lsI6XizEzU9SO7Y9LJmp000SIAZMg1A",stripePaymentLink_disabled:"",paypalClientId:"AVNQLqpnuHw6iz1WhMle_P_GsQRaAvpE0zHHy82EOlf3tzPiUWbnPuP_CkvXJ_W6Ue4D6OlZSTINacqs",btcAddress:"3H1wo2u43uh7kwfZk3L5JD7pJpTz3JT768",usdtAddress:"0x5CDA5992AB8CFD42C135F12756809AFea7d746F8",githubToken:"",adminTotpSecret:"",zelleEmail:"Tormil61@icloud.com",zelleName:"Milton Torres",emailjsPublicKey:"HVDMR09St7qz-fUxV",emailjsServiceId:"service_zfgxbhe",emailjsTemplateNew:"template_8hpp3n8",emailjsTemplateStatus:"template_ts2m4ye",emailjsTemplateWelcome:"",emailjsTemplateProcessing:""};
 
 // Supplier API configs — DhruFusion standard format
 const SUPPLIER_APIS={
@@ -4484,31 +4486,7 @@ async function handleRegister(){
   // Save to Supabase then redirect
   supaUpsert("accounts",[{id:newAcc.id,name:newAcc.name,email:newAcc.email,password_hash:newAcc.passwordHash||"",balance:0,created_at:newAcc.createdAt||new Date().toISOString().split("T")[0]}]).then(function(){
     // Notify admin of new account + send welcome email to customer
-    if(typeof sendEmail!=="undefined"&&payConfig.emailjsServiceId){
-      var welcomeData={
-        order_id: newAcc.id,
-        customer_name: newAcc.name,
-        customer_email: newAcc.email,
-        service: "Welcome to Rotten Apple GSM! Your account is ready.",
-        imei_masked: "rottenapplegsm.com",
-        amount: "Free Account",
-        payment_method: "WhatsApp: (323) 829-1991",
-        placed: new Date().toLocaleDateString()
-      };
-      // Welcome email to customer
-      sendEmail(payConfig, payConfig.emailjsTemplateNew, welcomeData);
-      // Alert email to admin
-      sendEmail(payConfig, payConfig.emailjsTemplateNew, {
-        order_id: newAcc.id,
-        customer_name: "NEW CUSTOMER: "+newAcc.name,
-        customer_email: "rottenapplegsm@gmail.com",
-        service: "New account created by "+newAcc.name+" ("+newAcc.email+")",
-        imei_masked: newAcc.email,
-        amount: "$0.00",
-        payment_method: "Registration",
-        placed: new Date().toLocaleDateString()
-      });
-    }
+    notifyWelcome(payConfig, newAcc);
     var newSecret2=generateTOTPSecret();
     var uri2='otpauth://totp/RottenAppleGSM:'+encodeURIComponent(newAcc.email)+'?secret='+newSecret2+'&issuer=RottenAppleGSM&algorithm=SHA1&digits=6&period=30';
     window._pendingAcc={newAcc:newAcc,secret:newSecret2};
@@ -6601,8 +6579,10 @@ function renderAdminPage(){
         ${[
           {label:"Public Key",        key:"emailjsPublicKey",    ph:"user_xxxxxxxxxxxxxxxxxxxx",    note:"Account → API Keys"},
           {label:"Service ID",        key:"emailjsServiceId",    ph:"service_xxxxxxx",              note:"Email Services → your service"},
-          {label:"New Order Template",key:"emailjsTemplateNew",  ph:"template_xxxxxxx",             note:"Variables: {{order_id}} {{customer_name}} {{customer_email}} {{service}} {{imei_masked}} {{amount}} {{payment_method}} {{placed}}"},
-          {label:"Status Update Template",key:"emailjsTemplateStatus",ph:"template_xxxxxxx",       note:"Variables: {{order_id}} {{customer_name}} {{customer_email}} {{service}} {{amount}} {{new_status}}"},
+          {label:"New Order Template",key:"emailjsTemplateNew",  ph:"template_xxxxxxx",             note:"Variables: {{to_name}} {{order_id}} {{customer_name}} {{customer_email}} {{service}} {{imei_masked}} {{amount}} {{payment_method}} {{placed}} {{new_status}}"},
+          {label:"Status Update Template",key:"emailjsTemplateStatus",ph:"template_xxxxxxx",       note:"Variables: {{to_name}} {{order_id}} {{customer_name}} {{customer_email}} {{service}} {{amount}} {{new_status}}"},
+          {label:"Welcome Email Template",key:"emailjsTemplateWelcome",ph:"template_xxxxxxx",      note:"Sent on account sign-up. Variables: {{to_name}} {{customer_name}} {{customer_email}} {{service}} {{placed}} — falls back to New Order template if blank"},
+          {label:"Payment Verified Template",key:"emailjsTemplateProcessing",ph:"template_xxxxxxx",note:"Sent when you click Confirm Payment. Variables: {{to_name}} {{order_id}} {{customer_name}} {{customer_email}} {{service}} {{amount}} {{new_status}} — falls back to Status Update template if blank"},
         ].map(f=>`<div style="margin-bottom:12px">
           <label class="lbl">${f.label} <span style="font-weight:400;color:var(--muted);font-size:11px">${f.note}</span></label>
           <div style="display:flex;gap:8px">
@@ -7139,7 +7119,6 @@ function confirmCryptoPayment(id){
   if(!confirm(`Confirm crypto payment received for order ${o.id}?\nThis will move the order to Processing.`))return;
   o.status="Processing";
   notifyStatus(payConfig,o,"Processing");
-  notifyNew(payConfig,o);
   // Auto-submit to sickw if enabled for this service
   const _svc = services.find(x=>x.id===matchedSvc?.id);
   if(_svc&&_svc.sickwAutoSubmit&&_svc.sickwServiceId&&o.imeiMasked){
