@@ -629,7 +629,7 @@ async function handleAdmin(msg, text) {
       await tgSend(MILTON_ID,
         `💰 <b>Price update ready</b>\n` +
         `Supplier: <b>${supplierName || 'Unknown'}</b>\nService: "${serviceName}"\n\n` +
-        `• ${s.carrier} | ${s.stype}\n` +
+        `• ${s.carrier} | ${s.stype} (${s.series || 'no series'})\n` +
         `  Cost: $${s.cost} → $${newCost} | Sell: $${s.price} → $${newSell}\n\n` +
         `Reply <b>confirm</b> to apply, or <b>cancel</b> to skip.`
       );
