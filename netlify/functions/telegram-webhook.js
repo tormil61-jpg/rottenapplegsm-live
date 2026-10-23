@@ -606,7 +606,7 @@ async function handleAdmin(msg, text) {
       return;
     }
 
-    const allServices = await supaGet('services', 'select=id,carrier,stype,brand,series,cost,price,supplier&limit=500');
+    const allServices = await supaGet('services', 'select=id,carrier,stype,brand,series,cost,price,supplier&active=eq.true&limit=500');
     const matches = matchServices(allServices, serviceName, supplierName);
 
     if (!matches.length) {
