@@ -1,4 +1,33 @@
+const crypto = require('crypto');
+
+function verifyStripeSignature(payload, sigHeader, secret) {
+  if (!secret || !sigHeader) return true; // skip if not configured (dev/test)
+  try {
+    const parts = sigHeader.split(',').reduce((acc, part) => {
+      const [k, v] = part.split('=');
+      acc[k] = v;
+      return acc;
+    }, {});
+    const timestamp = parts['t'];
+    const sig = parts['v1'];
+    if (!timestamp || !sig) return false;
+    const signed = `${timestamp}.${payload}`;
+    const expected = crypto.createHmac('sha256', secret).update(signed).digest('hex');
+    return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(sig));
+  } catch (e) {
+    return false;
+  }
+}
+
 exports.handler = async (event) => {
+  const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
+  const sigHeader = event.headers['stripe-signature'];
+
+  if (WEBHOOK_SECRET && !verifyStripeSignature(event.body, sigHeader, WEBHOOK_SECRET)) {
+    console.error('Stripe webhook signature verification failed');
+    return { statusCode: 400, body: 'Invalid signature' };
+  }
+
   let stripeEvent;
   try {
     stripeEvent = JSON.parse(event.body);
@@ -30,7 +59,7 @@ exports.handler = async (event) => {
     };
 
     try {
-      await fetch(SURL + '/rest/v1/orders', {
+      const r = await fetch(SURL + '/rest/v1/orders', {
         method: 'POST',
         headers: {
           'apikey': SKEY,
@@ -40,7 +69,12 @@ exports.handler = async (event) => {
         },
         body: JSON.stringify([order])
       });
-      console.log('Order saved:', order.id);
+      if (!r.ok) {
+        const err = await r.text();
+        console.error('Failed to save order:', err);
+      } else {
+        console.log('Order saved:', order.id);
+      }
     } catch (e) {
       console.error('Failed to save order:', e);
     }
