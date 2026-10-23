@@ -187,9 +187,13 @@ async function nextOrderNumber() {
 }
 
 async function getSession(key) {
-  const rows = await supaGet('settings', `key=eq.${key}&limit=1`);
-  if (!rows.length || !rows[0].value) return null;
-  try { return JSON.parse(rows[0].value); } catch { return null; }
+  try {
+    const res = await fetch(`${SUPA_URL}/rest/v1/settings?key=eq.${key}&limit=1`, { headers: supaHeaders });
+    if (!res.ok) return null;
+    const rows = await res.json();
+    if (!rows.length || !rows[0].value) return null;
+    return JSON.parse(rows[0].value);
+  } catch { return null; }
 }
 
 async function setSession(key, value) {
