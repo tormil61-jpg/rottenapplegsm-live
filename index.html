@@ -4205,7 +4205,7 @@ const SESSION_MS=30*60*1000,MAX_DEP=1000,MIN_DEP=5;
 const ADMIN_EMAIL="rottenapplegsm@gmail.com",WA="13238291991",DOMAIN="https://www.rottenapplegsm.com";
 const loadEJS=pk=>new Promise(r=>{if(window.emailjs){r();return}const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";s.onload=()=>{window.emailjs.init(pk);r()};document.head.appendChild(s)});
 const sendEmail=async(cfg,tid,params,toEmail)=>{if(!cfg.emailjsPublicKey||!cfg.emailjsServiceId||!tid)return;try{await loadEJS(cfg.emailjsPublicKey);await window.emailjs.send(cfg.emailjsServiceId,tid,{to_email:toEmail||ADMIN_EMAIL,...params})}catch(e){console.warn("Email fail",e)}};
-const notifyNew=(cfg,o)=>{const p={order_id:`#${o.orderNumber} (${o.id})`,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,imei_masked:o.imeiMasked,amount:`$${o.amount.toFixed(2)}`,payment_method:o.paymentMethod,placed:o.placed,new_status:"Payment received — processing your order"};sendEmail(cfg,cfg.emailjsTemplateNew,{...p,customer_name:`NEW ORDER from ${o.name||"Guest"}`,to_name:"Admin"},ADMIN_EMAIL);if(o.email&&o.email!==ADMIN_EMAIL)sendEmail(cfg,cfg.emailjsTemplateNew,{...p,to_name:o.name||"Guest"},o.email);};
+const notifyNew=(cfg,o)=>{const p={order_id:`#${o.orderNumber} (${o.id})`,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,imei_masked:o.imeiMasked,amount:`$${o.amount.toFixed(2)}`,payment_method:o.paymentMethod,placed:o.placed,new_status:"Payment received — processing your order"};sendEmail(cfg,cfg.emailjsTemplateNew,{...p,customer_name:`NEW ORDER from ${o.name||"Guest"}`,to_name:"Admin"},ADMIN_EMAIL);if(o.email&&o.email!==ADMIN_EMAIL)sendEmail(cfg,cfg.emailjsTemplateNew,{...p,to_name:o.name||"Guest"},o.email);try{fetch("/.netlify/functions/telegram-webhook",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"new_order",order:{order_number:o.orderNumber,id:o.id,customer_name:o.name||"Guest",email:o.email,desc:o.desc,carrier:o.carrier||"",stype:o.stype||"",series:o.series||"",imei_masked:o.imeiMasked,amount:o.amount,payment_method:o.paymentMethod,status:o.status||"Pending Verification",placed:o.placed}})});}catch(e){}};
 const notifyProcessing=(cfg,o)=>{const tid=cfg.emailjsTemplateProcessing||cfg.emailjsTemplateStatus;if(!tid)return;const p={order_id:`#${o.orderNumber||""} (${o.id})`,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,amount:`$${o.amount.toFixed(2)}`,new_status:"Processing — payment verified, your unlock is underway",payment_method:o.paymentMethod,placed:o.placed};sendEmail(cfg,tid,{...p,to_name:"Admin",customer_name:`ORDER PROCESSING: ${o.name||"Guest"}`},ADMIN_EMAIL);if(o.email&&o.email!==ADMIN_EMAIL)sendEmail(cfg,tid,{...p,to_name:o.name||"Guest"},o.email);};
 const notifyWelcome=(cfg,acc)=>{const tid=cfg.emailjsTemplateWelcome||cfg.emailjsTemplateNew;if(!tid)return;const p={order_id:acc.id,customer_name:acc.name,customer_email:acc.email,service:"Your account is ready — start placing unlock orders any time.",imei_masked:"rottenapplegsm.com",amount:"Free",payment_method:"Account registration",placed:new Date().toLocaleDateString(),new_status:"Welcome!"};sendEmail(cfg,tid,{...p,to_name:acc.name},acc.email);sendEmail(cfg,tid,{...p,customer_name:`NEW CUSTOMER: ${acc.name}`,service:`New account: ${acc.name} (${acc.email})`,to_name:"Admin"},ADMIN_EMAIL);};
 const notifyStatus=(cfg,o,st)=>{if(!["Processing","Completed","Refunded","Cancelled"].includes(st))return;if(st==="Processing"){notifyProcessing(cfg,o);return;}const p={order_id:`#${o.orderNumber||""} (${o.id})`,customer_name:o.name||"Guest",customer_email:o.email,service:o.desc,amount:`$${o.amount.toFixed(2)}`,new_status:st,payment_method:o.paymentMethod,placed:o.placed};sendEmail(cfg,cfg.emailjsTemplateStatus,{...p,to_name:"Admin",customer_name:`ORDER ${st.toUpperCase()}: ${o.name||"Guest"}`},ADMIN_EMAIL);if(o.email&&o.email!==ADMIN_EMAIL)sendEmail(cfg,cfg.emailjsTemplateStatus,{...p,to_name:o.name||"Guest"},o.email);};
@@ -5047,18 +5047,37 @@ async function runImeiLookup(){
   allOrders.unshift(imeiOrder);
   saveOrders();
 
+  // Notify admin via Telegram
+  try{fetch("/.netlify/functions/telegram-webhook",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"new_order",order:{order_number:imeiOrder.order_number,id:imeiOrder.id,customer_name:imeiOrder.customer_name,email:imeiOrder.email,desc:imeiOrder.description,carrier:"IMEI Check",stype:type.label||"IMEI Check",series:"",imei_masked:imeiMasked,amount:imeiOrder.amount,payment_method:"IMEI Check",status:imeiOrder.status,placed:imeiOrder.placed}})});}catch(e){}
+
   // Send results email to customer
   if(email && typeof sendEmail!=="undefined" && payConfig.emailjsServiceId && payConfig.emailjsTemplateNew) {
+    const imeiResultStatus = isLive ? "Check complete — result included below" : "Check in progress — we will send results shortly";
     sendEmail(payConfig, payConfig.emailjsTemplateNew, {
       order_id: historyEntry.id,
       customer_name: currentUser ? currentUser.name : 'Customer',
+      to_name: currentUser ? currentUser.name : 'Customer',
       customer_email: email,
       service: type.label + ' — IMEI Check Results',
       imei_masked: imeiMasked,
       amount: '$' + type.price.toFixed(2),
       payment_method: 'IMEI Check',
-      placed: new Date().toLocaleDateString()
-    });
+      placed: new Date().toLocaleDateString(),
+      new_status: imeiResultStatus
+    }, email);
+    // Also alert admin
+    sendEmail(payConfig, payConfig.emailjsTemplateNew, {
+      order_id: historyEntry.id,
+      customer_name: 'NEW IMEI CHECK: ' + (currentUser ? currentUser.name : email),
+      to_name: 'Admin',
+      customer_email: email,
+      service: type.label,
+      imei_masked: imeiMasked,
+      amount: '$' + type.price.toFixed(2),
+      payment_method: 'IMEI Check',
+      placed: new Date().toLocaleDateString(),
+      new_status: isLive ? 'Completed (live result)' : 'Processing'
+    }, ADMIN_EMAIL);
   }
 
   // Suggest matching services based on result

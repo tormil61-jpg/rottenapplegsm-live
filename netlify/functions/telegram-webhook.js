@@ -569,12 +569,20 @@ exports.handler = async (event) => {
     // ── F3: Website → bot alerts (new_order / new_account) ──
     if(body.type==='new_order'&&body.order){
       const o=body.order;
-      await tgSend(MILTON_ID,
-        `📦 <b>New Order #${o.order_number||'?'} from website</b>\n`+
-        `Service: ${o.service_name||'—'}\nIMEI: ${maskImei(o.imei)}\n`+
-        `Email: ${o.email||'—'}\nAmount: $${o.sell_price||'?'}\n`+
-        `Payment: ${o.payment_method||'—'}\n\n`+
-        `/verify ${o.order_number} — confirm\n/reject ${o.order_number} — reject`);
+      const isImeiChk=(o.payment_method==='IMEI Check'||o.carrier==='IMEI Check');
+      const icon=isImeiChk?'📋':'📦';
+      const label=isImeiChk?'New IMEI Check':'New Order';
+      const svcLine=o.desc||o.service_name||o.stype||'—';
+      const imeiLine=o.imei_masked||maskImei(o.imei||'')||'—';
+      const amtLine=o.amount!=null?`$${parseFloat(o.amount).toFixed(2)}`:o.sell_price||'?';
+      let msg=`${icon} <b>${label} #${o.order_number||o.id||'?'} from website</b>\n`+
+        `Service: ${svcLine}\nIMEI: ${imeiLine}\n`+
+        `Email: ${o.email||'—'}\nAmount: ${amtLine}\n`+
+        `Payment: ${o.payment_method||'—'}\nStatus: ${o.status||'Pending Verification'}`;
+      if(!isImeiChk){
+        msg+=`\n\n/verify ${o.order_number} — confirm\n/reject ${o.order_number} — reject`;
+      }
+      await tgSend(MILTON_ID, msg);
       return {statusCode:200,body:'ok'};
     }
     if(body.type==='new_account'&&body.account){

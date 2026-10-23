@@ -78,6 +78,26 @@ exports.handler = async (event) => {
     } catch (e) {
       console.error('Failed to save order:', e);
     }
+
+    // Notify admin via Telegram bot
+    try {
+      const TG_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+      const MILTON_ID = 689316020;
+      if (TG_TOKEN) {
+        await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: MILTON_ID,
+            parse_mode: 'HTML',
+            text: `📦 <b>New Order #${order.order_number||'?'} — Stripe Payment</b>\n` +
+              `Service: ${order.description||'—'}\nIMEI: ${order.imei||'—'}\n` +
+              `Email: ${order.email||'—'}\nAmount: $${order.amount?.toFixed(2)||'?'}\n` +
+              `Status: ${order.status}\n\n/verify ${order.order_number} — confirm`
+          })
+        });
+      }
+    } catch (tgErr) { console.error('TG notify error:', tgErr.message); }
   }
 
   return { statusCode: 200, body: JSON.stringify({ received: true }) };
