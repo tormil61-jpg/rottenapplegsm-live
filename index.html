@@ -5050,34 +5050,24 @@ async function runImeiLookup(){
   // Notify admin via Telegram
   try{fetch("/.netlify/functions/telegram-webhook",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type:"new_order",order:{order_number:imeiOrder.order_number,id:imeiOrder.id,customer_name:imeiOrder.customer_name,email:imeiOrder.email,desc:imeiOrder.description,carrier:"IMEI Check",stype:type.label||"IMEI Check",series:"",imei_masked:imeiMasked,amount:imeiOrder.amount,payment_method:"IMEI Check",status:imeiOrder.status,placed:imeiOrder.placed}})});}catch(e){}
 
-  // Send results email to customer
+  // Send results email to customer only (admin gets bot notification above)
   if(email && typeof sendEmail!=="undefined" && payConfig.emailjsServiceId && payConfig.emailjsTemplateNew) {
-    const imeiResultStatus = isLive ? "Check complete — result included below" : "Check in progress — we will send results shortly";
+    // Put actual result in new_status so it shows in the email regardless of template wording
+    const resultForEmail = isLive
+      ? "Your IMEI check is complete. Here are your results:\n\n" + (resultData||"No result returned.")
+      : "Your IMEI check is being processed. We will email you the results shortly.";
     sendEmail(payConfig, payConfig.emailjsTemplateNew, {
       order_id: historyEntry.id,
       customer_name: currentUser ? currentUser.name : 'Customer',
       to_name: currentUser ? currentUser.name : 'Customer',
       customer_email: email,
-      service: type.label + ' — IMEI Check Results',
+      service: type.label + ' — IMEI Check',
       imei_masked: imeiMasked,
       amount: '$' + type.price.toFixed(2),
       payment_method: 'IMEI Check',
       placed: new Date().toLocaleDateString(),
-      new_status: imeiResultStatus
+      new_status: resultForEmail
     }, email);
-    // Also alert admin
-    sendEmail(payConfig, payConfig.emailjsTemplateNew, {
-      order_id: historyEntry.id,
-      customer_name: 'NEW IMEI CHECK: ' + (currentUser ? currentUser.name : email),
-      to_name: 'Admin',
-      customer_email: email,
-      service: type.label,
-      imei_masked: imeiMasked,
-      amount: '$' + type.price.toFixed(2),
-      payment_method: 'IMEI Check',
-      placed: new Date().toLocaleDateString(),
-      new_status: isLive ? 'Completed (live result)' : 'Processing'
-    }, ADMIN_EMAIL);
   }
 
   // Suggest matching services based on result
