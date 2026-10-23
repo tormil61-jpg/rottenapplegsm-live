@@ -5217,7 +5217,7 @@ function openCheckout(){
     guestMethods.style.display="none";
     userMethods.style.display="block";
     const bal=getUserBalance();
-    const can=bal>=matchedSvc.price;
+    const can=bal>=(checkoutPending?.discPrice||matchedSvc.price);
     document.getElementById("wallet-balance-label").textContent="$"+bal.toFixed(2)+" available"+(can?"":" — insufficient");
     document.getElementById("wallet-balance-label").style.color=can?"var(--green)":"var(--red)";
     document.getElementById("wallet-insufficient").style.display=can?"none":"block";
@@ -5239,7 +5239,7 @@ function setCheckoutStep(step){
   }
   if(step==="paypal")mountPayPal();
   if(step==="stripe"){
-    const total=matchedSvc?matchedSvc.price:0;
+    const total=checkoutPending?.discPrice||matchedSvc?.price||0;
     document.getElementById("stripe-total").textContent="$"+total.toFixed(2);
     document.getElementById("stripe-order-detail").textContent=
       matchedSvc?`${matchedSvc.brand} · ${matchedSvc.series} · ${matchedSvc.carrier}`:"";
@@ -5255,7 +5255,7 @@ function setCheckoutStep(step){
 function checkoutBack(){setCheckoutStep("method")}
 function payWallet(){
   if(!currentUser){showToast("Please sign in to use account balance.");return}
-  const price=checkoutPending?.isImeiCheck?checkoutPending.svc.price:matchedSvc?.price||0;
+  const price=checkoutPending?.isImeiCheck?checkoutPending.svc.price:(checkoutPending?.discPrice||matchedSvc?.price||0);
   const bal=getUserBalance();
   if(bal<price){showToast("Insufficient balance. Please add funds.");return}
   recordOrder("wallet");
@@ -5309,7 +5309,7 @@ function recordOrder(method, initialStatus){
   if(matchedSvc.apiServiceId){
     placeSupplierOrder(o, matchedSvc).catch(()=>{});
   }
-  if(method==="wallet"&&currentUser)updateBalance(currentUser.id,-matchedSvc.price);
+  if(method==="wallet"&&currentUser)updateBalance(currentUser.id,-finalPrice);
   saveOrders();
   notifyNew(payConfig,o);
   document.getElementById("order-imei").value="";
@@ -5568,9 +5568,9 @@ function checkStripeReturn(){
       ||{carrier:o.carrier,stype:o.stype,series:o.series,brand:o.brand,price:o.price};
     checkoutPending={
       imeiMasked:o.imeiMasked,email:o.email,name:o.name,
-      svc:matchedSvc
+      svc:matchedSvc,discPrice:o.price
     };
-    recordOrder("stripe");
+    recordOrder("stripe","Processing");
     // Show success modal
     document.getElementById("checkout-overlay").classList.add("open");
     setCheckoutStep("done");
@@ -7121,7 +7121,7 @@ function saveOrders(){
     supaUpsert("orders",rows).catch(function(e){console.log("orders save error:",e);});
   }
 }
-function loadOrders(){try{var s=localStorage.getItem("ra_orders");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p)&&p.length)orders=p;}catch(e){}}
+function loadOrders(){try{var s=localStorage.getItem("ra_orders");if(!s)return;var p=JSON.parse(s);if(Array.isArray(p)&&p.length){allOrders=p;orderCounter=p.reduce(function(mx,o){return Math.max(mx,o.orderNumber||0);},orderCounter);}}catch(e){}}
 function updateOrderStatus(id,status){
   if(!ORDER_STATUSES.includes(status))return;
   const o=allOrders.find(x=>x.id===id);
@@ -7380,9 +7380,7 @@ window.saveServicesToStorage=function(){
   });
 };
 
-// Hook recordOrder
-const _origRecordOrder=recordOrder;
-window.recordOrder=function(o){_origRecordOrder(o);supaPost('orders',{id:o.id,order_number:o.orderNumber,customer_name:o.name,email:o.email,description:o.desc,imei:o.imeiMasked||o.imei||'',amount:o.amount,cost:o.cost||0,payment_method:o.paymentMethod,status:o.status||'Pending Verification',placed:o.placed,account_id:o.accountId||null});};
+// recordOrder saves to Supabase via saveOrders() → supaUpsert inside the function itself
 
 // Hook updateOrderStatus
 const _origUpdateStatus=updateOrderStatus;
@@ -7472,7 +7470,7 @@ if(typeof updateOrderUI==='function')updateOrderUI();
     }
   }catch(e){console.log('payconfig load error:',e);}
   const orders=await supaGet('orders','order=created_at.desc');
-  if(orders&&orders.length){allOrders=orders.map(o=>({id:o.id,orderNumber:o.order_number,name:o.customer_name,email:o.email,desc:o.description,imei:o.imei,amount:parseFloat(o.amount)||0,cost:parseFloat(o.cost)||0,paymentMethod:o.payment_method,status:o.status,placed:o.placed,completed:o.completed,accountId:o.account_id,notes:o.notes||''}));saveOrders();}
+  if(orders&&orders.length){allOrders=orders.map(o=>({id:o.id,orderNumber:o.order_number,name:o.customer_name,email:o.email,desc:o.description,imei:o.imei,amount:parseFloat(o.amount)||0,cost:parseFloat(o.cost)||0,paymentMethod:o.payment_method,status:o.status,placed:o.placed,completed:o.completed,accountId:o.account_id,notes:o.notes||''}));orderCounter=allOrders.reduce(function(mx,o){return Math.max(mx,o.orderNumber||0);},orderCounter);saveOrders();}
 })();
 </script>
 
