@@ -100,41 +100,48 @@ function parsePriceUpdate(text) {
 }
 
 function matchServices(allServices, serviceName, supplierName) {
-  // Step 1: narrow by supplier
+  // Step 1: narrow by supplier if known
   let pool = allServices;
   if (supplierName) {
-    const supLower = supplierName.toLowerCase();
-    const filtered = allServices.filter(s =>
-      (s.supplier || '').toLowerCase().includes(supLower) ||
-      supLower.includes((s.supplier || '').toLowerCase().trim())
-    );
+    const supLower = supplierName.toLowerCase().replace(/\s+/g,'');
+    const filtered = allServices.filter(s => {
+      const dbSup = (s.supplier || '').toLowerCase().replace(/\s+/g,'');
+      return dbSup.includes(supLower) || supLower.includes(dbSup);
+    });
     if (filtered.length > 0) pool = filtered;
   }
 
-  // Step 2: extract specific carrier names from caption
-  const CARRIER_KEYWORDS = [
-    't-mobile','tmobile','sprint','metropcs','metro pcs','at&t','att',
-    'verizon','boost','xfinity','cricket','dish','visible','us cellular',
-    'consumer cellular','straight talk','mint','tracfone','simple mobile',
-    'net10','total wireless','virgin','lycamobile','h2o'
+  // Step 2: extract caption carrier names (exact, no stripping)
+  // We match the DB carrier field directly against these phrases
+  const CARRIER_PHRASES = [
+    't-mobile','tmobile','sprint','metropcs','metro pcs',
+    'at&t','att','verizon','boost mobile','xfinity mobile','xfinity',
+    'cricket','dish','visible','us cellular','consumer cellular',
+    'straight talk','mint','tracfone','simple mobile','net10',
+    'total wireless','virgin','lycamobile','h2o','boost'
   ];
   const svcLower = serviceName.toLowerCase();
-  const captionCarriers = CARRIER_KEYWORDS.filter(c => svcLower.includes(c));
+  // Only keep carriers that actually appear as a word/phrase in the caption
+  const captionCarriers = CARRIER_PHRASES.filter(c => {
+    const escaped = c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp('\\b' + escaped.replace(/\s+/g,'[\\s\\-]+') + '\\b', 'i').test(serviceName);
+  });
 
-  // Step 3: extract model numbers from caption
-  const modelRangeMatch = serviceName.match(/(\d{1,2})\s*[-–]\s*(\d{1,2})/);
-  const singleModelMatch = serviceName.match(/\b(X|XS|XR|SE|6S?|7|8|9|10|11|12|13|14|15|16|17|18|19|20)\b/gi);
+  // Step 3: extract iPhone model numbers from caption
+  // Caption examples: "iPhone 18 / Duo", "iPhone 15 - 17"
+  const captionModelRange = serviceName.match(/iPhone\s+(\d{1,2})\s*[-\/–]\s*(\d{1,2})/i);
+  const captionSingleModel = serviceName.match(/iPhone\s+(\d{1,2})/i);
 
-  let coveredModels = new Set();
+  let captionModels = new Set();
   let skipModelFilter = false;
 
-  if (modelRangeMatch) {
-    const start = parseInt(modelRangeMatch[1]);
-    const end   = parseInt(modelRangeMatch[2]);
-    if (end - start > 8) { skipModelFilter = true; }
-    else { for (let m = start; m <= end; m++) coveredModels.add(String(m)); }
-  } else if (singleModelMatch) {
-    singleModelMatch.forEach(m => coveredModels.add(m.toUpperCase()));
+  if (captionModelRange) {
+    const s = parseInt(captionModelRange[1]);
+    const e = parseInt(captionModelRange[2]);
+    if (e - s > 8) { skipModelFilter = true; }
+    else { for (let m = s; m <= e; m++) captionModels.add(m); }
+  } else if (captionSingleModel) {
+    captionModels.add(parseInt(captionSingleModel[1]));
   } else {
     skipModelFilter = true;
   }
@@ -142,36 +149,39 @@ function matchServices(allServices, serviceName, supplierName) {
   const hasiPhone  = /iphone/i.test(serviceName);
   const hasSamsung = /samsung/i.test(serviceName);
 
-  // Step 4: filter
   return pool.filter(s => {
     const hCarrier = (s.carrier || '').toLowerCase();
     const hSeries  = (s.series  || '').toLowerCase();
     const hBrand   = (s.brand   || '').toLowerCase();
-    const hStype   = (s.stype   || '').toLowerCase();
 
-    if (hasiPhone  && !hBrand.includes('apple') && !hStype.includes('iphone') && !hSeries.includes('iphone')) return false;
+    // Brand filter
+    if (hasiPhone  && !hBrand.includes('apple') && !hSeries.includes('iphone')) return false;
     if (hasSamsung && !hBrand.includes('samsung')) return false;
 
-    // Carrier: DB service must match at least one carrier from the caption
+    // Carrier: at least one caption carrier must appear in the DB carrier field
     if (captionCarriers.length > 0) {
-      const carrierHit = captionCarriers.some(c => {
-        const norm  = c.replace(/[-\s]/g, '');
-        const hNorm = hCarrier.replace(/[-\s]/g, '');
-        return hNorm.includes(norm) || norm.includes(hNorm.replace(/mobile|wireless|cellular/g,'').trim());
-      });
-      if (!carrierHit) return false;
+      const hit = captionCarriers.some(c => hCarrier.includes(c));
+      if (!hit) return false;
     }
 
-    // Model: DB service must cover at least one model from the caption
-    if (!skipModelFilter && coveredModels.size > 0) {
-      const svcModels = (hSeries + ' ' + hStype).match(/\b(X|XS|XR|SE|\d{1,2})\b/gi) || [];
-      const svcModelSet = new Set(svcModels.map(m => m.toUpperCase()));
-      // Expand DB ranges (e.g. "15 - 17")
-      const dbRange = (hSeries + ' ' + hStype).match(/(\d{1,2})\s*[-–]\s*(\d{1,2})/);
+    // Model: extract numbers from the DB series field and check overlap
+    if (!skipModelFilter && captionModels.size > 0) {
+      // Parse DB series like "iPhone 15-17 Series", "iPhone 18 Series", "iPhone All Models"
+      if (/all models/i.test(hSeries)) return true; // "All Models" covers everything
+
+      const dbRange  = hSeries.match(/(\d{1,2})\s*[-–]\s*(\d{1,2})/);
+      const dbSingle = hSeries.match(/\biphone\s+(\d{1,2})\b/i) || hSeries.match(/\b(\d{1,2})\b/);
+
+      let dbModels = new Set();
       if (dbRange) {
-        for (let m = parseInt(dbRange[1]); m <= parseInt(dbRange[2]); m++) svcModelSet.add(String(m));
+        for (let m = parseInt(dbRange[1]); m <= parseInt(dbRange[2]); m++) dbModels.add(m);
+      } else if (dbSingle) {
+        dbModels.add(parseInt(dbSingle[1]));
+      } else {
+        return true; // can't parse series — include it
       }
-      const overlap = [...coveredModels].some(m => svcModelSet.has(m.toUpperCase()) || svcModelSet.has(m));
+
+      const overlap = [...captionModels].some(m => dbModels.has(m));
       if (!overlap) return false;
     }
 
