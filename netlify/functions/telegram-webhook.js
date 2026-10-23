@@ -458,24 +458,25 @@ async function handleAdmin(msg, text) {
     }
     const ids = pending.ids.split(',').filter(Boolean);
     for (const id of ids) {
-      await supaPatch('services', `id=eq.${id}`, { cost: pending.newCost, price: calcSellPrice(pending.newCost) });
+      await supaPatch('services', `id=eq.${id}`, { cost: pending.newCost });
     }
     await clearSession('pending_price_update');
+    // Read back updated services to get their actual current sell prices
+    const updatedRows = await supaGet('services', `id=in.(${ids.join(',')})&select=id,carrier,price`);
     const direction = pending.oldCost
       ? (pending.newCost < pending.oldCost ? 'decreased' : 'increased')
       : 'updated';
+    const sellSummary = updatedRows.map(s => `• ${s.carrier}: sell $${s.price}`).join('\n');
     await tgSend(MILTON_ID,
-      `✅ <b>Price updated — ${ids.length} service${ids.length > 1 ? 's' : ''}</b>\n` +
+      `✅ <b>Cost updated — ${ids.length} service${ids.length > 1 ? 's' : ''}</b>\n` +
       `Supplier: "${pending.supplierName || 'Unknown'}"\n` +
       `Service: "${pending.serviceName}"\n` +
       (pending.oldCost ? `$${pending.oldCost} → ` : '') +
-      `$${pending.newCost} cost | Sell: $${calcSellPrice(pending.newCost)}`
+      `$${pending.newCost} new cost\n\nYour sell prices (unchanged):\n${sellSummary}`
     );
     await tgBroadcast(
       `💰 <b>Price Update</b>\n${pending.serviceName}\n` +
-      `Price ${direction}: ` +
-      (pending.oldCost ? `$${calcSellPrice(pending.oldCost)} → ` : '') +
-      `$${calcSellPrice(pending.newCost)}\n\nOrder at rottenapplegsm.com`
+      `Supplier cost ${direction}.\n\nOrder at rottenapplegsm.com`
     );
     return;
   }
@@ -588,7 +589,7 @@ async function handleAdmin(msg, text) {
     }
 
     const previewLines = matches.map(s =>
-      `• ${s.carrier} | ${s.stype} — was $${s.cost} → $${newCost} (sell $${calcSellPrice(newCost)})`
+      `• ${s.carrier} | ${s.stype} — was $${s.cost} → $${newCost} cost (your sell price stays $${s.price})`
     ).join('\n');
 
     await setSession('pending_price_update', {
@@ -598,7 +599,7 @@ async function handleAdmin(msg, text) {
     await tgSend(MILTON_ID,
       `💰 <b>Price update ready</b>\n` +
       `Supplier: <b>${supplierName || 'Unknown'}</b>\nService: "${serviceName}"\n` +
-      (oldCost ? `$${oldCost} → ` : '') + `$${newCost} cost | Sell: $${calcSellPrice(newCost)}\n` +
+      (oldCost ? `$${oldCost} → ` : '') + `$${newCost} new cost (your sell prices unchanged)\n` +
       `${matches.length} service${matches.length > 1 ? 's' : ''} matched:\n\n${previewLines}\n\n` +
       `Reply <b>confirm</b> to apply, or <b>cancel</b> to skip.`
     );
