@@ -205,10 +205,13 @@ exports.handler = async (event) => {
   if (!msg) return { statusCode: 200, body: 'ok' };
 
   const fromId = msg.from?.id || msg.chat?.id;
-  if (fromId !== MILTON_ID) return { statusCode: 200, body: 'ok' };
-
-  const text = msg.text || msg.caption || '';
+  const text   = msg.text || msg.caption || '';
   if (!text) return { statusCode: 200, body: 'ok' };
+
+  // ── Customer order lookup (non-Milton users) ─────────────────
+  if (fromId !== MILTON_ID) {
+    return handleCustomer(fromId, text, msg.from?.first_name || 'there');
+  }
 
   try {
     const lower = text.toLowerCase().trim();
