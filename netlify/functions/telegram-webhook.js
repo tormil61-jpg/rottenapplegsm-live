@@ -100,7 +100,7 @@ function parsePriceUpdate(text) {
 }
 
 function matchServices(allServices, serviceName, supplierName) {
-  const svcLower = serviceName.toLowerCase();
+  // Step 1: narrow by supplier
   let pool = allServices;
   if (supplierName) {
     const supLower = supplierName.toLowerCase();
@@ -111,16 +111,18 @@ function matchServices(allServices, serviceName, supplierName) {
     if (filtered.length > 0) pool = filtered;
   }
 
-  const GENERIC = new Set(['iphone','ipad','samsung','galaxy','series','premium','standard','pro',
-    'max','plus','ultra','mini','usa','the','and','for','unlock','service','support','all',
-    'carrier','clean','unbarring','cleaning','check','eligibility','duo','sprint']);
+  // Step 2: extract specific carrier names from caption
+  const CARRIER_KEYWORDS = [
+    't-mobile','tmobile','sprint','metropcs','metro pcs','at&t','att',
+    'verizon','boost','xfinity','cricket','dish','visible','us cellular',
+    'consumer cellular','straight talk','mint','tracfone','simple mobile',
+    'net10','total wireless','virgin','lycamobile','h2o'
+  ];
+  const svcLower = serviceName.toLowerCase();
+  const captionCarriers = CARRIER_KEYWORDS.filter(c => svcLower.includes(c));
 
-  const carrierWords = svcLower
-    .replace(/[^a-z0-9 &/]/g, ' ')
-    .split(/\s+/)
-    .filter(w => w.length > 2 && !GENERIC.has(w));
-
-  const modelRangeMatch = serviceName.match(/(\d{1,2})\s*[-]\s*(\d{1,2})/);
+  // Step 3: extract model numbers from caption
+  const modelRangeMatch = serviceName.match(/(\d{1,2})\s*[-–]\s*(\d{1,2})/);
   const singleModelMatch = serviceName.match(/\b(X|XS|XR|SE|6S?|7|8|9|10|11|12|13|14|15|16|17|18|19|20)\b/gi);
 
   let coveredModels = new Set();
@@ -140,6 +142,7 @@ function matchServices(allServices, serviceName, supplierName) {
   const hasiPhone  = /iphone/i.test(serviceName);
   const hasSamsung = /samsung/i.test(serviceName);
 
+  // Step 4: filter
   return pool.filter(s => {
     const hCarrier = (s.carrier || '').toLowerCase();
     const hSeries  = (s.series  || '').toLowerCase();
@@ -149,17 +152,29 @@ function matchServices(allServices, serviceName, supplierName) {
     if (hasiPhone  && !hBrand.includes('apple') && !hStype.includes('iphone') && !hSeries.includes('iphone')) return false;
     if (hasSamsung && !hBrand.includes('samsung')) return false;
 
-    if (carrierWords.length > 0) {
-      const carrierHit = carrierWords.some(w => hCarrier.includes(w));
+    // Carrier: DB service must match at least one carrier from the caption
+    if (captionCarriers.length > 0) {
+      const carrierHit = captionCarriers.some(c => {
+        const norm  = c.replace(/[-\s]/g, '');
+        const hNorm = hCarrier.replace(/[-\s]/g, '');
+        return hNorm.includes(norm) || norm.includes(hNorm.replace(/mobile|wireless|cellular/g,'').trim());
+      });
       if (!carrierHit) return false;
     }
 
+    // Model: DB service must cover at least one model from the caption
     if (!skipModelFilter && coveredModels.size > 0) {
       const svcModels = (hSeries + ' ' + hStype).match(/\b(X|XS|XR|SE|\d{1,2})\b/gi) || [];
       const svcModelSet = new Set(svcModels.map(m => m.toUpperCase()));
-      const overlap = [...coveredModels].some(m => svcModelSet.has(m.toUpperCase()));
+      // Expand DB ranges (e.g. "15 - 17")
+      const dbRange = (hSeries + ' ' + hStype).match(/(\d{1,2})\s*[-–]\s*(\d{1,2})/);
+      if (dbRange) {
+        for (let m = parseInt(dbRange[1]); m <= parseInt(dbRange[2]); m++) svcModelSet.add(String(m));
+      }
+      const overlap = [...coveredModels].some(m => svcModelSet.has(m.toUpperCase()) || svcModelSet.has(m));
       if (!overlap) return false;
     }
+
     return true;
   });
 }
