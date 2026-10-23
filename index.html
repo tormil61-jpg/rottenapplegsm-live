@@ -876,6 +876,10 @@ select option:hover, select option:checked {
         <div id="paypal-loading" style="text-align:center;padding:24px 0;color:var(--muted);font-size:14px">Loading PayPal…</div>
         <div id="paypal-error" class="err-box" style="display:none"></div>
         <div id="paypal-buttons-container" style="min-height:50px"></div>
+        <div id="paypal-fallback" style="display:none;margin-top:12px">
+          <div style="background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.3);border-radius:10px;padding:14px 16px;margin-bottom:14px;font-size:13px;color:var(--orange)">⚠ PayPal smart buttons unavailable. Use the direct link below to pay, then contact us with your confirmation.</div>
+          <a id="paypal-me-link" href="https://paypal.me/RottenAppleGSM" target="_blank" rel="noopener" style="display:block;background:#0070ba;color:#fff;text-align:center;padding:14px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;letter-spacing:.02em">🅿️ Pay with PayPal.me</a>
+        </div>
         <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:12px">🔒 Powered by PayPal · Payment confirmed before order is placed</div>
       </div>
 
@@ -5395,20 +5399,36 @@ function doStripeRedirect(pk,link){
 }
 
 // ── PayPal — via Netlify Functions backend ─────────────────────────
+function showPayPalFallback(){
+  const amt=checkoutPending?.discPrice||matchedSvc?.price||0;
+  const fallbackEl=document.getElementById("paypal-fallback");
+  const linkEl=document.getElementById("paypal-me-link");
+  if(fallbackEl){
+    if(linkEl&&amt>0) linkEl.href=`https://paypal.me/RottenAppleGSM/${amt.toFixed(2)}`;
+    fallbackEl.style.display="block";
+  }
+}
 async function mountPayPal(){
   const loadEl=document.getElementById("paypal-loading");
   const errEl=document.getElementById("paypal-error");
   const warnEl=document.getElementById("paypal-key-warn");
   const container=document.getElementById("paypal-buttons-container");
+  const fallbackEl=document.getElementById("paypal-fallback");
   loadEl.style.display="block";
   loadEl.textContent="Loading PayPal…";
   errEl.style.display="none";
   warnEl.style.display="none";
+  if(fallbackEl) fallbackEl.style.display="none";
   container.innerHTML="";
+
+  // 12-second timeout — if buttons don't render, show PayPal.me fallback
+  const timeoutId=setTimeout(()=>{
+    loadEl.style.display="none";
+    showPayPalFallback();
+  }, 12000);
 
   try{
     // Load PayPal SDK with client-only client-id (public key, safe in browser)
-    // The secret key stays in Netlify environment variables — never in browser
     const clientId=payConfig.paypalClientId||"sb"; // fallback to sandbox UI
     const existing=document.getElementById("paypal-sdk");
     if(existing&&!existing.src.includes(clientId)){existing.remove();window.paypal=undefined}
@@ -5418,10 +5438,11 @@ async function mountPayPal(){
         s.id="paypal-sdk";
         s.src=`https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD&intent=capture&disable-funding=credit,venmo`;
         s.onload=res;
-        s.onerror=()=>rej(new Error("Failed to load PayPal SDK"));
+        s.onerror=()=>rej(new Error("Failed to load PayPal SDK. Check your connection and try again."));
         document.head.appendChild(s);
       });
     }
+    clearTimeout(timeoutId);
     loadEl.style.display="none";
 
     const tier=currentUser?getTier(getUserSpend(currentUser.id)):null;
@@ -5433,14 +5454,29 @@ async function mountPayPal(){
 
       // createOrder calls our Netlify backend function — secret key is server-side
       createOrder: async()=>{
-        const res=await fetch("/.netlify/functions/paypal-create-order",{
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body:JSON.stringify({amount:amt.toFixed(2),currency:"USD",description:desc})
-        });
-        if(!res.ok) throw new Error("Could not create PayPal order. Please try again.");
+        let res;
+        try{
+          res=await fetch("/.netlify/functions/paypal-create-order",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({amount:amt.toFixed(2),currency:"USD",description:desc})
+          });
+        }catch(fetchErr){
+          clearTimeout(timeoutId);
+          showPayPalFallback();
+          throw new Error("Network error. Use the PayPal.me link below.");
+        }
+        if(!res.ok){
+          clearTimeout(timeoutId);
+          showPayPalFallback();
+          throw new Error("Payment server error. Use the PayPal.me link below.");
+        }
         const data=await res.json();
-        if(data.error) throw new Error(data.error);
+        if(data.error){
+          clearTimeout(timeoutId);
+          showPayPalFallback();
+          throw new Error(data.error);
+        }
         return data.orderID;
       },
 
@@ -5491,12 +5527,15 @@ async function mountPayPal(){
         errEl.style.display="block";
         loadEl.style.display="none";
       },
-    }).render(container);
+    }).render(container).then(()=>clearTimeout(timeoutId)).catch(()=>{clearTimeout(timeoutId);showPayPalFallback();});
 
   }catch(e){
+    clearTimeout(timeoutId);
     loadEl.style.display="none";
     errEl.textContent=e.message;
     errEl.style.display="block";
+    // Show PayPal.me fallback whenever SDK or backend fails
+    showPayPalFallback();
   }
 }
 // ── Check for Stripe redirect return ─────────────────────────────────────────
