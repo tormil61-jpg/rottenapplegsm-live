@@ -1,6 +1,7 @@
 const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
 const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET;
-const PAYPAL_BASE = process.env.PAYPAL_ENV === "sandbox"
+const PAYPAL_ENV = process.env.PAYPAL_ENV;
+const PAYPAL_BASE = PAYPAL_ENV === "sandbox"
   ? "https://api-m.sandbox.paypal.com"
   : "https://api-m.paypal.com";
 
@@ -12,6 +13,10 @@ async function getAccessToken() {
     body: "grant_type=client_credentials"
   });
   const data = await res.json();
+  if (!res.ok || !data.access_token) {
+    console.error("PayPal auth failed:", JSON.stringify(data), "ENV:", PAYPAL_ENV, "ClientID:", PAYPAL_CLIENT_ID?.slice(0,8) + "...");
+    throw new Error("PayPal authentication failed: " + (data.error_description || data.error || "no token returned"));
+  }
   return data.access_token;
 }
 
@@ -24,16 +29,22 @@ exports.handler = async (event) => {
     const { orderID, orderId, orderNumber, customerName, email, description, imei, cost, accountId } = body;
     if (!orderID) return { statusCode: 400, body: JSON.stringify({ error: "Missing orderID" }) };
 
+    console.log("Capture attempt — orderID:", orderID, "ENV:", PAYPAL_ENV, "Base:", PAYPAL_BASE);
+
     const accessToken = await getAccessToken();
     const res = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${orderID}/capture`, {
       method: "POST",
       headers: { "Authorization": `Bearer ${accessToken}`, "Content-Type": "application/json" }
     });
     const captureData = await res.json();
-    if (!res.ok) return { statusCode: res.status, body: JSON.stringify({ error: "Capture failed", details: captureData }) };
+    if (!res.ok) {
+      console.error("PayPal capture failed:", JSON.stringify(captureData), "orderID:", orderID, "ENV:", PAYPAL_ENV);
+      return { statusCode: res.status, body: JSON.stringify({ error: "Capture failed", details: captureData }) };
+    }
 
     const capture = captureData.purchase_units?.[0]?.payments?.captures?.[0];
     const amount = parseFloat(capture?.amount?.value || 0);
+    console.log("PayPal capture success:", capture?.id, "amount:", amount);
 
     // Save order to Supabase
     const SURL = 'https://fkiajefrdcgiobrzftjx.supabase.co';
@@ -68,6 +79,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({ success: true, captureId: capture?.id, amount })
     };
   } catch (err) {
+    console.error("Capture function error:", err.message);
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 };
