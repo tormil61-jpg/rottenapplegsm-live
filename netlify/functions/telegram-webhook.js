@@ -457,26 +457,30 @@ async function handleAdmin(msg, text) {
       return;
     }
     const ids = pending.ids.split(',').filter(Boolean);
-    for (const id of ids) {
-      await supaPatch('services', `id=eq.${id}`, { cost: pending.newCost });
+    // Shift = how much the cost changed. Sell price moves by the same amount.
+    const costDelta = pending.oldCost ? parseFloat((pending.newCost - pending.oldCost).toFixed(2)) : 0;
+    // Read current prices before patching so we can shift them
+    const beforeRows = await supaGet('services', `id=in.(${ids.join(',')})&select=id,carrier,cost,price`);
+    for (const svc of beforeRows) {
+      const newSellPrice = parseFloat((svc.price + costDelta).toFixed(2));
+      await supaPatch('services', `id=eq.${svc.id}`, { cost: pending.newCost, price: newSellPrice });
     }
     await clearSession('pending_price_update');
-    // Read back updated services to get their actual current sell prices
-    const updatedRows = await supaGet('services', `id=in.(${ids.join(',')})&select=id,carrier,price`);
-    const direction = pending.oldCost
-      ? (pending.newCost < pending.oldCost ? 'decreased' : 'increased')
-      : 'updated';
-    const sellSummary = updatedRows.map(s => `• ${s.carrier}: sell $${s.price}`).join('\n');
+    const direction = costDelta < 0 ? 'decreased' : costDelta > 0 ? 'increased' : 'unchanged';
+    const sellSummary = beforeRows.map(s => {
+      const newSell = parseFloat((s.price + costDelta).toFixed(2));
+      return `• ${s.carrier}: $${s.price} → $${newSell}`;
+    }).join('\n');
     await tgSend(MILTON_ID,
-      `✅ <b>Cost updated — ${ids.length} service${ids.length > 1 ? 's' : ''}</b>\n` +
+      `✅ <b>Price updated — ${ids.length} service${ids.length > 1 ? 's' : ''}</b>\n` +
       `Supplier: "${pending.supplierName || 'Unknown'}"\n` +
       `Service: "${pending.serviceName}"\n` +
-      (pending.oldCost ? `$${pending.oldCost} → ` : '') +
-      `$${pending.newCost} new cost\n\nYour sell prices (unchanged):\n${sellSummary}`
+      `Cost: ${pending.oldCost ? `$${pending.oldCost} → ` : ''}$${pending.newCost} (${costDelta >= 0 ? '+' : ''}$${costDelta})\n\n` +
+      `Sell prices adjusted by $${costDelta >= 0 ? '+' : ''}${costDelta}:\n${sellSummary}`
     );
     await tgBroadcast(
-      `💰 <b>Price Update</b>\n${pending.serviceName}\n` +
-      `Supplier cost ${direction}.\n\nOrder at rottenapplegsm.com`
+      `💰 <b>Price ${direction === 'decreased' ? 'Drop' : 'Update'}</b>\n${pending.serviceName}\n` +
+      `Price ${direction} by $${Math.abs(costDelta)}.\n\nOrder at rottenapplegsm.com`
     );
     return;
   }
@@ -588,9 +592,11 @@ async function handleAdmin(msg, text) {
       return;
     }
 
-    const previewLines = matches.map(s =>
-      `• ${s.carrier} | ${s.stype} — was $${s.cost} → $${newCost} cost (your sell price stays $${s.price})`
-    ).join('\n');
+    const previewDelta = oldCost ? parseFloat((newCost - oldCost).toFixed(2)) : 0;
+    const previewLines = matches.map(s => {
+      const newSell = parseFloat((s.price + previewDelta).toFixed(2));
+      return `• ${s.carrier} | ${s.stype} — cost $${s.cost} → $${newCost} | sell $${s.price} → $${newSell}`;
+    }).join('\n');
 
     await setSession('pending_price_update', {
       ids: matches.map(s => s.id).join(','), newCost, oldCost, serviceName, supplierName, ts: Date.now()
